@@ -1,0 +1,38 @@
+#include "stdafx.h"
+#include "Title.h"
+#include "Game.h"
+
+Title::Title()
+{
+	m_sprite.Init(L"Assets/sprite/title.dds", 1280, 720);
+}
+
+
+Title::~Title()
+{
+}
+
+void Title::Update()
+{
+	m_sprite.UpdateWorldMatrix(CVector3::Zero(), CQuaternion::Identity(), CVector3::One());
+	//ÉQÅ[ÉÄÇ…ëJà⁄
+	if (g_pad[0].IsTrigger(enButtonA)){
+		g_goMgr.NewGameObject<Game>("game");
+		g_goMgr.DeleteGameObject(this);
+	}
+}
+
+void Title::Draw()
+{
+	CMatrix mView;
+	CMatrix mProj;
+	mView.MakeLookAt(
+		{ 0, 0, -1 },
+		{ 0, 0, 0 },
+		{ 0,1,0 }
+	);
+	mProj.MakeOrthoProjectionMatrix(1280.0f, 720.0f, 0.1f, 100.0f);
+	m_sprite.Draw(mView, mProj);
+	
+}
+
