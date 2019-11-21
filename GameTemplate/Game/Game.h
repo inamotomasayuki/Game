@@ -7,6 +7,9 @@
 #include "Enemy02.h"
 #include "BackGround.h"
 #include "MoveFloor.h"
+#include "JumpFloor.h"
+#include "ShadowMap.h"
+#include "SpriteUI.h"
 class Game : public IGameObject
 {
 public:
@@ -18,10 +21,11 @@ public:
 	/// スコアの設定
 	/// </summary>
 	/// <param name="i">加算するスコアの値</param>
-	void SetScore(int i)
+	void SetScore(int score)
 	{
-		m_score += i;
+		m_score += score;
 	}
+	
 private:
 	Level m_level;
 	Player* m_player = nullptr;				//プレイヤー
@@ -31,5 +35,7 @@ private:
 	GameCamera* m_gameCamera = nullptr;		//ゲームカメラ
 	BackGround* m_backGround = nullptr;		//ステージ
 	MoveFloor* m_moveFloor = nullptr;		//動く床
+	JumpFloor* m_jumpFloor = nullptr;		//ジャンプ床
 	int m_score = 0;			//スコア
+	SpriteUI* m_spriteUI = nullptr;
 };

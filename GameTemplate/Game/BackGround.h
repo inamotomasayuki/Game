@@ -1,6 +1,5 @@
 #pragma once
 #include "physics/PhysicsStaticObject.h"
-
 class BackGround : public IGameObject
 {
 public:
@@ -32,6 +31,10 @@ public:
 	void SetScale(CVector3 scale)
 	{
 		m_scale = scale;
+	}
+	SkinModel* GetSkinModel()
+	{
+		return &m_skinModel;
 	}
 private:
 	SkinModel m_skinModel;							//ƒXƒLƒ“ƒ‚ƒfƒ‹

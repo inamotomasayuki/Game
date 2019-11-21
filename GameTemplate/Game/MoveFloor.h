@@ -1,5 +1,6 @@
 #pragma once
 #include "physics/PhysicsGhostObject.h"
+#include "physics/PhysicsStaticObject.h"
 #include "character/CharacterController.h"
 class Player;
 
@@ -49,6 +50,7 @@ private:
 	/// </summary>
 	void RoundTrip();
 	SkinModel m_skinModel;							//スキンモデル
+	PhysicsStaticObject m_staticObject;				//静的オブジェクト
 	PhysicsGhostObject m_ghostObject;				//ゴースト
 	CharacterController m_charaCon;					//キャラコン
 	CVector3 m_position = CVector3::Zero();				//座標
@@ -59,11 +61,11 @@ private:
 	Player* m_player = nullptr;			//プレイヤー
 
 	int m_timer = 0;		//タイマー
-
-	enum EnState {
-		enState_right,		//右
-		enState_left,		//左
+	float m_speed = 1400.0f;
+	enum enState {
+		enState_right,
+		enState_left
 	};
-	EnState m_state;	//ステート
+	enState m_state;
 };
 

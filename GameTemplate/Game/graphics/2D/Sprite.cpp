@@ -13,6 +13,7 @@ struct Vertex {
 /// </summary>
 struct SSpriteCB {
 	CMatrix mWVP;		//ワールド×ビュー×プロジェクション行列。
+	float alpha;		//α値。
 };
 
 Sprite::Sprite()
@@ -197,10 +198,13 @@ void Sprite::Draw(CMatrix mView, CMatrix mProj)
 	//ワールド×ビュー×プロジェクション行列を計算。
 	cb.mWVP.Mul(m_world, mView);
 	cb.mWVP.Mul(cb.mWVP, mProj);
+	cb.alpha = m_alpha;
 	//定数バッファの内容をメインメモリからVRAMにコピー。
 	deviceContext->UpdateSubresource(m_cbGPU, 0, nullptr, &cb, 0, 0);
 	//定数バッファをレジスタb0にバインドする。
 	deviceContext->VSSetConstantBuffers(0, 1, &m_cbGPU);
+	deviceContext->PSSetConstantBuffers(0, 1, &m_cbGPU);
+
 	//テクスチャをレジスタt0にバインドする。
 	deviceContext->PSSetShaderResources(0, 1, &m_texture);
 	//サンプラステートをレジスタs0にバインドする。

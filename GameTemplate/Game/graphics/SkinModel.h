@@ -65,7 +65,7 @@ public:
 	* param [in]renderMode
 	*  描画ステップ。0なら通常描画、1ならシルエット描画。
 	*/
-	void Draw( CMatrix viewMatrix, CMatrix projMatrix, int renderMode);
+	void Draw( CMatrix viewMatrix, CMatrix projMatrix, EnRenderMode renderMode);
 	/*!
 	*@brief	スケルトンの取得。
 	*/

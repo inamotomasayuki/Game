@@ -41,6 +41,28 @@ void Enemy02::Move()
 			m_isJump = false;
 		}
 	}
+	m_timer++;
+	m_moveSpeed.x += m_speed;
+	if (m_timer == 120) {
+		m_speed *= -1.0f;
+		m_timer = 0;
+
+	}
+	else if (m_timer >= 80.0f) {
+		m_moveSpeed.x *= 0.97f;
+		if (m_moveSpeed.Length() < 0.1f) {
+			m_moveSpeed.x = 0;
+		}
+	}
+
 	m_moveSpeed.y -= 200.0f;
 	m_position = m_charaCon.Execute(1.0f / 60.0f, m_moveSpeed);
+}
+void Enemy02::Rotation()
+{
+	//‚˜‚Æ‚š‚ÌƒxƒNƒgƒ‹‚©‚çŠp“x‚ð‹‚ß‚Ä‰ñ“]‚³‚¹‚éB
+	auto moveSpeedXZ = m_moveSpeed;
+	moveSpeedXZ.y = 0.0f;
+	moveSpeedXZ.Normalize();
+	m_rotation.SetRotation(CVector3::AxisY(), atan2f(moveSpeedXZ.x, moveSpeedXZ.z));  //Šp“x‚ð‹‚ß‚éŠÖ”
 }

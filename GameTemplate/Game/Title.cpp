@@ -4,7 +4,7 @@
 
 Title::Title()
 {
-	m_sprite.Init(L"Assets/sprite/title.dds", 1280, 720);
+	m_sprite.Init(L"Assets/sprite/kaburon.dds", 1280, 720);
 }
 
 
@@ -20,6 +20,15 @@ void Title::Update()
 		g_goMgr.NewGameObject<Game>("game");
 		g_goMgr.DeleteGameObject(this);
 	}
+	//if (g_pad[0].IsPress(enButtonLeft)) {
+	//	//α値を0.02減らす。
+	//	m_sprite.DeltaAlpha(-0.02f);
+	//}
+	//else if (g_pad[0].IsPress(enButtonRight)) {
+	//	//α値を0.02増やす。
+	//	m_sprite.DeltaAlpha(0.02f);
+	//}
+
 }
 
 void Title::Draw()

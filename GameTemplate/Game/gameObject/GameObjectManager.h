@@ -2,6 +2,7 @@
 #include <vector>
 #include "IGameObject.h"
 #include "util/Util.h"
+
 class GameObjectManager
 {
 private:
@@ -80,8 +81,8 @@ public:
 		return nullptr;
 	}
 private:
+	
 	std::vector< IGameObject* > m_goList;		//ゲームオブジェクトのリスト。
 };
-
 //外部からアクセスするので、extern宣言も必要。
 extern GameObjectManager g_goMgr;

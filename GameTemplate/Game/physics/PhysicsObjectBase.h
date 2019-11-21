@@ -37,6 +37,13 @@
 		{
 
 		}
+		/*!
+		* @brief	ボックス形状のゴーストオブジェクトを作成。
+		*@param[in]	pos			座標。
+		 *@param[in]	rot			回転。
+		*@param[in]	size		サイズ。
+		*/
+		void CreateBox(CVector3 pos, CQuaternion rot, CVector3 size);
 
 		/*!
 		 * @brief	カプセル形状のゴーストオブジェクトを作成。

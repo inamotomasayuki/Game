@@ -131,6 +131,7 @@
     <ClCompile Include="math\Matrix.cpp" />
     <ClCompile Include="math\Vector.cpp" />
     <ClCompile Include="MoveFloor.cpp" />
+    <ClCompile Include="physics\BoxCollider.cpp" />
     <ClCompile Include="physics\MeshCollider.cpp" />
     <ClCompile Include="physics\Physics.cpp" />
     <ClCompile Include="physics\PhysicsGhostObject.cpp" />
@@ -140,6 +141,8 @@
     <ClCompile Include="physics\PhysicsStaticObject.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="RenderTarget.cpp" />
+    <ClCompile Include="ShadowMap.cpp" />
+    <ClCompile Include="SpriteUI.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -180,6 +183,7 @@
     <ClInclude Include="math\Matrix.h" />
     <ClInclude Include="math\Vector.h" />
     <ClInclude Include="MoveFloor.h" />
+    <ClInclude Include="physics\BoxCollider.h" />
     <ClInclude Include="physics\ICollider.h" />
     <ClInclude Include="physics\MeshCollider.h" />
     <ClInclude Include="physics\Physics.h" />
@@ -191,6 +195,8 @@
     <ClInclude Include="physics\PhysicsStaticObject.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="RenderTarget.h" />
+    <ClInclude Include="ShadowMap.h" />
+    <ClInclude Include="SpriteUI.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="system\system.h" />
     <ClInclude Include="Title.h" />
@@ -198,6 +204,7 @@
   <ItemGroup>
     <MeshContentTask Include="Assets\modelData\coin.fbx" />
     <MeshContentTask Include="Assets\modelData\gameStage01.FBX" />
+    <MeshContentTask Include="Assets\modelData\jumpFloor.FBX" />
     <MeshContentTask Include="Assets\modelData\kuribo.FBX" />
     <MeshContentTask Include="Assets\modelData\moveFloor.FBX" />
     <MeshContentTask Include="Assets\modelData\unityChan.fbx" />

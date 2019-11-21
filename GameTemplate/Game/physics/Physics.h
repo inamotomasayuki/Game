@@ -10,11 +10,13 @@ class PhysicsWorld
 	btBroadphaseInterface*					overlappingPairCache = nullptr;	//!<ブロードフェーズ。衝突判定の枝切り。
 	btSequentialImpulseConstraintSolver*	constraintSolver = nullptr;		//!<コンストレイントソルバー。拘束条件の解決処理。
 	btDiscreteDynamicsWorld*				dynamicWorld = nullptr;			//!<ワールド。
+
 public:
 	~PhysicsWorld();
 	void Init();
 	void Update();
 	void Release();
+
 	/*!
 	* @brief	ダイナミックワールドを取得。
 	*/

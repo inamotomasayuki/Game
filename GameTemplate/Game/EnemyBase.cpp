@@ -7,14 +7,14 @@ void EnemyBase::Draw()
 	m_skinModel.Draw(
 		g_camera3D.GetViewMatrix(),
 		g_camera3D.GetProjectionMatrix(),
-		0
+		enRenderMode_Normal
 	);
 }
 void EnemyBase::Attack()
 {
 	//攻撃中じゃなかったら攻撃
 	if (m_isAttack == false) {
-		if (fabs(m_angle) > CMath::DegToRad(70) && m_len < 50.0f) {
+		if (fabs(m_angle) > CMath::DegToRad(80) && m_len < 50.0f) {
 			m_v.y = 0.0f;
 			//ノックバックさせる速度
 			m_player->SetAddSpeed(m_v * 2500.0f);
@@ -37,7 +37,7 @@ void EnemyBase::Death(int score)
 {
 	//攻撃されてなかったら
 	if (m_isAttacked == false) {
-		if (fabs(m_angle) <= CMath::DegToRad(70) && m_len < 50.0f) {
+		if (fabs(m_angle) <= CMath::DegToRad(80) && m_len < 50.0f) {
 			m_game->SetScore(10);
 			m_scale.z /= 2;
 			m_player->SetJumpFlag(true);	//ジャンプさせる

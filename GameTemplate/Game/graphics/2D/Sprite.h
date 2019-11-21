@@ -30,6 +30,22 @@ public:
 	/// <param name="mView">カメラ行列</param>
 	/// /// <param name="mView">プロジェクション行列</param>
 	void Draw(CMatrix mView, CMatrix mProj);
+	/// <summary>
+/// αを変位させる
+/// </summary>
+/// <param name="delta">乗算αを変位させる量</param>
+	void DeltaAlpha(float delta)
+	{
+		m_alpha += delta;
+		//数値の境界チェック。
+		if (m_alpha > 1.0f) {
+			m_alpha = 1.0f;
+		}
+		else if (m_alpha < 0.0f) {
+			m_alpha = 0.0f;
+		}
+	}
+
 private:
 	/// <summary>
 	/// シェーダーをロード。
@@ -66,4 +82,5 @@ private:
 	ID3D11ShaderResourceView* m_texture = nullptr;	//テクスチャにアクセスするためのインターフェース。
 	ID3D11SamplerState* m_samplerState = nullptr;	//サンプラステート。
 	CMatrix m_world = CMatrix::Identity();					//ワールド行列。
+	float						m_alpha = 1.0f;							//スプライトのα値。
 };

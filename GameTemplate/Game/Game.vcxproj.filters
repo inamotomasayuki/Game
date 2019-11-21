@@ -141,6 +141,11 @@
       <Filter>physics</Filter>
     </ClCompile>
     <ClCompile Include="JumpFloor.cpp" />
+    <ClCompile Include="physics\BoxCollider.cpp">
+      <Filter>physics</Filter>
+    </ClCompile>
+    <ClCompile Include="ShadowMap.cpp" />
+    <ClCompile Include="SpriteUI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Vector.h">
@@ -253,6 +258,11 @@
       <Filter>physics</Filter>
     </ClInclude>
     <ClInclude Include="JumpFloor.h" />
+    <ClInclude Include="physics\BoxCollider.h">
+      <Filter>physics</Filter>
+    </ClInclude>
+    <ClInclude Include="ShadowMap.h" />
+    <ClInclude Include="SpriteUI.h" />
   </ItemGroup>
   <ItemGroup>
     <MeshContentTask Include="Assets\modelData\gameStage01.FBX">
@@ -268,6 +278,9 @@
       <Filter>Assets\modelData</Filter>
     </MeshContentTask>
     <MeshContentTask Include="Assets\modelData\moveFloor.FBX">
+      <Filter>Assets\modelData</Filter>
+    </MeshContentTask>
+    <MeshContentTask Include="Assets\modelData\jumpFloor.FBX">
       <Filter>Assets\modelData</Filter>
     </MeshContentTask>
   </ItemGroup>

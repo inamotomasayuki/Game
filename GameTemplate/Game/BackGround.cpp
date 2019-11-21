@@ -22,6 +22,6 @@ void BackGround::Draw()
 	m_skinModel.Draw(
 		g_camera3D.GetViewMatrix(),
 		g_camera3D.GetProjectionMatrix(),
-		0
+		enRenderMode_Normal
 	);
 }

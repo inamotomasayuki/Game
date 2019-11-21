@@ -1,6 +1,8 @@
 #pragma once
 #include "character/CharacterController.h"
 #include "MoveFloor.h"
+#include "JumpFloor.h"
+class JumpFloor;
 class Player : public IGameObject
 {
 public:
@@ -76,10 +78,15 @@ public:
 		m_jumpFlag = jumpFlag;
 		m_jumpSpeed = 5000.0f;
 	}
-	void SetFloorSpeed(CVector3 v)
+	void SetFloorSpeed(CVector3 floorSpeed)
 	{
-		m_floorSpeed = v;
+		m_floorSpeed = floorSpeed;
 	}
+	SkinModel* GetSkinModel()
+	{
+		return &m_skinModel;
+	}
+
 private:
 	/// <summary>
 	/// カメラを考慮したスティックでの移動
@@ -89,6 +96,7 @@ private:
 	/// プレイヤーの回転
 	/// </summary>
 	void Rotation();
+	void AnimationController();
 private:
 	SkinModel m_skinModel;								//スキンモデル。
 	CharacterController m_charaCon;						//キャラクターコントローラー
@@ -99,7 +107,9 @@ private:
 	CVector3 m_addSpeed = CVector3::Zero();				//加速度
 	CQuaternion m_jumpRot = CQuaternion::Identity();	//3段ジャンプ目の回転
 
+	JumpFloor* m_jumpFloor = nullptr;				//ジャンプ床
 	MoveFloor* m_moveFloor = nullptr;				//動く床
+
 	CVector3 m_floorSpeed = CVector3::Zero();		//床の速度
 
 	enum EnAnimationClip {
@@ -107,6 +117,7 @@ private:
 		enAnimationClip_run,	//走りアニメーション
 		enAnimationClip_jump,	//ジャンプアニメーション。
 		enAnimationClip_damage,
+		enAnimationClip_walk,
 		enAnimationClip_Num		//アニメーションクリップの数。
 	};
 	AnimationClip m_animClips[enAnimationClip_Num];		//アニメーションクリップ。
@@ -114,7 +125,6 @@ private:
 
 	bool m_isAttacked = false;		//攻撃を受けてるかどうか
 	bool m_jumpFlag = false;		//ジャンプしてるかどうか
-	bool m_isMoveJump = true;		//移動しながらジャンプしてるかどうか
 	bool m_contactFloor = false;	//床と接触してるかどうか
 
 	float m_jumpSpeed;				//ジャンプ速度

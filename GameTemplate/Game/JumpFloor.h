@@ -1,7 +1,7 @@
 #pragma once
 #include "physics/PhysicsGhostObject.h"
 #include "Player.h"
-class JumpFloor
+class JumpFloor : public IGameObject
 {
 public:
 	JumpFloor();
@@ -42,8 +42,6 @@ private:
 	CVector3 m_position = CVector3::Zero();				//座標
 	CQuaternion m_rotation = CQuaternion::Identity();	//回転
 	CVector3 m_scale = CVector3::One();					//拡大率
-	CVector3 m_moveSpeed = CVector3::Zero();			//移動速度
 
-	Player* m_player = nullptr;			//プレイヤー
 };
 

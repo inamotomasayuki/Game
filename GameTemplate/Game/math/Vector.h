@@ -69,6 +69,7 @@ public:
 		vec = _v.vec;
 		return *this;
 	}
+	
 	CVector3() {}
 	/*!
 	* @brief	コンストラクタ。
@@ -500,6 +501,12 @@ public:
 	{
 		static const CVector4 white = { 1.0f, 1.0f, 1.0f, 1.0f };
 		return white;
+
+	}
+	static CVector4 Black()
+	{
+		static const CVector4 black = { 0.0f, 0.0f, 0.0f, 1.0f };
+		return black;
 
 	}
 };

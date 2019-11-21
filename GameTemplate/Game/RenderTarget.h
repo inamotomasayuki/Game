@@ -63,6 +63,14 @@ public:
 	{
 		return m_renderTargetSRV;
 	}
+	/// <summary>
+/// ビューポートの取得。
+/// </summary>
+/// <returns>ビューポート</returns>
+	D3D11_VIEWPORT* GetViewport()
+	{
+		return &m_viewport;
+	}
 
 private:
 	ID3D11Texture2D*			m_renderTargetTex = nullptr;		//!<レンダリングターゲットとなるテクスチャ。
@@ -70,5 +78,7 @@ private:
 	ID3D11ShaderResourceView*	m_renderTargetSRV = nullptr;		//!<レンダリングターゲットのSRV
 	ID3D11Texture2D*			m_depthStencilTex = nullptr;		//!<デプスステンシルとなるテクスチャ。
 	ID3D11DepthStencilView*		m_depthStencilView = nullptr;		//!<デプスステンシルビュー。
+	D3D11_VIEWPORT				m_viewport;							//!<ビューポート。
+
 };
 
