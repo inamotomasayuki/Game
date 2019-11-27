@@ -62,10 +62,10 @@ private:
 
 	int m_timer = 0;		//タイマー
 	float m_speed = 1400.0f;
-	enum enState {
+	enum EnState {
 		enState_right,
 		enState_left
 	};
-	enState m_state;
+	EnState m_state;
 };
 

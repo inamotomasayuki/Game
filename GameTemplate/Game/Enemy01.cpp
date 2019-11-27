@@ -30,7 +30,7 @@ void Enemy01::Update()
 	//‰ñ“]
 	Rotation();
 	//Ž€–S
-	Death(10);
+	Death(5);
 }
 void Enemy01::Search()
 {

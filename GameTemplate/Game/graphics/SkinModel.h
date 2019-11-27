@@ -114,6 +114,9 @@ private:
 		CMatrix mWorld;
 		CMatrix mView;
 		CMatrix mProj;
+		CMatrix mLightView;	//ライトビュー行列。
+		CMatrix mLightProj;	//ライトプロジェクション行列。
+		int isShadowReciever;	//シャドウレシーバーフラグ。
 	};
 
 	EnFbxUpAxis			m_enFbxUpAxis = enFbxUpAxisZ;	//!<FBXの上方向。

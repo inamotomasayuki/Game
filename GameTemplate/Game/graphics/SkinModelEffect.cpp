@@ -4,7 +4,6 @@
 #include "../Game.h"
 void __cdecl ModelEffect::Apply(ID3D11DeviceContext* deviceContext)
 {
-
 	//シェーダーを適用する。
 	deviceContext->VSSetShader((ID3D11VertexShader*)m_vsShader.GetBody(), NULL, 0);
 	switch (m_renderMode) {
@@ -15,10 +14,10 @@ void __cdecl ModelEffect::Apply(ID3D11DeviceContext* deviceContext)
 		//todo シェーダーリソースビューを一気に設定する。
 		ID3D11ShaderResourceView* srvArray[] = {
 			m_albedoTex,							//アルベドテクスチャ。
-			//g_shadowMap->GetShadowMapSRV()	//シャドウマップ。
+			g_shadowMap->GetShadowMapSRV()	//シャドウマップ。
 		};
 
-		deviceContext->PSSetShaderResources(enSkinModelSRVReg_AlbedoTexture, 1, srvArray);
+		deviceContext->PSSetShaderResources(enSkinModelSRVReg_AlbedoTexture, 2, srvArray);
 	}break;
 	case enRenderMode_Silhouette:
 		//シルエット描画。

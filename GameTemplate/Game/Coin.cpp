@@ -66,6 +66,7 @@ void Coin::GetCoin()
 		if (m_timer == 10) {
 			m_game->SetScore(10);
 			m_timer = 0;
+			m_game->SetScore(1);
 			g_goMgr.DeleteGameObject(this);
 		}
 	}

@@ -17,7 +17,7 @@ void Title::Update()
 	m_sprite.UpdateWorldMatrix(CVector3::Zero(), CQuaternion::Identity(), CVector3::One());
 	//ÉQÅ[ÉÄÇ…ëJà⁄
 	if (g_pad[0].IsTrigger(enButtonA)){
-		g_goMgr.NewGameObject<Game>("game");
+		m_game = g_goMgr.NewGameObject<Game>("game");
 		g_goMgr.DeleteGameObject(this);
 	}
 	//if (g_pad[0].IsPress(enButtonLeft)) {

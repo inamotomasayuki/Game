@@ -6,6 +6,7 @@ Enemy02::Enemy02()
 {
 	//cmoファイルの読み込み。
 	m_skinModel.Init(L"Assets/modelData/kuribo.cmo");
+	m_state = enState_right;
 }
 
 void Enemy02::Update()
@@ -22,40 +23,53 @@ void Enemy02::Update()
 	Move();
 	//攻撃
 	Attack();
+	Rotation();
 	//死亡*スコア値
 	Death(10);
 }
 
 void Enemy02::Move()
 {
-	//ぴょんぴょん
-	if (m_charaCon.IsOnGround()) {
-		m_jumpSpeed = 2000.0f;
-		m_isJump = true;
-	}
-	if (m_isJump == true) {
-		m_moveSpeed.y = m_jumpSpeed;
-		m_jumpSpeed *= 0.85f;
-		if (m_jumpSpeed < 200.0f) {
-			m_jumpSpeed = 0;
-			m_isJump = false;
+	float GRAVITY = 200.0f;
+	//攻撃されてないなら
+	if (!m_isAttacked) {
+		//ぴょんぴょん
+		if (m_charaCon.IsOnGround()) {
+			m_jumpSpeed = 2000.0f;
+			m_isJump = true;
+		}
+		if (m_isJump == true) {
+			m_moveSpeed.y = m_jumpSpeed;
+			m_jumpSpeed *= 0.85f;
+			if (m_jumpSpeed < 200.0f) {
+				m_jumpSpeed = 0;
+				m_isJump = false;
+			}
+		}
+		m_timer++;
+		if (m_state == enState_right) {
+			m_moveSpeed.x = 400.0f;
+			if (m_timer == 120) {
+				m_timer = 0;
+				m_state = enState_left;
+			}
+		}
+		if (m_state == enState_left) {
+			m_moveSpeed.x = -400.0f;
+			if (m_timer == 120) {
+				m_timer = 0;
+				m_state = enState_right;
+			}
 		}
 	}
-	m_timer++;
-	m_moveSpeed.x += m_speed;
-	if (m_timer == 120) {
-		m_speed *= -1.0f;
-		m_timer = 0;
-
+	//攻撃されたら
+	else {
+		m_moveSpeed = CVector3::Zero();
+		GRAVITY = 500.0f;
 	}
-	else if (m_timer >= 80.0f) {
-		m_moveSpeed.x *= 0.97f;
-		if (m_moveSpeed.Length() < 0.1f) {
-			m_moveSpeed.x = 0;
-		}
-	}
+	//重力
+	m_moveSpeed.y -= GRAVITY;
 
-	m_moveSpeed.y -= 200.0f;
 	m_position = m_charaCon.Execute(1.0f / 60.0f, m_moveSpeed);
 }
 void Enemy02::Rotation()

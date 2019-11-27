@@ -1,5 +1,6 @@
 #pragma once
 #include "physics/PhysicsGhostObject.h"
+#include "physics/PhysicsStaticObject.h"
 #include "Player.h"
 class JumpFloor : public IGameObject
 {
@@ -36,8 +37,13 @@ public:
 	{
 		return &m_ghostObject;
 	}
+	CVector3 GetPosition()
+	{
+		return m_position;
+	}
 private:
 	SkinModel m_skinModel;							//スキンモデル
+	PhysicsStaticObject m_staticObject;				//静的オブジェクト
 	PhysicsGhostObject m_ghostObject;				//ゴースト
 	CVector3 m_position = CVector3::Zero();				//座標
 	CQuaternion m_rotation = CQuaternion::Identity();	//回転

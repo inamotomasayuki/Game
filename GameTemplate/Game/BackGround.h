@@ -36,6 +36,9 @@ public:
 	{
 		return &m_skinModel;
 	}
+	PhysicsStaticObject* GetPhysicsStaticObject() {
+		return &m_physicsStaticObject;
+	}
 private:
 	SkinModel m_skinModel;							//スキンモデル
 	PhysicsStaticObject m_physicsStaticObject;		//静的物理オブジェクト

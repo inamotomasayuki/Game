@@ -38,7 +38,6 @@ void EnemyBase::Death(int score)
 	//UŒ‚‚³‚ê‚Ä‚È‚©‚Á‚½‚ç
 	if (m_isAttacked == false) {
 		if (fabs(m_angle) <= CMath::DegToRad(80) && m_len < 50.0f) {
-			m_game->SetScore(10);
 			m_scale.z /= 2;
 			m_player->SetJumpFlag(true);	//ƒWƒƒƒ“ƒv‚³‚¹‚é
 			m_isAttacked = true;		//UŒ‚‚³‚ê‚½
@@ -48,6 +47,7 @@ void EnemyBase::Death(int score)
 	if (m_isAttacked == true) {
 		m_waitTimer++;
 		if (m_waitTimer == 20) {
+			m_game->SetScore(score);
 			g_goMgr.DeleteGameObject(this);
 		}
 	}

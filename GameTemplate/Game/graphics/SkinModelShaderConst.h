@@ -21,5 +21,6 @@ enum EnSkinModelCBReg{
  */
 enum EnSkinModelSRVReg{
 	enSkinModelSRVReg_AlbedoTexture,		//!<アルベドテクスチャ。
+	enSkinModelSRVReg_ShadowTexture,
 	enSkinModelSRVReg_BoneMatrixArray,		//!<ボーン行列の配列。
 };

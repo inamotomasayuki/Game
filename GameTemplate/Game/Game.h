@@ -25,7 +25,10 @@ public:
 	{
 		m_score += score;
 	}
-	
+	int GetScore()
+	{
+		return m_score;
+	}
 private:
 	Level m_level;
 	Player* m_player = nullptr;				//ƒvƒŒƒCƒ„[

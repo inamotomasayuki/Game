@@ -30,8 +30,8 @@ Player::~Player()
 
 void Player::Update()
 {
+	
 	float DELTA_TIME = 1.0f / 60.0f;
-
 	bool isJump = m_jumpFlag;
 	//ワールド行列の更新。
 	m_skinModel.UpdateWorldMatrix(m_position, m_rotation, m_scale);
@@ -40,8 +40,12 @@ void Player::Update()
 	PadMove();
 	//プレイヤーの回転
 	Rotation();
+	m_backGround = g_goMgr.FindGameObject<BackGround>("backGround");
 	m_moveFloor = g_goMgr.FindGameObject<MoveFloor>("moveFloor");
 	m_jumpFloor = g_goMgr.FindGameObject<JumpFloor>("jumpFloor");
+	if (g_pad[0].IsTrigger(enButtonX)) {
+		m_charaCon.SetPosition(m_jumpFloor->GetPosition());
+	}
 	bool isContact = false;
 	g_physics.ContactTest(m_charaCon, [&](const btCollisionObject& contactObject) {
 		if (m_moveFloor->GetGhost()->IsSelf(contactObject) == true) {
@@ -53,10 +57,17 @@ void Player::Update()
 		}
 
 		if (m_jumpFloor->GetGhost()->IsSelf(contactObject) == true) {
-			m_jumpSpeed = 30000.0f;
-			m_moveSpeed.y = m_jumpSpeed;
+			m_jumpSpeed = 23000.0f;
+			m_contactJumpFloor = true;
 		}
 	});
+	if (m_contactJumpFloor) {
+		m_jumpSpeed *= 0.90f;
+		m_moveSpeed.y = m_jumpSpeed;
+		if (m_moveSpeed.Length() < 1000.0f) {
+			m_contactJumpFloor = false;
+		}
+	}
 	if (isContact == false) {
 		m_contactFloor = false;
 	}
@@ -84,12 +95,14 @@ void Player::Draw()
 		g_camera3D.GetViewMatrix(),
 		g_camera3D.GetProjectionMatrix(),
 		enRenderMode_Silhouette
-	);
+	);	
 	m_skinModel.Draw(
 		g_camera3D.GetViewMatrix(), 
 		g_camera3D.GetProjectionMatrix(),
 		enRenderMode_Normal
 	);
+
+	
 }
 
 void Player::PadMove()
@@ -97,7 +110,10 @@ void Player::PadMove()
 	const float MOVE_SPEED = 50.0f;
 	float DASH_SPEED = 1.0f;
 	if (g_pad[0].IsPress(enButtonB)) {
-		DASH_SPEED = 1.5f;
+		DASH_SPEED = 2.0f;
+		if (m_moveSpeed.Length() < 2000.0f) {
+			m_contactJumpFloor = false;
+		}
 	}
 	else {
 		DASH_SPEED = 1.0f;
@@ -115,7 +131,7 @@ void Player::PadMove()
 		cameraSide.Cross(v, CVector3::AxisY());
 		cameraSide.Normalize();
 		m_moveSpeed -= cameraSide * g_pad[0].GetLStickXF() * MOVE_SPEED * DASH_SPEED;
-		
+
 		//m_moveSpeed *= 0.90f;
 		/*if (m_moveSpeed.Length() < 10.0f)
 		{
@@ -235,7 +251,7 @@ void Player::AnimationController()
 {
 	if (m_charaCon.IsOnGround() && !m_isAttacked) {
 		if (m_moveSpeed.LengthSq() >= 1000000.0f) {
-			m_animation.Play(enAnimationClip_run, 0.1);
+			m_animation.Play(enAnimationClip_run, 0.1f);
 		}
 		else if (m_moveSpeed.LengthSq() >= 10.0f) {
 			m_animation.Play(enAnimationClip_walk, 0.1f);

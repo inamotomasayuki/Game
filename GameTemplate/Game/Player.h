@@ -2,6 +2,7 @@
 #include "character/CharacterController.h"
 #include "MoveFloor.h"
 #include "JumpFloor.h"
+#include "BackGround.h"
 class JumpFloor;
 class Player : public IGameObject
 {
@@ -109,6 +110,7 @@ private:
 
 	JumpFloor* m_jumpFloor = nullptr;				//ジャンプ床
 	MoveFloor* m_moveFloor = nullptr;				//動く床
+	BackGround* m_backGround = nullptr;
 
 	CVector3 m_floorSpeed = CVector3::Zero();		//床の速度
 
@@ -126,7 +128,7 @@ private:
 	bool m_isAttacked = false;		//攻撃を受けてるかどうか
 	bool m_jumpFlag = false;		//ジャンプしてるかどうか
 	bool m_contactFloor = false;	//床と接触してるかどうか
-
+	bool m_contactJumpFloor = false;
 	float m_jumpSpeed;				//ジャンプ速度
 	int m_threeStep = 0;			//3段ジャンプカウント
 	int m_timer = 0;				//タイマー

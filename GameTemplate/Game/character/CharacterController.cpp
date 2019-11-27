@@ -66,7 +66,9 @@ namespace {
 												//衝突したときに呼ばれるコールバック関数。
 		virtual	btScalar	addSingleResult(btCollisionWorld::LocalConvexResult& convexResult, bool normalInWorldSpace)
 		{
-			if (convexResult.m_hitCollisionObject == me) {
+			if (convexResult.m_hitCollisionObject == me
+				|| convexResult.m_hitCollisionObject->getInternalType() == btCollisionObject::CO_GHOST_OBJECT
+				) {
 				//自分に衝突した。or 地面に衝突した。
 				return 0.0f;
 			}

@@ -157,3 +157,24 @@ void RenderTarget::ClearRenderTarget(float* clearColor)
 	d3dDeviceContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
+void RenderTarget::ChangeRenderTarget(ID3D11DeviceContext* d3dDeviceContext, RenderTarget* renderTarget, D3D11_VIEWPORT* viewport)
+{
+	ChangeRenderTarget(
+		d3dDeviceContext,
+		renderTarget->GetRenderTargetView(),
+		renderTarget->GetDepthStensilView(),
+		viewport
+	);
+}
+void RenderTarget::ChangeRenderTarget(ID3D11DeviceContext* d3dDeviceContext, ID3D11RenderTargetView* renderTarget, ID3D11DepthStencilView* depthStensil, D3D11_VIEWPORT* viewport)
+{
+	ID3D11RenderTargetView* rtTbl[] = {
+		renderTarget
+	};
+	//レンダリングターゲットの切り替え。
+	d3dDeviceContext->OMSetRenderTargets(1, rtTbl, depthStensil);
+	if (viewport != nullptr) {
+		//ビューポートが指定されていたら、ビューポートも変更する。
+		d3dDeviceContext->RSSetViewports(1, viewport);
+	}
+}

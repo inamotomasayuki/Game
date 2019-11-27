@@ -1,13 +1,46 @@
 #include "stdafx.h"
 #include "SpriteUI.h"
-
+#include "Game.h"
 
 SpriteUI::SpriteUI()
 {
 	//半透明合成のブレンドステートを初期化する。
 	InitTranslucentBlendState();
 	m_spriteUI[enSprite_unityChan].Init(L"Assets/sprite/unityChan.dds", 500, 200);
-	m_position[enSprite_unityChan] = { -380.0f,250.0f,0.0f };
+	m_positionUI[enSprite_unityChan] = { -380.0f,250.0f,0.0f };
+	m_spriteUI[enSprite_kakeru].Init(L"Assets/sprite/kakeru.dds", 30, 30);
+	m_positionUI[enSprite_kakeru] = { -550.0f,310.0f,0.0f };
+	m_spriteUI[enSprite_coin].Init(L"Assets/sprite/coin.dds", 50, 50);
+	m_positionUI[enSprite_coin] = { 500.0f,320.0f,0.0f };
+	
+	m_spriteNumUI[enSpriteNum_zero].Init(L"Assets/sprite/zero.dds", 50, 50);
+	m_spriteNumUI[enSpriteNum_one].Init(L"Assets/sprite/one.dds", 50, 50);
+	m_spriteNumUI[enSpriteNum_two].Init(L"Assets/sprite/two.dds", 50, 50);
+	m_spriteNumUI[enSpriteNum_three].Init(L"Assets/sprite/three.dds", 50, 50);
+	m_spriteNumUI[enSpriteNum_four].Init(L"Assets/sprite/four.dds", 50, 50);
+	m_spriteNumUI[enSpriteNum_five].Init(L"Assets/sprite/five.dds", 50, 50);
+	m_spriteNumUI[enSpriteNum_six].Init(L"Assets/sprite/six.dds", 50, 50);
+	m_spriteNumUI[enSpriteNum_seven].Init(L"Assets/sprite/seven.dds", 50, 50);
+	m_spriteNumUI[enSpriteNum_eight].Init(L"Assets/sprite/eight.dds", 50, 50);
+	m_spriteNumUI[enSpriteNum_nine].Init(L"Assets/sprite/nine.dds", 50, 50);
+
+	m_spriteNumUI2[enSpriteNum_zero].Init(L"Assets/sprite/zero.dds", 50, 50);
+	m_spriteNumUI2[enSpriteNum_one].Init(L"Assets/sprite/one.dds", 50, 50);
+	m_spriteNumUI2[enSpriteNum_two].Init(L"Assets/sprite/two.dds", 50, 50);
+	m_spriteNumUI2[enSpriteNum_three].Init(L"Assets/sprite/three.dds", 50, 50);
+	m_spriteNumUI2[enSpriteNum_four].Init(L"Assets/sprite/four.dds", 50, 50);
+	m_spriteNumUI2[enSpriteNum_five].Init(L"Assets/sprite/five.dds", 50, 50);
+	m_spriteNumUI2[enSpriteNum_six].Init(L"Assets/sprite/six.dds", 50, 50);
+	m_spriteNumUI2[enSpriteNum_seven].Init(L"Assets/sprite/seven.dds", 50, 50);
+	m_spriteNumUI2[enSpriteNum_eight].Init(L"Assets/sprite/eight.dds", 50, 50);
+	m_spriteNumUI2[enSpriteNum_nine].Init(L"Assets/sprite/nine.dds", 50, 50);
+
+	for (int i = 0; i < enSpriteNum_Num; i++) {
+		m_spriteNumUI[i].DeltaAlpha(-1.0f);
+		m_spriteNumUI2[i].DeltaAlpha(-1.0f);
+	}
+	m_positionNum = { 580.0f,320.0f,0.0f };
+	m_positionNum2 = { 550.0f,320.0f,0.0f };
 }
 SpriteUI::~SpriteUI()
 {
@@ -17,6 +50,21 @@ SpriteUI::~SpriteUI()
 }
 void SpriteUI::Update()
 {
+	m_game = g_goMgr.FindGameObject<Game>("game");
+	
+	for (int i = 0; i < enSpriteNum_Num; i++) {
+		if ( i == m_game->GetScore() % 10) {
+			m_spriteNumUI[i].DeltaAlpha(1.0f);
+		}
+		else {
+			m_spriteNumUI[i].DeltaAlpha(-1.0f);	
+		}			
+	}		
+	if (m_game->GetScore() >= 10 
+		&& m_game->GetScore() < 20) {
+
+	}
+
 	if (g_pad[0].IsPress(enButtonLeft)) {
 		//α値を0.02減らす。
 		m_spriteUI[enSprite_unityChan].DeltaAlpha(-0.2f);
@@ -26,8 +74,13 @@ void SpriteUI::Update()
 		//α値を0.02増やす。
 		m_spriteUI[enSprite_unityChan].DeltaAlpha(0.2f);
 	}
-
-	m_spriteUI[enSprite_unityChan].UpdateWorldMatrix(m_position[enSprite_unityChan], m_rotation, m_scale);
+	for (int i = 0; i < enSprite_Num; i++) {
+		m_spriteUI[i].UpdateWorldMatrix(m_positionUI[i], m_rotation, m_scale);
+	}
+	for (int i = 0; i < enSpriteNum_Num; i++) {
+		m_spriteNumUI[i].UpdateWorldMatrix(m_positionNum, m_rotation, m_scale);
+		m_spriteNumUI2[i].UpdateWorldMatrix(m_positionNum2, m_rotation, m_scale);
+	}
 }
 void SpriteUI::Draw()
 {
@@ -47,7 +100,14 @@ void SpriteUI::Draw()
 		{ 0,1,0 }
 	);
 	mProj.MakeOrthoProjectionMatrix(1280.0f, 720.0f, 0.1f, 100.0f);
-	m_spriteUI[enSprite_unityChan].Draw(mView, mProj);
+	for (int i = 0; i < enSprite_Num; i++) {
+		m_spriteUI[i].Draw(mView, mProj);
+	}
+	for (int i = 0; i < enSpriteNum_Num; i++) {
+		m_spriteNumUI[i].Draw(mView, mProj);
+		m_spriteNumUI2[i].Draw(mView, mProj);
+	}
+
 }
 void SpriteUI::InitTranslucentBlendState()
 {

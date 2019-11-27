@@ -11,7 +11,7 @@ Texture2D<float4> albedoTexture : register(t0);
 Texture2D<float4> g_shadowMap : register(t1);		//todo シャドウマップ。
 
 //ボーン行列
-StructuredBuffer<float4x4> boneMatrix : register(t1);
+StructuredBuffer<float4x4> boneMatrix : register(t2);
 
 /////////////////////////////////////////////////////////////
 // SamplerState
@@ -37,7 +37,7 @@ static const int NUM_DIRECTION_LIG = 4;
 /*!
  *@brief	ライト用の定数バッファ。
  */
-cbuffer LightCb : register(b0) {
+cbuffer LightCb : register(b1) {
 	float3 dligDirection[NUM_DIRECTION_LIG];
 	float4 dligColor[NUM_DIRECTION_LIG];
 	float3 eyePos;		//カメラの視点
@@ -47,9 +47,9 @@ cbuffer LightCb : register(b0) {
 /// <summary>
 /// シャドウマップ用の定数バッファ。
 /// </summary>
-cbuffer ShadowMapCb : register(b1) {
-	float4x4 lightViewProjMatrix;	//ライトビュープロジェクション行列。
-}
+//cbuffer ShadowMapCb : register(b3) {
+//	float4x4 lightViewProjMatrix;	//ライトビュープロジェクション行列。
+//}
 
 /////////////////////////////////////////////////////////////
 //各種構造体
@@ -215,17 +215,16 @@ float4 PSMain( PSInput In ) : SV_Target0
 			&& shadowMapUV.y < 1.0f
 			&& shadowMapUV.y > 0.0f
 			) {
-			/////LVP空間での深度値を計算。
-			//float zInLVP = In.posInLVP.z / In.posInLVP.w;
-			////シャドウマップに書き込まれている深度値を取得。
-			//float zInShadowMap = g_shadowMap.Sample(Sampler, shadowMapUV);
-			float zInLVP = 1.0f;
-			float zInShadowMap = 0.0f;
+			///LVP空間での深度値を計算。
+			float zInLVP = In.posInLVP.z / In.posInLVP.w;
+			//シャドウマップに書き込まれている深度値を取得。
+			float zInShadowMap = g_shadowMap.Sample(Sampler, shadowMapUV);
+			//float zInLVP = 1.0f;
+			//float zInShadowMap = 0.0f;
 			if (zInLVP > zInShadowMap + 0.01f
 				) {
 				//影が落ちているので、光を弱くする
-				//lig *= 0.5f;
-				float a = 0.0f;
+				lig *= 0.5f;
 			}
 		}
 	}

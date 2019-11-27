@@ -37,11 +37,15 @@ public:
 	{
 		m_scale = scale;
 	}
+	SkinModel* GetSkinModel()
+	{
+		return &m_skinModel;
+	}
 protected:
 	/// <summary>
 	/// 攻撃
 	/// </summary>
-	void Attack();    //アタックには色んな方法があるからここでAttack関数を定義してしまうのはどうだろうか
+	void Attack();
 	/// <summary>
 	///	死亡
 	/// </summary>
@@ -61,7 +65,7 @@ protected:
 		m_naiseki = m_v.Dot(m_up);
 		m_angle = acos(m_naiseki);
 	}
-	//ここら辺の変数、無理に基底クラスで定義する必要はないでしょう
+
 	SkinModel m_skinModel;								//スキンモデル。		
 	CharacterController m_charaCon;						//キャラクターコントローラー
 	CVector3 m_position = CVector3::Zero();				//座標

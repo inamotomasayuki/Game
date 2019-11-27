@@ -33,7 +33,7 @@ Game::Game()
 				return true;
 			}
 			if (objData.EqualObjectName(L"gameStage01")) {
-				m_backGround = g_goMgr.NewGameObject<BackGround>(0);
+				m_backGround = g_goMgr.NewGameObject<BackGround>("backGround");
 				m_backGround->SetPosition(objData.position);
 				m_backGround->SetRotation(objData.rotation);
 				m_backGround->SetScale(objData.scale);
@@ -63,51 +63,15 @@ Game::Game()
 
 Game::~Game()
 {
-	
 }
 
 void Game::Update()
 {
-	////シャドウキャスターを登録。
-	//g_shadowMap->RegistShadowCaster(m_player->GetSkinModel());
-	//g_shadowMap->RegistShadowCaster(m_backGround->GetSkinModel());
-	////シャドウマップを更新。
-	//g_shadowMap->UpdateFromLightTarget(
-	//	{ 1000.0f, 1000.0f, 1000.0f },
-	//	{ 0.0f, 0.0f, 0.0f }
-	//);
+	//シャドウキャスターを登録。
+	g_shadowMap->RegistShadowCaster(m_backGround->GetSkinModel());
 }
 
 void Game::Draw()
 {
-	/////////////////////////////////////////////////
-	////シャドウマップにレンダリング
-	/////////////////////////////////////////////////
-	//auto d3dDeviceContext = g_graphicsEngine->GetD3DDeviceContext();
-	////現在のレンダリングターゲットをバックアップしておく。
-	//ID3D11RenderTargetView* oldRenderTargetView;
-	//ID3D11DepthStencilView* oldDepthStencilView;
-	//d3dDeviceContext->OMGetRenderTargets(
-	//	1,
-	//	&oldRenderTargetView,
-	//	&oldDepthStencilView
-	//);
-	////ビューポートもバックアップを取っておく。
-	//unsigned int numViewport = 1;
-	//D3D11_VIEWPORT oldViewports;
-	//d3dDeviceContext->RSGetViewports(&numViewport, &oldViewports);
 
-	////シャドウマップにレンダリング
-	//g_shadowMap->RenderToShadowMap();
-
-	////元に戻す。
-	//d3dDeviceContext->OMSetRenderTargets(
-	//	1,
-	//	&oldRenderTargetView,
-	//	oldDepthStencilView
-	//);
-	//d3dDeviceContext->RSSetViewports(numViewport, &oldViewports);
-	////レンダリングターゲットとデプスステンシルの参照カウンタを下す。
-	//oldRenderTargetView->Release();
-	//oldDepthStencilView->Release();
 }

@@ -35,7 +35,7 @@
 ///		}
 /// }
 /// </code>
-class ShadowMap
+class ShadowMap : public IGameObject
 {
 public:
 	/// <summary>
@@ -47,6 +47,8 @@ public:
 	/// デストラクタ。
 	/// </summary>
 	~ShadowMap();
+	void Update() {};
+	void Draw() {};
 	/// <summary>
 	/// ライトビュー行列を取得。
 	/// </summary>

@@ -17,6 +17,14 @@ public:
 	/// </summary>
 	/// <param name="textureFilePath">テクスチャのファイルパス。</param>
 	void Init(const wchar_t* textureFilePath, float w, float h);
+	void Sprite::Init(ID3D11ShaderResourceView* srv, float w, float h)
+	{
+		//共通の初期化処理を呼び出す。
+		InitCommon(w, h);
+		m_texture = srv;
+		m_texture->AddRef();	//参照カウンタを増やす。
+	}
+
 	/// <summary>
 	/// ワールド行列を更新。
 	/// </summary>
@@ -72,6 +80,11 @@ private:
 	/// </summary>
 	/// <param name="textureFIlePath">ロードするテクスチャのファイルパス。</param>
 	void LoadTexture(const wchar_t* textureFIlePath);
+	/// <summary>
+/// 初期化の共通処理。
+/// </summary>
+	void InitCommon(float w, float h);
+
 private:
 
 	Shader	m_vs;											//頂点シェーダー。
@@ -83,4 +96,6 @@ private:
 	ID3D11SamplerState* m_samplerState = nullptr;	//サンプラステート。
 	CMatrix m_world = CMatrix::Identity();					//ワールド行列。
 	float						m_alpha = 1.0f;							//スプライトのα値。
+	CVector2					m_size = CVector2::Zero();				//画像のサイズ。
+
 };
