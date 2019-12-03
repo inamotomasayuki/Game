@@ -58,5 +58,7 @@ void MoveFloor::RoundTrip()
 	
 	m_position = m_charaCon.Execute(1.0f / 60.0f, m_moveSpeed);
 	m_player = g_goMgr.FindGameObject<Player>("player");
-	m_player->SetFloorSpeed(m_moveSpeed);
+	if (m_player != nullptr) {
+		m_player->SetFloorSpeed(m_moveSpeed);
+	}
 }

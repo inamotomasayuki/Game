@@ -2,6 +2,14 @@
 #include "Coin.h"
 #include "Game.h"
 
+const float PYON_UP = 20.0f;
+const float PYON_DOWN = -20.0f;
+const int PYON_UP_TIME = 5;
+const int PYON_DOWN_TIME = 8;
+const int DELETE_TIME = 10;
+const int COIN_SCORE = 1;
+const float FLAG_LENGTH = 40.0f;
+const float ROTATION_SPEED = 5.0f;
 Coin::Coin()
 {
 	m_skinModel.Init(L"Assets/modelData/coin.cmo");
@@ -37,36 +45,37 @@ void Coin::Draw()
 void Coin::Rotation()
 {
 	//一定速度で回転させる
-	float angle = 0.0f;;
-	angle += 5.0f;
+	float rotSpeed = 0.0f;;
+	rotSpeed += ROTATION_SPEED;
 	CQuaternion addRot;
-	addRot.SetRotationDeg(CVector3::AxisY(), angle);
+	addRot.SetRotationDeg(CVector3::AxisY(), rotSpeed);
 	m_rotation.Multiply(addRot);
 }
 
 void Coin::GetCoin()
 {
-	CVector3 v = m_player->GetPositon() - m_position;
-	float len = v.Length();
-	//距離が一定以下なら取得フラグを立てる
-	if (len < 40.0f) {
-		m_coinGetFlag = true;
+	if (m_player != nullptr) {
+		CVector3 v = m_player->GetPositon() - m_position;
+		float len = v.Length();
+		//距離が一定以下なら取得フラグを立てる
+		if (len < FLAG_LENGTH) {
+			m_coinGetFlag = true;
+		}
 	}
 	//フラグが立ったら跳ねさせて取得する
 	if (m_coinGetFlag == true) {
 		m_timer++;
-		if (m_timer < 5) {
-			m_moveSpeed.y = 20.0f;
+		if (m_timer < PYON_UP_TIME) {
+			m_moveSpeed.y = PYON_UP;
 			m_position += m_moveSpeed;
 		}
-		if (m_timer >= 5 && m_timer < 8) {
-			m_moveSpeed.y = -20.0f;
+		if (m_timer >= PYON_UP_TIME && m_timer < PYON_DOWN_TIME) {
+			m_moveSpeed.y = PYON_DOWN;
 			m_position += m_moveSpeed;
 		}
-		if (m_timer == 10) {
-			m_game->SetScore(10);
+		if (m_timer == DELETE_TIME) {
 			m_timer = 0;
-			m_game->SetScore(1);
+			m_game->SetScore(COIN_SCORE);
 			g_goMgr.DeleteGameObject(this);
 		}
 	}

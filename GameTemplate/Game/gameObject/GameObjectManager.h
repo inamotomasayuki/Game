@@ -26,7 +26,15 @@ public:
 	/// <summary>
 	/// 更新。
 	/// </summary>
-	 void Update();
+	void Update();
+	/// <summary>
+	/// 3Dを描画
+	/// </summary>
+	void Draw3D();
+	/// <summary>
+	/// 2Dを描画。
+	/// </summary>
+	void Draw2D();
 	/// <summary>
 	/// ゲームオブジェクトを追加。
 	/// </summary>
@@ -71,7 +79,7 @@ public:
 		unsigned int nameKey = Util::MakeHash(objectName);
 		//リストから検索する。
 		for (auto go : m_goList) {
-			if ( go->m_nameKey == nameKey) {
+			if (go->m_nameKey == nameKey) {
 				//見つけた
 				T* p = dynamic_cast<T*>(go);
 				return p;
@@ -80,8 +88,26 @@ public:
 		//見つからなかった
 		return nullptr;
 	}
+	/*!
+	*@brief	指定したタグのいずれかがが含まれるゲームオブジェクトを検索して、見つかった場合指定されたコールバック関数を呼び出す。
+	*/
+	template<class T>
+	void FindGameObjects(const char* objectName, std::function<bool(T* go)> func)
+	{
+		unsigned int nameKey = Util::MakeHash(objectName);
+		for (auto go : m_goList) {
+			if (go->m_nameKey == nameKey) {
+				//見つけた。
+				T* p = dynamic_cast<T*>(go);
+				if (func(p) == false) {
+					//クエリ中断。
+					return;
+				}
+			}
+		}
+	}
 private:
-	
+
 	std::vector< IGameObject* > m_goList;		//ゲームオブジェクトのリスト。
 };
 //外部からアクセスするので、extern宣言も必要。

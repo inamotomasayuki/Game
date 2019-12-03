@@ -3,6 +3,8 @@
 #include "physics/PhysicsStaticObject.h"
 #include "character/CharacterController.h"
 class Player;
+const float FLOOR_COLLIDER_HIGHT = 0.0f;		//カプセルコライダーの高さ
+const float FLOOR_COLLIDER_RADIUS = 0.0f;		//カプセルコライダーの半径
 
 class MoveFloor : public IGameObject
 {
@@ -19,8 +21,8 @@ public:
 	{
 		m_position = pos;
 		m_charaCon.Init(
-			0.0f,
-			0.0f,
+			FLOOR_COLLIDER_RADIUS,
+			FLOOR_COLLIDER_HIGHT,
 			m_position
 		);
 	}

@@ -14,8 +14,8 @@ public:
 		m_position = pos;
 		//キャラクターコントローラー
 		m_charaCon.Init(
-			20.0,			//半径
-			100.0f,			//高さ
+			COLLIDER_RADIUS,		//半径
+			COLLIDER_HIGHT,			//高さ
 			m_position		//初期座標
 		);
 		m_initialPos = pos;

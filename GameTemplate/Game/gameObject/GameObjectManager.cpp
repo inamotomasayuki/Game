@@ -3,15 +3,29 @@
 //GameObjectManagerクラスのインスタンス。
 GameObjectManager g_goMgr;
 
+/// <summary>
+/// 3Dを描画
+/// </summary>
+void GameObjectManager::Draw3D()
+{
+	for (auto go : m_goList) {
+		go->Draw();
+	}
+}
+/// <summary>
+/// 2Dを描画。
+/// </summary>
+void GameObjectManager::Draw2D()
+{
+	for (auto go : m_goList) {
+		go->Draw2D();
+	}
+}
 void GameObjectManager::Update()
 {
 	//登録されているゲームオブジェクトの更新処理を呼ぶ。
 	for (auto go : m_goList) {
 		go->Update();
-		
-	}
-	for (auto go : m_goList) {
-		go->Draw();
 	}
 	
 	//全てのゲームオブジェクトの1フレーム分の処理が終わってから、削除する。

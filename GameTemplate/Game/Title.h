@@ -10,6 +10,5 @@ public:
 
 private:
 	Sprite m_sprite;		//スプライト
-	Game* m_game = nullptr;
 };
 

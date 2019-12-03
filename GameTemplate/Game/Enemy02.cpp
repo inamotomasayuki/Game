@@ -15,17 +15,19 @@ void Enemy02::Update()
 	m_game = g_goMgr.FindGameObject<Game>("game");
 	//ワールド行列の更新。
 	m_skinModel.UpdateWorldMatrix(m_position, m_rotation, m_scale);
-	//プレイヤーに伸びるベクトル＆正規化
-	VectorToPlayer();
-	//角度を求める
-	Angle();
-	//動く処理
-	Move();
-	//攻撃
-	Attack();
-	Rotation();
-	//死亡*スコア値
-	Death(10);
+	if (m_player != nullptr) {
+		//プレイヤーに伸びるベクトル＆正規化
+		VectorToPlayer();
+		//角度を求める
+		Angle();
+		//動く処理
+		Move();
+		//攻撃
+		Attack();
+		Rotation();
+		//死亡*スコア値
+		Death(10);
+	}
 }
 
 void Enemy02::Move()

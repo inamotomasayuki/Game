@@ -11,7 +11,9 @@ public:
 	/// </summary>
 	virtual void Update() = 0;
 	virtual void Draw() = 0;
-
+	virtual void Draw2D() 
+	{
+	}
 	/// <summary>
 	/// 削除リクエストを行う
 	/// </summary>

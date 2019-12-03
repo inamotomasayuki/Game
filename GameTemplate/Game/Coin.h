@@ -33,6 +33,14 @@ public:
 	{
 		m_scale = scale;
 	}
+	/// <summary>
+/// スキンモデルの取得
+/// </summary>
+/// <returns>スキンモデル</returns>
+	SkinModel* GetSkinModel()
+	{
+		return &m_skinModel;
+	}
 
 private:
 	/// <summary>

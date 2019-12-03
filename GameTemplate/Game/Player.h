@@ -1,9 +1,13 @@
 #pragma once
 #include "character/CharacterController.h"
 #include "MoveFloor.h"
-#include "JumpFloor.h"
-#include "BackGround.h"
+
 class JumpFloor;
+class Game;
+const float GRAVITY = 400.0f;					//重力
+const float COLLIDER_HIGHT = 100.0f;		//カプセルコライダーの高さ
+const float COLLIDER_RADIUS = 20.0f;		//カプセルコライダーの半径
+
 class Player : public IGameObject
 {
 public:
@@ -29,8 +33,8 @@ public:
 		m_position = pos;
 		//キャラクターコントローラー
 		m_charaCon.Init(
-			20.0,			//半径
-			100.0f,			//高さ
+			COLLIDER_RADIUS,			//半径
+			COLLIDER_HIGHT,			//高さ
 			m_position		//初期座標
 		);
 	}
@@ -74,15 +78,28 @@ public:
 	{
 		return m_isAttacked;
 	}
+	/// <summary>
+	/// ジャンプしてるかどうか
+	/// </summary>
+	/// <param name="jumpFlag">ジャンプフラグ</param>
 	void SetJumpFlag(bool jumpFlag)
 	{
 		m_jumpFlag = jumpFlag;
-		m_jumpSpeed = 5000.0f;
+		m_jumpSpeed = 4000.0f;
+		m_gravity = GRAVITY;
 	}
+	/// <summary>
+	/// 動く床の速度の設定
+	/// </summary>
+	/// <param name="floorSpeed">動く床の速度</param>
 	void SetFloorSpeed(CVector3 floorSpeed)
 	{
 		m_floorSpeed = floorSpeed;
 	}
+	/// <summary>
+	/// スキンモデルの取得
+	/// </summary>
+	/// <returns>スキンモデル</returns>
 	SkinModel* GetSkinModel()
 	{
 		return &m_skinModel;
@@ -97,6 +114,14 @@ private:
 	/// プレイヤーの回転
 	/// </summary>
 	void Rotation();
+	/// <summary>
+	/// アニメーションクリップのロード
+	/// ループフラグ設定
+	/// </summary>
+	void InitAnimationClip();
+	/// <summary>
+	/// アニメーションコントローラー
+	/// </summary>
 	void AnimationController();
 private:
 	SkinModel m_skinModel;								//スキンモデル。
@@ -110,7 +135,7 @@ private:
 
 	JumpFloor* m_jumpFloor = nullptr;				//ジャンプ床
 	MoveFloor* m_moveFloor = nullptr;				//動く床
-	BackGround* m_backGround = nullptr;
+	Game* m_game = nullptr;							//ゲーム
 
 	CVector3 m_floorSpeed = CVector3::Zero();		//床の速度
 
@@ -118,8 +143,9 @@ private:
 		enAnimationClip_idle,	//待機アニメーション。
 		enAnimationClip_run,	//走りアニメーション
 		enAnimationClip_jump,	//ジャンプアニメーション。
-		enAnimationClip_damage,
-		enAnimationClip_walk,
+		enAnimationClip_damage,	//ダメージアニメーション
+		enAnimationClip_walk,	//歩きアニメーション
+		enAnimationClip_Down,	//ダウンアニメーション
 		enAnimationClip_Num		//アニメーションクリップの数。
 	};
 	AnimationClip m_animClips[enAnimationClip_Num];		//アニメーションクリップ。
@@ -128,9 +154,10 @@ private:
 	bool m_isAttacked = false;		//攻撃を受けてるかどうか
 	bool m_jumpFlag = false;		//ジャンプしてるかどうか
 	bool m_contactFloor = false;	//床と接触してるかどうか
-	bool m_contactJumpFloor = false;
+	bool m_contactJumpFloor = false;	//ジャンプ床と接触してるかどうか
 	float m_jumpSpeed;				//ジャンプ速度
 	int m_threeStep = 0;			//3段ジャンプカウント
-	int m_timer = 0;				//タイマー
+	int m_timer = 0;				//タイマー 単位：秒
 	float angle = 0.0f;				//角度
+	float m_gravity;				//重力
 };

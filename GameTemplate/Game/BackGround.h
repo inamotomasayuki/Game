@@ -32,10 +32,18 @@ public:
 	{
 		m_scale = scale;
 	}
+	/// <summary>
+	/// スキンモデルの取得
+	/// </summary>
+	/// <returns>スキンモデル</returns>
 	SkinModel* GetSkinModel()
 	{
 		return &m_skinModel;
 	}
+	/// <summary>
+	/// 静的オブジェクトの取得
+	/// </summary>
+	/// <returns>静的オブジェクト</returns>
 	PhysicsStaticObject* GetPhysicsStaticObject() {
 		return &m_physicsStaticObject;
 	}

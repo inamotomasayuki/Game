@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Game.h"
 #include "GameData.h"
+#include "Title.h"
+const float PLAYER_FALL_GAMEOVER_POS_Y = -1000.0f;		//プレイヤーのY位置
 
 Game::Game()
 {
@@ -56,19 +58,62 @@ Game::Game()
 			return false;
 		});
 		m_spriteUI = g_goMgr.NewGameObject<SpriteUI>(0);
-		m_gameCamera = g_goMgr.NewGameObject<GameCamera>("gameCamera");
+		m_gameCamera = g_goMgr.NewGameObject<GameCamera>("gameCamera");	
 	}
 }
 
 
 Game::~Game()
 {
+	g_goMgr.FindGameObjects<Coin>("coin", [](Coin* coin)->bool {
+		g_goMgr.DeleteGameObject(coin);
+		return true;
+	});
+	g_goMgr.FindGameObjects<Enemy01>("enemy01", [](Enemy01* enemy01)->bool {
+		g_goMgr.DeleteGameObject(enemy01);
+		return true;
+	});
+	g_goMgr.DeleteGameObject(m_player);
+	g_goMgr.DeleteGameObject(m_backGround);
+	g_goMgr.DeleteGameObject(m_moveFloor);
+	g_goMgr.DeleteGameObject(m_jumpFloor);
+	g_goMgr.DeleteGameObject(m_spriteUI);
+	g_goMgr.DeleteGameObject(m_gameOver);
+	g_goMgr.DeleteGameObject(m_gameCamera);
 }
 
 void Game::Update()
 {
 	//シャドウキャスターを登録。
 	g_shadowMap->RegistShadowCaster(m_backGround->GetSkinModel());
+	g_goMgr.FindGameObjects<Enemy01>("enemy01", [](Enemy01* enemy01)->bool {
+		g_shadowMap->RegistShadowCaster(enemy01->GetSkinModel());
+		return true;
+	});
+	g_goMgr.FindGameObjects<Coin>("coin", [](Coin* coin)->bool {
+		g_shadowMap->RegistShadowCaster(coin->GetSkinModel());
+		return true;
+	});
+	g_goMgr.FindGameObjects<Player>("player", [](Player* player)->bool {
+		g_shadowMap->RegistShadowCaster(player->GetSkinModel());
+		return true;
+	});
+	if (m_gameOver == nullptr) {
+		if (m_hp == 0 
+			|| m_player->GetPositon().y < PLAYER_FALL_GAMEOVER_POS_Y) {
+			m_gameOver = g_goMgr.NewGameObject<GameOver>(0);
+			m_gameOverFlag = true;	
+			
+		}
+	
+	}
+	else {
+		if (g_pad[0].IsTrigger(enButtonA)
+			&& m_gameOver->GetButtonFlag()) {
+			g_goMgr.NewGameObject<Title>(0);
+			g_goMgr.DeleteGameObject(this);
+		}
+	}
 }
 
 void Game::Draw()

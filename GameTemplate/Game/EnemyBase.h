@@ -1,7 +1,6 @@
 #pragma once
 #include "Player.h"
 class Game;
-//純粋関数、純粋仮想関数、virtualじゃない関数、基底クラスで実装する関数はよく考えましょう
 class EnemyBase : public IGameObject
 {
 public:
@@ -16,8 +15,8 @@ public:
 		m_position = pos;
 		//キャラクターコントローラー
 		m_charaCon.Init(
-			20.0,			//半径
-			100.0f,			//高さ
+			COLLIDER_RADIUS,			//半径
+			COLLIDER_HIGHT,			//高さ
 			m_position		//初期座標
 		);
 	}
