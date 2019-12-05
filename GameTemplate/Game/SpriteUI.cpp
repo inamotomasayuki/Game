@@ -7,6 +7,10 @@ const float VIEW_BOLUME_HIGHT = 720.0f;			//ビューボリュームの高さ
 const float F_NEAR = 0.1f;						//近平面
 const float F_FAR = 100.0f;						//遠平面
 
+const CVector3 CAMERA_POSITION = { 0, 0, -1 };		//カメラの位置
+const CVector3 CAMERA_TARGET = { 0, 0, 0 };			//カメラの注視点
+const CVector3 CAMERA_UP = { 0,1,0 };				//カメラの上方向
+
 const float NUM_SPRITE_WIDTH = 50.0f;		//数字の横幅
 const float NUM_SPRITE_HIGHT = 50.0f;		//数字の縦幅
 
@@ -14,9 +18,6 @@ const float ALPHA_MINUS = -1.0f;		//アルファ値をマイナス
 const float ALPHA_PLUS = 1.0f;			//アルファ値をプラス
 
 
-const CVector3 CAMERA_POSITION = { 0, 0, -1 };		//カメラの位置
-const CVector3 CAMERA_TARGET = { 0, 0, 0 };			//カメラの注視点
-const CVector3 CAMERA_UP = { 0,1,0 };				//カメラの上方向
 
 SpriteUI::SpriteUI()
 {

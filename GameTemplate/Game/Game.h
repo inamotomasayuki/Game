@@ -11,6 +11,8 @@
 #include "ShadowMap.h"
 #include "SpriteUI.h"
 #include "GameOver.h"
+#include "GameClear.h"
+#include "Star.h"
 class Game : public IGameObject
 {
 public:
@@ -62,6 +64,18 @@ public:
 	{
 		return m_gameOverFlag;
 	}
+	bool GetGameClearFlag()
+	{
+		return m_gameClearFlag;
+	}
+	void SetGetStarFlag()
+	{
+		m_getStar = true;
+	}
+	bool GetStar()
+	{
+		return m_getStar;
+	}
 private:
 	Level m_level;
 	Player* m_player = nullptr;				//プレイヤー
@@ -74,8 +88,15 @@ private:
 	SpriteUI* m_spriteUI = nullptr;			//スプライト
 	JumpFloor* m_jumpFloor = nullptr;		//ジャンプ床
 	GameOver* m_gameOver = nullptr;			//ゲームオーバー
+	GameClear* m_gameClear = nullptr;		//ゲームクリア
+	Star* m_star = nullptr;					//星
 private:
 	int m_score = 0;			//スコア
 	int m_hp = 3;				//HP
+	int m_clearTimer = 0;
 	bool m_gameOverFlag = false;	//ゲームオーバーフラグ
+	bool m_gameClearFlag = false;	//ゲームクリアフラグ
+	bool m_getStar = false;
+	CVector3 m_cameraPos;
+	CVector3 m_nextCameraPos;
 };

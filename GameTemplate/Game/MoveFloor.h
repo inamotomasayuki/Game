@@ -46,6 +46,11 @@ public:
 	{
 		return &m_ghostObject;
 	}
+	CVector3 GetPosition()
+	{
+		return m_position;
+	}
+
 private:
 	/// <summary>
 	/// ‰•œ

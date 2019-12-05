@@ -2,7 +2,6 @@
 #include "Player.h"
 #include "Game.h"
 #include "JumpFloor.h"
-
 const float DELTA_TIME = 1.0f / 60.0f;			//経過時間　単位：秒
 const float INTERPOLATE_TIME = 0.1f;			//補完時間　単位：秒
 
@@ -26,6 +25,9 @@ const float INPUT_AMOUNT_LENGTH = 0.8f;			//角度を求めるときの入力量
 const float INPUT_AMOUNT_DASH_LENGTH = 1000000.0f;	//走りアニメーションさせる
 const float INPUT_AMOUNT_WALK_LENGTH = 10.0f;		//歩きアニメーションさせる
 const int TIMER = 7;
+
+const float ANIMATION_DOWN_SPEED = 3.0f;		//ダウンアニメーションスピード
+const float ANIMATION_CLEAR_SPEED = 2.0f;		//クリアアニメーションスピード
 
 Player::Player()
 {
@@ -58,11 +60,21 @@ void Player::Update()
 
 	m_moveFloor = g_goMgr.FindGameObject<MoveFloor>("moveFloor");
 	m_jumpFloor = g_goMgr.FindGameObject<JumpFloor>("jumpFloor");
-	//if (g_pad[0].IsTrigger(enButtonX)) {
-	//	m_charaCon.SetPosition(m_jumpFloor->GetPosition());
-	//}
+	m_star = g_goMgr.FindGameObject<Star>("star");
+	if (g_pad[0].IsTrigger(enButtonX)) {
+		m_charaCon.SetPosition(m_jumpFloor->GetPosition());
+	}
+	if (g_pad[0].IsTrigger(enButtonY)) {
+		m_charaCon.SetPosition(m_moveFloor->GetPosition());
+	}
+
 	bool isContact = false;
+
 	g_physics.ContactTest(m_charaCon, [&](const btCollisionObject& contactObject) {
+		//星とぶつかった
+		if (m_star->GetGhost()->IsSelf(contactObject) == true) {
+			m_game->SetGetStarFlag();
+		}
 		//動く床とぶつかった
 		if (m_moveFloor->GetGhost()->IsSelf(contactObject) == true) {
 			m_addSpeed = m_floorSpeed;
@@ -74,7 +86,7 @@ void Player::Update()
 			m_jumpSpeed = 23000.0f;
 			m_contactJumpFloor = true;
 		}
-		});
+	});
 
 	if (m_contactJumpFloor) {
 		m_jumpSpeed *= JUMP_FLOOR_SPEED_DECAY;
@@ -95,7 +107,9 @@ void Player::Update()
 		m_position = m_charaCon.Execute(DELTA_TIME, movespeed);
 	}
 	else {
-
+		if (!m_isAttacked) {
+			m_addSpeed = CVector3::Zero();
+		}
 		m_position = m_charaCon.Execute(DELTA_TIME, m_moveSpeed);
 	}
 	m_moveSpeed *= MOVE_SPEED_DECAY;
@@ -138,7 +152,9 @@ void Player::PadMove()
 	
 	m_game = g_goMgr.FindGameObject<Game>("game");
 	if (m_game != nullptr) {
-		if (m_isAttacked == false && !m_game->GetGameOverFlag()) {
+		if (m_isAttacked == false 
+			&& !m_game->GetGameOverFlag()
+			&& !m_game->GetStar()) {
 			//カメラを考慮したスティックでのプレイヤー移動
 			//前方向の移動
 			auto v = g_camera3D.GetTarget() - g_camera3D.GetPosition();
@@ -176,7 +192,11 @@ void Player::PadMove()
 				}
 			}
 		}
+		if (m_game->GetGameClearFlag()) {
+			m_moveSpeed *= 0.0f;
+		}
 	}
+
 	//ジャンプ
 	if (m_jumpFlag == true) {
 		m_moveSpeed.y = m_jumpSpeed;
@@ -242,37 +262,74 @@ void Player::Rotation()
 
 void Player::AnimationController()
 {
-	if (!m_game->GetGameOverFlag()) {
+	if (!m_game->GetGameOverFlag()
+		&& !m_game->GetStar()) {
 		if (m_charaCon.IsOnGround() && !m_isAttacked) {
+			//ダッシュ中
 			if (m_moveSpeed.LengthSq() >= INPUT_AMOUNT_DASH_LENGTH) {
 				//走りアニメーション
 				m_animation.Play(enAnimationClip_run, INTERPOLATE_TIME);
 				m_animation.Update(DELTA_TIME);
 			}
+			//通常移動中
 			else if (m_moveSpeed.LengthSq() >= INPUT_AMOUNT_WALK_LENGTH) {
 				//歩きアニメーション
 				m_animation.Play(enAnimationClip_walk, INTERPOLATE_TIME);
-				m_animation.Update(DELTA_TIME*0.75);
+				m_animation.Update(DELTA_TIME);
 			}
+			//何も操作されてない
 			else {
 				//立ちアニメーション
 				m_animation.Play(enAnimationClip_idle, INTERPOLATE_TIME);
+				m_animation.Update(DELTA_TIME);
 			}
 		}
+		//床から離れている
 		if (m_charaCon.IsOnGround() == false) {
 			//ジャンプアニメーション
 			m_animation.Play(enAnimationClip_jump, INTERPOLATE_TIME);
+			m_animation.Update(DELTA_TIME);
 		}
+		//攻撃されたら
 		if (m_isAttacked == true) {
 			//ダメージアニメーション
 			m_animation.Play(enAnimationClip_damage, INTERPOLATE_TIME);
+			m_animation.Update(DELTA_TIME);
 		}
 	}
-	if (m_game->GetGameOverFlag()) {
-		m_animation.Play(enAnimationClip_Down, INTERPOLATE_TIME);
-		m_animation.Update(DELTA_TIME*3.0f);
+	//ゲームオーバーなら
+	if(m_game->GetGameOverFlag()) {
+		//ダウンアニメーション
+		m_animation.Play(enAnimationClip_down, INTERPOLATE_TIME);
+		m_animation.Update(DELTA_TIME * ANIMATION_DOWN_SPEED);
 	}
-	m_animation.Update(DELTA_TIME);
+
+	//ゲームクリアなら
+	if (m_game->GetGameClearFlag()) {
+		//クリアアニメーション
+		m_animation.Play(enAnimationClip_clear, INTERPOLATE_TIME);
+		m_animation.Update(DELTA_TIME * ANIMATION_CLEAR_SPEED);
+	}	
+	else if (m_game->GetStar()) {
+		//ダッシュ中
+		if (m_moveSpeed.LengthSq() >= INPUT_AMOUNT_DASH_LENGTH) {
+			//走りアニメーション
+			m_animation.Play(enAnimationClip_run, INTERPOLATE_TIME);
+			m_animation.Update(DELTA_TIME);
+		}
+		//通常移動中
+		else if (m_moveSpeed.LengthSq() >= INPUT_AMOUNT_WALK_LENGTH) {
+			//歩きアニメーション
+			m_animation.Play(enAnimationClip_walk, INTERPOLATE_TIME);
+			m_animation.Update(DELTA_TIME);
+		}
+		//何も操作されてない
+		else {
+			//立ちアニメーション
+			m_animation.Play(enAnimationClip_idle, INTERPOLATE_TIME);
+			m_animation.Update(DELTA_TIME);
+		}
+	}
 }
 
 void Player::InitAnimationClip()
@@ -283,7 +340,8 @@ void Player::InitAnimationClip()
 	m_animClips[enAnimationClip_jump].Load(L"Assets/animData/jump.tka");
 	m_animClips[enAnimationClip_damage].Load(L"Assets/animData/damage.tka");
 	m_animClips[enAnimationClip_walk].Load(L"Assets/animData/walk.tka");
-	m_animClips[enAnimationClip_Down].Load(L"Assets/animData/KneelDown.tka");
+	m_animClips[enAnimationClip_down].Load(L"Assets/animData/KneelDown.tka");
+	m_animClips[enAnimationClip_clear].Load(L"Assets/animData/clear.tka");
 	//ループフラグを設定する
 	//走りアニメーションはループフラグを設定していないのでワンショット再生で停止。
 	m_animClips[enAnimationClip_idle].SetLoopFlag(true);
@@ -291,5 +349,7 @@ void Player::InitAnimationClip()
 	m_animClips[enAnimationClip_walk].SetLoopFlag(true);
 	m_animClips[enAnimationClip_jump].SetLoopFlag(false);
 	m_animClips[enAnimationClip_damage].SetLoopFlag(false);
-	m_animClips[enAnimationClip_Down].SetLoopFlag(false);
+	m_animClips[enAnimationClip_down].SetLoopFlag(false);
+	m_animClips[enAnimationClip_clear].SetLoopFlag(false);
+
 }

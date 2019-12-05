@@ -3,11 +3,15 @@
 #include "GameData.h"
 #include "Title.h"
 const float PLAYER_FALL_GAMEOVER_POS_Y = -1000.0f;		//プレイヤーのY位置
+const float CAMERA_ZOOM_SPEED = 0.97f;					//カメラのズーム速度
+const float CAMERA_CLEAR_START_LENGTH = 1000.0f;		//クリアした時のカメラの距離
+const float CAMERA_CLEAR_END_LENGTH = 300.0f;			//ズームした後のカメラの距離
+const int CLEAR_TIME = 25;				//クリアまでの時間
 
 Game::Game()
 {
 	if (g_gameData.GetStageNo() == 0) {
-		m_level.Init(L"Assets/level/stage_03.tkl", [&](LevelObjectData& objData) {
+		m_level.Init(L"Assets/level/stage_05.tkl", [&](LevelObjectData& objData) {
 			if (objData.EqualObjectName(L"unityChan")) {
 				m_player = g_goMgr.NewGameObject<Player>("player");
 				m_player->SetPosition(objData.position);
@@ -27,14 +31,14 @@ Game::Game()
 				m_enemy01->SetPosition(objData.position);
 				m_enemy01->SetRotation(objData.rotation);
 				m_enemy01->SetScale(objData.scale);
-				
+
 				//m_enemy02 = g_goMgr.NewGameObject<Enemy02>("enemy02");
 				//m_enemy02->SetPosition(objData.position);
 				//m_enemy02->SetRotation(objData.rotation);
 				//m_enemy02->SetScale(objData.scale);
 				return true;
 			}
-			if (objData.EqualObjectName(L"gameStage01")) {
+			if (objData.EqualObjectName(L"gameStage02")) {
 				m_backGround = g_goMgr.NewGameObject<BackGround>("backGround");
 				m_backGround->SetPosition(objData.position);
 				m_backGround->SetRotation(objData.rotation);
@@ -55,10 +59,17 @@ Game::Game()
 				m_jumpFloor->SetScale(objData.scale);
 				return true;
 			}
+			if (objData.EqualObjectName(L"star")) {
+				m_star = g_goMgr.NewGameObject<Star>("star");
+				m_star->SetPosition(objData.position);
+				m_star->SetRotation(objData.rotation);
+				m_star->SetScale(objData.scale);
+				return true;
+			}
 			return false;
-		});
+			});
 		m_spriteUI = g_goMgr.NewGameObject<SpriteUI>(0);
-		m_gameCamera = g_goMgr.NewGameObject<GameCamera>("gameCamera");	
+		m_gameCamera = g_goMgr.NewGameObject<GameCamera>("gameCamera");
 	}
 }
 
@@ -68,51 +79,86 @@ Game::~Game()
 	g_goMgr.FindGameObjects<Coin>("coin", [](Coin* coin)->bool {
 		g_goMgr.DeleteGameObject(coin);
 		return true;
-	});
+		});
 	g_goMgr.FindGameObjects<Enemy01>("enemy01", [](Enemy01* enemy01)->bool {
 		g_goMgr.DeleteGameObject(enemy01);
 		return true;
-	});
+		});
+	g_goMgr.FindGameObjects<MoveFloor>("moveFloor", [](MoveFloor* moveFloor)->bool {
+		g_goMgr.DeleteGameObject(moveFloor);
+		return true;
+		});
+	g_goMgr.DeleteGameObject(m_star);
 	g_goMgr.DeleteGameObject(m_player);
 	g_goMgr.DeleteGameObject(m_backGround);
-	g_goMgr.DeleteGameObject(m_moveFloor);
 	g_goMgr.DeleteGameObject(m_jumpFloor);
 	g_goMgr.DeleteGameObject(m_spriteUI);
 	g_goMgr.DeleteGameObject(m_gameOver);
 	g_goMgr.DeleteGameObject(m_gameCamera);
+	g_goMgr.DeleteGameObject(m_gameClear);
 }
 
 void Game::Update()
 {
 	//シャドウキャスターを登録。
 	g_shadowMap->RegistShadowCaster(m_backGround->GetSkinModel());
+	g_shadowMap->RegistShadowCaster(m_star->GetSkinModel());
+	g_shadowMap->RegistShadowCaster(m_player->GetSkinModel());
 	g_goMgr.FindGameObjects<Enemy01>("enemy01", [](Enemy01* enemy01)->bool {
 		g_shadowMap->RegistShadowCaster(enemy01->GetSkinModel());
 		return true;
-	});
+		});
 	g_goMgr.FindGameObjects<Coin>("coin", [](Coin* coin)->bool {
 		g_shadowMap->RegistShadowCaster(coin->GetSkinModel());
 		return true;
-	});
-	g_goMgr.FindGameObjects<Player>("player", [](Player* player)->bool {
-		g_shadowMap->RegistShadowCaster(player->GetSkinModel());
-		return true;
-	});
+		});
+	//ゲームオーバー
 	if (m_gameOver == nullptr) {
-		if (m_hp == 0 
+		if (m_hp == 0
 			|| m_player->GetPositon().y < PLAYER_FALL_GAMEOVER_POS_Y) {
 			m_gameOver = g_goMgr.NewGameObject<GameOver>(0);
-			m_gameOverFlag = true;	
-			
+			m_gameOverFlag = true;
+
 		}
-	
+
 	}
+	//遷移
 	else {
 		if (g_pad[0].IsTrigger(enButtonA)
 			&& m_gameOver->GetButtonFlag()) {
 			g_goMgr.NewGameObject<Title>(0);
 			g_goMgr.DeleteGameObject(this);
 		}
+	}
+	//ゲームクリア
+	if (m_star->GetStarFlag()) {
+		m_clearTimer++;
+		if (m_gameClear == nullptr) {
+			m_gameClear = g_goMgr.NewGameObject<GameClear>(0);
+			if (!m_gameClearFlag) {
+				m_cameraPos = m_player->GetMoveSpeed();
+				m_cameraPos.y = 0.0f;
+				m_cameraPos.Normalize();
+				m_nextCameraPos = m_cameraPos;
+				m_nextCameraPos *= CAMERA_CLEAR_END_LENGTH;
+				m_cameraPos *= CAMERA_CLEAR_START_LENGTH;
+				m_gameClearFlag = true;
+			}
+		}
+		//遷移
+		if (m_clearTimer >= CLEAR_TIME) {
+			if (g_pad[0].IsTrigger(enButtonA)) {
+				g_goMgr.NewGameObject<Title>(0);
+				g_goMgr.DeleteGameObject(this);
+			}
+		}
+		//ズーム
+		if (m_gameClearFlag) {
+			if (m_nextCameraPos.Length() < m_cameraPos.Length()) {
+				m_cameraPos *= CAMERA_ZOOM_SPEED;
+			}
+		}
+		m_gameCamera->SetCameraPos(m_cameraPos);
 	}
 }
 

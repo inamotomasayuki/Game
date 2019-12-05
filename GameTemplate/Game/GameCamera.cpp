@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "GameCamera.h"
 #include "Player.h"
+#include "Game.h"
 
 GameCamera::GameCamera()
 {
@@ -16,9 +17,11 @@ GameCamera::~GameCamera()
 }
 
 void GameCamera::Update()
-{		
+{
 	m_player = g_goMgr.FindGameObject<Player>("player");
-	if (m_player != nullptr) {
+	m_game = g_goMgr.FindGameObject<Game>("game");
+	if (m_player != nullptr
+		&& m_game != nullptr) {
 		m_cameraTarget = m_player->GetPositon(); //注視点を計算する
 		m_cameraTarget.y += 100.0f;		//プレイヤーの足元からちょっと上を注視点とする
 
@@ -27,14 +30,18 @@ void GameCamera::Update()
 
 		auto toCameraPosOld = m_toCameraPos;
 		//Y軸周りの回転
-		m_rotation.SetRotationDeg(CVector3::AxisY(), g_pad[0].GetRStickXF()*6.0f);
+		if (!m_game->GetStar()) {
+			m_rotation.SetRotationDeg(CVector3::AxisY(), g_pad[0].GetRStickXF()*6.0f);
+		}
 		m_rotation.Multiply(m_toCameraPos);
 		//X軸周りの回転
 		CVector3 vUP = CVector3::Up();
 		CVector3 vRotAxis;
 		vRotAxis.Cross(m_toCameraPos, vUP);
 		vRotAxis.Normalize();
-		m_rotation.SetRotationDeg(vRotAxis, g_pad[0].GetRStickYF()*-6.0f);
+		if (!m_game->GetStar()) {
+			m_rotation.SetRotationDeg(vRotAxis, g_pad[0].GetRStickYF()*-6.0f);
+		}
 		m_rotation.Multiply(m_toCameraPos);
 		//カメラの回転の上限をチェックする。
 		//注視点から視点までのベクトルを正規化する。

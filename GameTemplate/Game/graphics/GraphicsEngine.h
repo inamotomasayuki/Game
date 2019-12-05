@@ -1,4 +1,8 @@
 #pragma once
+#include "../RenderTarget.h"
+#include "../graphics/2D/Sprite.h"
+#include "../PostEffect.h"
+
 /// <summary>
 /// レンダリングモード。
 /// </summary>
@@ -51,6 +55,29 @@ public:
 	 *@brief	描画終了。
 	 */
 	void EndRender();
+	/// <summary>
+/// レンダリングターゲットの切り替え。
+/// </summary>
+/// <param name="renderTarget">レンダリングターゲット</param>
+/// <param name="viewport">ビューポート</param>
+	void ChangeRenderTarget(RenderTarget* renderTarget, D3D11_VIEWPORT* viewport);
+	void ChangeRenderTarget(ID3D11RenderTargetView* renderTarget, ID3D11DepthStencilView* depthStensil, D3D11_VIEWPORT* viewport);
+	/// <summary>
+	/// 描画
+	/// </summary>
+	void GameDraw();
+	/// <summary>
+	/// メインレンダリングターゲットを作成
+	/// </summary>
+	void CreateMainRenderTarget();
+	/// <summary>
+/// メインレンダリングターゲットを取得。
+/// </summary>
+/// <returns></returns>
+	RenderTarget* GetMainRenderTarget()
+	{
+		return &m_mainRenderTarget;
+	}
 private:
 	D3D_FEATURE_LEVEL		m_featureLevel;				//Direct3D デバイスのターゲットとなる機能セット。
 	ID3D11Device*			m_pd3dDevice = NULL;		//D3D11デバイス。
@@ -61,6 +88,11 @@ private:
 	ID3D11Texture2D*		m_depthStencil = NULL;		//デプスステンシル。
 	ID3D11DepthStencilView* m_depthStencilView = NULL;	//デプスステンシルビュー。
 
+	RenderTarget m_mainRenderTarget;		//メインレンダリングターゲット。	
+	Sprite m_copyMainRtToFrameBufferSprite;			//メインレンダリングターゲットに描かれた絵をフレームバッファにコピーするためのスプライト。
+	D3D11_VIEWPORT m_frameBufferViewports;			//フレームバッファのビューポート。
+	ID3D11RenderTargetView* m_frameBufferRenderTargetView = nullptr;	//フレームバッファのレンダリングターゲットビュー。
+	ID3D11DepthStencilView* m_frameBufferDepthStencilView = nullptr;	//フレームバッファのデプスステンシルビュー。
 };
 
 extern GraphicsEngine* g_graphicsEngine;			//グラフィックスエンジン

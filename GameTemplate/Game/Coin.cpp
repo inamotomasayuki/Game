@@ -2,17 +2,19 @@
 #include "Coin.h"
 #include "Game.h"
 
-const float PYON_UP = 20.0f;
-const float PYON_DOWN = -20.0f;
-const int PYON_UP_TIME = 5;
-const int PYON_DOWN_TIME = 8;
-const int DELETE_TIME = 10;
-const int COIN_SCORE = 1;
-const float FLAG_LENGTH = 40.0f;
-const float ROTATION_SPEED = 5.0f;
+const float PYON_UP = 20.0f;			//跳ね上がるときの速度
+const float PYON_DOWN = -20.0f;			//跳ね落ちるときの速度
+const int PYON_UP_TIME = 5;				//跳ね上がる時間
+const int PYON_DOWN_TIME = 8;			//跳ね落ちる時間
+const int DELETE_TIME = 10;				//削除までの待ち時間
+const int COIN_SCORE = 1;				//コインのスコア
+const float FLAG_LENGTH = 40.0f;		//コイン取得フラグさせるプレイヤーとの距離
+const float ROTATION_SPEED = 5.0f;		//回転速度
+
 Coin::Coin()
 {
 	m_skinModel.Init(L"Assets/modelData/coin.cmo");
+	m_ghostObject.CreateMesh(m_position, m_rotation, m_scale, m_skinModel);
 }
 
 
@@ -25,14 +27,17 @@ void Coin::Update()
 {
 	m_player = g_goMgr.FindGameObject<Player>("player");
 	m_game = g_goMgr.FindGameObject<Game>("game");
-
 	//ワールド行列の更新。
 	m_skinModel.UpdateWorldMatrix(m_position, m_rotation, m_scale);
 
 	//回転
 	Rotation();
 	//コイン取得処理
-	GetCoin();
+	GetCoin();	
+	
+	m_ghostObject.SetPosition(m_position);
+	m_ghostObject.SetRotation(m_rotation);
+
 }
 void Coin::Draw()
 {
@@ -62,7 +67,7 @@ void Coin::GetCoin()
 			m_coinGetFlag = true;
 		}
 	}
-	//フラグが立ったら跳ねさせて取得する
+	//フラグが立ったら跳ねさせる
 	if (m_coinGetFlag == true) {
 		m_timer++;
 		if (m_timer < PYON_UP_TIME) {
@@ -73,6 +78,7 @@ void Coin::GetCoin()
 			m_moveSpeed.y = PYON_DOWN;
 			m_position += m_moveSpeed;
 		}
+		//削除
 		if (m_timer == DELETE_TIME) {
 			m_timer = 0;
 			m_game->SetScore(COIN_SCORE);

@@ -1,7 +1,7 @@
 #pragma once
 #include "character/CharacterController.h"
 #include "MoveFloor.h"
-
+#include "Star.h"
 class JumpFloor;
 class Game;
 const float GRAVITY = 400.0f;					//重力
@@ -104,7 +104,10 @@ public:
 	{
 		return &m_skinModel;
 	}
-
+	CVector3 GetMoveSpeed()
+	{
+		return m_moveSpeed;
+	}
 private:
 	/// <summary>
 	/// カメラを考慮したスティックでの移動
@@ -136,6 +139,7 @@ private:
 	JumpFloor* m_jumpFloor = nullptr;				//ジャンプ床
 	MoveFloor* m_moveFloor = nullptr;				//動く床
 	Game* m_game = nullptr;							//ゲーム
+	Star* m_star = nullptr;							//星
 
 	CVector3 m_floorSpeed = CVector3::Zero();		//床の速度
 
@@ -145,7 +149,8 @@ private:
 		enAnimationClip_jump,	//ジャンプアニメーション。
 		enAnimationClip_damage,	//ダメージアニメーション
 		enAnimationClip_walk,	//歩きアニメーション
-		enAnimationClip_Down,	//ダウンアニメーション
+		enAnimationClip_down,	//ダウンアニメーション
+		enAnimationClip_clear,	//クリアアニメーション
 		enAnimationClip_Num		//アニメーションクリップの数。
 	};
 	AnimationClip m_animClips[enAnimationClip_Num];		//アニメーションクリップ。

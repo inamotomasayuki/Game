@@ -100,8 +100,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BackGround.cpp" />
+    <ClCompile Include="Bloom.cpp" />
     <ClCompile Include="character\CharacterController.cpp" />
     <ClCompile Include="Coin.cpp" />
+    <ClCompile Include="ConstantBufferGPU.cpp" />
     <ClCompile Include="Enemy01.cpp" />
     <ClCompile Include="Enemy02.cpp" />
     <ClCompile Include="EnemyBase.cpp" />
@@ -112,6 +114,7 @@
     <ClCompile Include="gameObject\GameObjectManager.cpp" />
     <ClCompile Include="gameObject\IGameObject.cpp" />
     <ClCompile Include="GameOver.cpp" />
+    <ClCompile Include="GaussianBlur.cpp" />
     <ClCompile Include="graphics\2D\Sprite.cpp" />
     <ClCompile Include="graphics\animation\Animation.cpp" />
     <ClCompile Include="graphics\animation\AnimationClip.cpp" />
@@ -142,9 +145,11 @@
     <ClCompile Include="physics\CapsuleCollider.cpp" />
     <ClCompile Include="physics\PhysicsStaticObject.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PostEffect.cpp" />
     <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="ShadowMap.cpp" />
     <ClCompile Include="SpriteUI.cpp" />
+    <ClCompile Include="Star.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -154,8 +159,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BackGround.h" />
+    <ClInclude Include="Bloom.h" />
     <ClInclude Include="character\CharacterController.h" />
     <ClInclude Include="Coin.h" />
+    <ClInclude Include="ConstantBufferGPU.h" />
     <ClInclude Include="Enemy01.h" />
     <ClInclude Include="Enemy02.h" />
     <ClInclude Include="EnemyBase.h" />
@@ -166,6 +173,7 @@
     <ClInclude Include="gameObject\GameObjectManager.h" />
     <ClInclude Include="gameObject\IGameObject.h" />
     <ClInclude Include="GameOver.h" />
+    <ClInclude Include="GaussianBlur.h" />
     <ClInclude Include="graphics\2D\Sprite.h" />
     <ClInclude Include="graphics\animation\Animation.h" />
     <ClInclude Include="graphics\animation\AnimationClip.h" />
@@ -198,9 +206,11 @@
     <ClInclude Include="physics\CollisionAttr.h" />
     <ClInclude Include="physics\PhysicsStaticObject.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="PostEffect.h" />
     <ClInclude Include="RenderTarget.h" />
     <ClInclude Include="ShadowMap.h" />
     <ClInclude Include="SpriteUI.h" />
+    <ClInclude Include="Star.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="system\system.h" />
     <ClInclude Include="Title.h" />
@@ -208,9 +218,11 @@
   <ItemGroup>
     <MeshContentTask Include="Assets\modelData\coin.fbx" />
     <MeshContentTask Include="Assets\modelData\gameStage01.FBX" />
+    <MeshContentTask Include="Assets\modelData\gameStage02.fbx" />
     <MeshContentTask Include="Assets\modelData\jumpFloor.FBX" />
     <MeshContentTask Include="Assets\modelData\kuribo.FBX" />
     <MeshContentTask Include="Assets\modelData\moveFloor.FBX" />
+    <MeshContentTask Include="Assets\modelData\star.fbx" />
     <MeshContentTask Include="Assets\modelData\unityChan.fbx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

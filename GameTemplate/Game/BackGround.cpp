@@ -4,7 +4,7 @@
 
 BackGround::BackGround()
 {
-	m_skinModel.Init(L"Assets/modelData/gameStage01.cmo");
+	m_skinModel.Init(L"Assets/modelData/gameStage02.cmo");
 	m_physicsStaticObject.CreateMeshObject(m_skinModel, m_position, m_rotation, m_scale);
 }
 

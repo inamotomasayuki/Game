@@ -2,6 +2,7 @@
 #include "MoveFloor.h"
 #include "Player.h"
 
+const float MOVE_X = 1800.0f;
 MoveFloor::MoveFloor()
 {
 	m_skinModel.Init(L"Assets/modelData/moveFloor.cmo");
@@ -35,22 +36,22 @@ void MoveFloor::RoundTrip()
 {
 	m_timer++;
 	if (m_state == enState_right) {
-		if (m_timer == 120) {
+		if (m_timer == 220) {
 			m_moveSpeed.x += 1000.0f;
 			m_timer = 0;
 			m_state = enState_left;
 		}
-		else if (m_timer == 90.0f) {
+		else if (m_timer == 170.0f) {
 			m_moveSpeed.x = 0;
 		}
 	}
 	if (m_state == enState_left) {
-		if (m_timer == 120) {
+		if (m_timer == 220) {
 			m_moveSpeed.x -= 1000.0f;
 			m_timer = 0;
 			m_state = enState_right;
 		}
-		else if (m_timer == 90.0f) {
+		else if (m_timer == 170.0f) {
 			m_moveSpeed.x = 0;
 		}
 	}

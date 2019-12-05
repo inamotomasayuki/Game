@@ -1,18 +1,18 @@
 #pragma once
-#include "Player.h"
 #include "physics/PhysicsGhostObject.h"
+class Player;
 class Game;
-class Coin : public IGameObject
+class Star : public IGameObject
 {
 public:
-	Coin();
-	~Coin();
+	Star();
+	~Star();
 	void Update();
 	void Draw();
 	/// <summary>
-	/// 座標の設定
-	/// </summary>
-	/// <param name="pos">座標</param>
+/// 座標の設定
+/// </summary>
+/// <param name="pos">座標</param>
 	void SetPosition(CVector3 pos)
 	{
 		m_position = pos;
@@ -41,32 +41,32 @@ public:
 	{
 		return &m_skinModel;
 	}
+	/// <summary>
+	/// ゴーストの取得
+	/// </summary>
+	/// <returns></returns>
 	PhysicsGhostObject* GetGhost()
 	{
-		return &m_ghostObject;
+		return &m_ghost;
+	}
+	bool GetStarFlag()
+	{
+		return m_getStar;
 	}
 private:
 	/// <summary>
 	/// 回転
 	/// </summary>
 	void Rotation();
-	/// <summary>
-	/// コインを獲得
-	/// </summary>
-	void GetCoin();
 private:
-	SkinModel m_skinModel;				//スキンモデル。
-	PhysicsGhostObject m_ghostObject;				//ゴースト
-
+	SkinModel m_skinModel;									//スキンモデル
+	PhysicsGhostObject m_ghost;								//ゴースト
 	CVector3 m_position = CVector3::Zero();					//座標
 	CQuaternion m_rotation = CQuaternion::Identity();		//回転
 	CVector3 m_scale = CVector3::One();						//拡大率。
-	CVector3 m_moveSpeed = CVector3::Zero();				//移動速度
-
+	int m_timer = 0;
+	bool m_getStar = false;
 	Player* m_player = nullptr;				//プレイヤー
-	Game* m_game = nullptr;					//ゲーム
-
-	int m_timer = 0;						//タイマー
-	bool m_coinGetFlag = false;				//コイン取得フラグ
+	Game* m_game = nullptr;
 };
 

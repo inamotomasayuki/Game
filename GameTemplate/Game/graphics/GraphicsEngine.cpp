@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "GraphicsEngine.h"
-
+#include "../ShadowMap.h"
 GraphicsEngine::GraphicsEngine()
 {
 }
@@ -150,4 +150,158 @@ void GraphicsEngine::Init(HWND hWnd)
 	viewport.MaxDepth = 1.0f;
 	m_pd3dDeviceContext->RSSetViewports(1, &viewport);
 	m_pd3dDeviceContext->RSSetState(m_rasterizerState);
+}
+void GraphicsEngine::ChangeRenderTarget(RenderTarget* renderTarget, D3D11_VIEWPORT* viewport)
+{
+	ChangeRenderTarget(
+		renderTarget->GetRenderTargetView(),
+		renderTarget->GetDepthStensilView(),
+		viewport
+	);
+}
+void GraphicsEngine::ChangeRenderTarget(ID3D11RenderTargetView* renderTarget, ID3D11DepthStencilView* depthStensil, D3D11_VIEWPORT* viewport)
+{
+	ID3D11RenderTargetView* rtTbl[] = {
+		renderTarget
+	};
+	//レンダリングターゲットの切り替え。
+	m_pd3dDeviceContext->OMSetRenderTargets(1, rtTbl, depthStensil);
+	if (viewport != nullptr) {
+		//ビューポートが指定されていたら、ビューポートも変更する。
+		m_pd3dDeviceContext->RSSetViewports(1, viewport);
+	}
+}
+void GraphicsEngine::GameDraw()
+{
+	//描画開始。
+	BegineRender();
+
+
+	////メインとなるレンダリングターゲットを作成する。
+	//m_mainRenderTarget.Create(
+	//	FRAME_BUFFER_W,
+	//	FRAME_BUFFER_H,
+	//	DXGI_FORMAT_R8G8B8A8_UNORM
+	//);
+
+	////メインレンダリングターゲットに描かれた絵を
+	////フレームバッファにコピーするためのスプライトを初期化する。
+	//m_copyMainRtToFrameBufferSprite.Init(
+	//	m_mainRenderTarget.GetRenderTargetSRV(),
+	//	FRAME_BUFFER_W,
+	//	FRAME_BUFFER_H
+	//);
+
+	//フレームバッファののレンダリングターゲットをバックアップしておく。
+	auto d3dDeviceContext = GetD3DDeviceContext();
+	d3dDeviceContext->OMGetRenderTargets(
+		1,
+		&m_frameBufferRenderTargetView,
+		&m_frameBufferDepthStencilView
+	);
+	//ビューポートもバックアップを取っておく。
+	unsigned int numViewport = 1;
+	d3dDeviceContext->RSGetViewports(&numViewport, &m_frameBufferViewports);
+
+
+
+	//シャドウマップを更新。
+	g_shadowMap->UpdateFromLightTarget(
+		{ 1000.0f, 1000.0f, 1000.0f },
+		{ 0.0f, 0.0f, 0.0f }
+	);
+
+	///////////////////////////////////////////////
+	//シャドウマップにレンダリング
+	///////////////////////////////////////////////
+	//auto d3dDeviceContext = g_graphicsEngine->GetD3DDeviceContext();
+	//現在のレンダリングターゲットをバックアップしておく。
+	ID3D11RenderTargetView* oldRenderTargetView;
+	ID3D11DepthStencilView* oldDepthStencilView;
+	d3dDeviceContext->OMGetRenderTargets(
+		1,
+		&oldRenderTargetView,
+		&oldDepthStencilView
+	);
+	//ビューポートもバックアップを取っておく。
+	//unsigned int numViewport = 1;
+	D3D11_VIEWPORT oldViewports;
+	d3dDeviceContext->RSGetViewports(&numViewport, &oldViewports);
+
+	//シャドウマップにレンダリング
+	g_shadowMap->RenderToShadowMap();
+	//元に戻す。
+	d3dDeviceContext->OMSetRenderTargets(
+		1,
+		&oldRenderTargetView,
+		oldDepthStencilView
+	);
+	d3dDeviceContext->RSSetViewports(numViewport, &oldViewports);
+	//レンダリングターゲットとデプスステンシルの参照カウンタを下す。
+	oldRenderTargetView->Release();
+	oldDepthStencilView->Release();
+
+	//レンダリングターゲットをメインに変更する。
+	//auto d3dDeviceContext = g_graphicsEngine->GetD3DDeviceContext();
+	//m_copyMainRtToFrameBufferSprite.ChangeRenderTarget(d3dDeviceContext, &m_mainRenderTarget, &m_frameBufferViewports);
+	ChangeRenderTarget(&m_mainRenderTarget, &m_frameBufferViewports);
+	//メインレンダリングターゲットをクリアする。
+	float clearColor[] = { 0.0f, 0.0f, 0.0f, 1.0f };
+	m_mainRenderTarget.ClearRenderTarget(clearColor);
+
+
+	g_goMgr.Draw3D();
+
+
+	//レンダリングターゲットをフレームバッファに戻す。
+	ChangeRenderTarget(
+		m_frameBufferRenderTargetView,
+		m_frameBufferDepthStencilView,
+		&m_frameBufferViewports
+	);
+	CMatrix mView;
+	CMatrix mProj;
+	mView.MakeLookAt(
+		{ 0, 0, -1 },
+		{ 0, 0, 0 },
+		{ 0,1,0 }
+	);
+	mProj.MakeOrthoProjectionMatrix(1280.0f, 720.0f, 0.1f, 100.0f);
+	////ドロドロ
+	m_copyMainRtToFrameBufferSprite.Draw(mView, mProj);
+
+	m_frameBufferRenderTargetView->Release();
+	m_frameBufferDepthStencilView->Release();
+
+	//2Dを描画
+	g_goMgr.Draw2D();
+
+	if (m_frameBufferRenderTargetView != nullptr) {
+		m_frameBufferRenderTargetView->Release();
+	}
+	if (m_frameBufferDepthStencilView != nullptr) {
+		m_frameBufferDepthStencilView->Release();
+	}
+
+
+	//描画終了。
+	EndRender();
+
+}
+void GraphicsEngine::CreateMainRenderTarget()
+{
+	//メインとなるレンダリングターゲットを作成する。
+	m_mainRenderTarget.Create(
+		FRAME_BUFFER_W,
+		FRAME_BUFFER_H,
+		DXGI_FORMAT_R16G16B16A16_FLOAT
+	);
+
+	//メインレンダリングターゲットに描かれた絵を
+	//フレームバッファにコピーするためのスプライトを初期化する。
+	m_copyMainRtToFrameBufferSprite.Init(
+		m_mainRenderTarget.GetRenderTargetSRV(),
+		FRAME_BUFFER_W,
+		FRAME_BUFFER_H
+	);
 }

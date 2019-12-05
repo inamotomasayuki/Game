@@ -188,21 +188,21 @@ float4 PSMain( PSInput In ) : SV_Target0
 		lig += max(0.0f, dot(In.Normal * -1.0f, dligDirection[i])) * dligColor[i];
 
 		//ディレクションライトの鏡面反射光を計算する。
-		{
-			//実習　鏡面反射を計算しなさい。
-			//①　反射ベクトルRを求める。
-			float3 R = dligDirection[i]
-				+ 2 * dot(In.Normal, -dligDirection[i])
-				* In.Normal;
-			//②　視点からライトを当てる物体に伸びるベクトルEを求める。
-			float3 E = normalize(In.worldPos - eyePos);
-			//①と②で求まったベクトルの内積を計算する。
-			//スペキュラ反射の強さを求める。
-			float specPower = max(0, dot(R, -E));
-			specPower = pow(specPower, specPow);
-			lig += dligColor[i] * specPower;
-			lig += ambient;
-		}
+		//{
+		//	//実習　鏡面反射を計算しなさい。
+		//	//①　反射ベクトルRを求める。
+		//	float3 R = dligDirection[i]
+		//		+ 2 * dot(In.Normal, -dligDirection[i])
+		//		* In.Normal;
+		//	//②　視点からライトを当てる物体に伸びるベクトルEを求める。
+		//	float3 E = normalize(In.worldPos - eyePos);
+		//	//①と②で求まったベクトルの内積を計算する。
+		//	//スペキュラ反射の強さを求める。
+		//	float specPower = max(0, dot(R, -E));
+		//	specPower = pow(specPower, specPow);
+		//	lig += dligColor[i] * specPower;
+		//	lig += ambient;
+		//}
 	}
 	if (isShadowReciever == 1) {	//シャドウレシーバー。
 	//LVP空間から見た時の最も手前の深度値をシャドウマップから取得する。

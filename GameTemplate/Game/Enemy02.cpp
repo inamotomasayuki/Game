@@ -15,7 +15,10 @@ void Enemy02::Update()
 	m_game = g_goMgr.FindGameObject<Game>("game");
 	//ワールド行列の更新。
 	m_skinModel.UpdateWorldMatrix(m_position, m_rotation, m_scale);
-	if (m_player != nullptr) {
+	if (m_player != nullptr
+		&& m_game != nullptr
+		&& !m_game->GetGameClearFlag()
+		&& !m_game->GetStar()) {
 		//プレイヤーに伸びるベクトル＆正規化
 		VectorToPlayer();
 		//角度を求める

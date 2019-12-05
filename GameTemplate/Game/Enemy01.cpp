@@ -4,7 +4,7 @@
 
 const float LENGTH_UPPER = 1000.0f;			//追跡上限距離
 const float LENGTH_UNDER = 50.0f;			//追跡下限距離
-const float MOVE_SPEED = 200.0f;			//移動速度
+const float MOVE_SPEED = 400.0f;			//移動速度
 const float MINIMUM = 0.0001f;				//極小
 const float DELTA_TIME = 1.0f / 60.0f;		//経過時間　単位：秒
 
@@ -21,7 +21,10 @@ void Enemy01::Update()
 
 	//ワールド行列の更新。
 	m_skinModel.UpdateWorldMatrix(m_position, m_rotation, m_scale);
-	if (m_player != nullptr) {
+	if (m_player != nullptr
+		&& m_game != nullptr
+		&& !m_game->GetGameClearFlag()
+		&& !m_game->GetStar()) {
 		//プレイヤーに伸びるベクトル＆正規化
 		VectorToPlayer();
 		//角度を求める

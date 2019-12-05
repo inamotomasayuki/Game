@@ -148,6 +148,11 @@
     <ClCompile Include="SpriteUI.cpp" />
     <ClCompile Include="GameOver.cpp" />
     <ClCompile Include="GameClear.cpp" />
+    <ClCompile Include="Star.cpp" />
+    <ClCompile Include="Bloom.cpp" />
+    <ClCompile Include="GaussianBlur.cpp" />
+    <ClCompile Include="PostEffect.cpp" />
+    <ClCompile Include="ConstantBufferGPU.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Vector.h">
@@ -267,6 +272,11 @@
     <ClInclude Include="SpriteUI.h" />
     <ClInclude Include="GameOver.h" />
     <ClInclude Include="GameClear.h" />
+    <ClInclude Include="Star.h" />
+    <ClInclude Include="Bloom.h" />
+    <ClInclude Include="GaussianBlur.h" />
+    <ClInclude Include="PostEffect.h" />
+    <ClInclude Include="ConstantBufferGPU.h" />
   </ItemGroup>
   <ItemGroup>
     <MeshContentTask Include="Assets\modelData\gameStage01.FBX">
@@ -285,6 +295,12 @@
       <Filter>Assets\modelData</Filter>
     </MeshContentTask>
     <MeshContentTask Include="Assets\modelData\jumpFloor.FBX">
+      <Filter>Assets\modelData</Filter>
+    </MeshContentTask>
+    <MeshContentTask Include="Assets\modelData\star.fbx">
+      <Filter>Assets\modelData</Filter>
+    </MeshContentTask>
+    <MeshContentTask Include="Assets\modelData\gameStage02.fbx">
       <Filter>Assets\modelData</Filter>
     </MeshContentTask>
   </ItemGroup>
