@@ -1,12 +1,16 @@
 #include "stdafx.h"
 #include "EnemyBase.h"
 #include "Game.h"
+#include "EnemyBall.h"
 
-const float ATTACK_WAIT_TIME = 40.0f;		//攻撃したときの待ち時間
-const float ATTACKED_WAIT_TIME = 20.0f;		//攻撃されたときの待ち時間
-const float SCALE_DIVISION = 2.0f;		//スケールを割る数値
-const float DEGREE_NUM = 80.0f;			//角度　単位：degree
-const float LENGTH = 50.0f;				//プレイヤーとの距離
+const float LENGTH = 75.0f;				//玉との距離
+const float PYON_UP = 1000.0f;			//跳ね上がるときの速度
+const float PYON_DOWN = -1000.0f;			//跳ね落ちるときの速度
+const int PYON_UP_TIME = 6;				//跳ね上がる時間
+const int PYON_DOWN_TIME = 9;			//跳ね落ちる時間
+const int DELETE_TIME = 11;				//削除までの待ち時間
+const int SCORE = 5;					//スコア
+const float DELTA_TIME = 1.0f / 60.0f;		//経過時間　単位：秒
 
 void EnemyBase::Draw()
 {
@@ -16,44 +20,32 @@ void EnemyBase::Draw()
 		enRenderMode_Normal
 	);
 }
-void EnemyBase::Attack()
-{
-	//攻撃中じゃなかったら攻撃
-	if (m_isAttack == false) {
-		if (fabs(m_angle) > CMath::DegToRad(DEGREE_NUM) && m_len < LENGTH) {
-			m_v.y = 0.0f;
-			//ノックバックさせる速度
-			m_player->SetAddSpeed(m_v * 2500.0f);
-			m_player->SetIsAttacked(true);	//攻撃された。
-			m_isAttack = true;	//攻撃した。	
-			m_game->SetHP(-1);
-		}
-	}
-	//攻撃したら少し待つ
-	else {
-		m_waitTimer++;
-		if (m_waitTimer == ATTACK_WAIT_TIME) {
-			m_waitTimer = 0;
-			m_isAttack = false;		//攻撃してない。
-			m_player->SetIsAttacked(false);		//攻撃されてない。
-		}
-	}
-}
 
-void EnemyBase::Death(int score)
+void EnemyBase::DeathEnemyBallContact(int score)
 {
-	//攻撃されてなかったら
-	if (m_isAttacked == false) {
-		if (fabs(m_angle) <= CMath::DegToRad(80) && m_len < LENGTH) {
-			m_scale.z /= SCALE_DIVISION;
-			m_player->SetJumpFlag(true);	//ジャンプさせる
-			m_isAttacked = true;		//攻撃された
+
+	g_goMgr.FindGameObjects<EnemyBall>("enemyBall", [this](EnemyBall* enemyBall)->bool {
+		auto vector = enemyBall->GetPositon() - m_position;
+		auto len = vector.Length();
+		if (len < LENGTH) {
+			m_charaCon.RemoveRigidBoby();
+			m_isDeath = true;
 		}
-	}
-	//攻撃されたら少し待ってから削除
-	if (m_isAttacked == true) {
-		m_waitTimer++;
-		if (m_waitTimer == ATTACKED_WAIT_TIME) {
+		return true;
+	});
+
+	//フラグが立ったら跳ねさせる
+	if (m_isDeath) {
+		m_timer++;
+		if (m_timer < PYON_UP_TIME) {
+			m_moveSpeed.y = PYON_UP;
+		}
+		if (m_timer >= PYON_UP_TIME && m_timer < PYON_DOWN_TIME) {
+			m_moveSpeed.y = PYON_DOWN;
+		}
+		//削除
+		if (m_timer == DELETE_TIME) {
+			m_timer = 0;
 			m_game->SetScore(score);
 			g_goMgr.DeleteGameObject(this);
 		}

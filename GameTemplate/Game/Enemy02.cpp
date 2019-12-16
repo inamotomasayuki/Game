@@ -2,6 +2,21 @@
 #include "Enemy02.h"
 #include "Game.h"
 
+const int ATTACK_WAIT_TIME = 40;		//攻撃したときの待ち時間
+const float ATTACKED_WAIT_TIME = 20.0f;		//攻撃されたときの待ち時間
+const float SCALE_DIVISION = 2.0f;		//スケールを割る数値
+const float DEGREE_NUM = 80.0f;			//角度　単位：degree
+const float LENGTH = 50.0f;				//プレイヤーとの距離
+const int ATTACK_MINUS_PLAYER_HP = -1;		//攻撃時プレイヤーHPマイナス
+const float PLAYER_NOCKBACK_SPEED = 2500.0f;	//プレイヤーのノックバックスピード
+const int SCORE = 1;						//スコア
+const float JUMP_SPEED_DECAY = 0.85f;			//ジャンプ速度減衰
+const float PYON_SPEED = 2000.0f;				//ぴょんスピード
+const int STOP_TIMER = 120.0f;			//往復タイマー　単位：秒
+const float MOVE_SPEED_X = 400.0f;			//X方向の移動速度
+const float JUMP_SPEED_ZERO_JUDGMENT = 200.0f;		//ジャンプ速度をゼロにする値
+const float DELTA_TIME = 1.0f / 60.0f;		//経過時間　単位：秒
+
 Enemy02::Enemy02()
 {
 	//cmoファイルの読み込み。
@@ -17,7 +32,7 @@ void Enemy02::Update()
 	m_skinModel.UpdateWorldMatrix(m_position, m_rotation, m_scale);
 	if (m_player != nullptr
 		&& m_game != nullptr
-		&& !m_game->GetGameClearFlag()
+		&& !m_game->GetGameOverFlag()
 		&& !m_game->GetStar()) {
 		//プレイヤーに伸びるベクトル＆正規化
 		VectorToPlayer();
@@ -27,9 +42,11 @@ void Enemy02::Update()
 		Move();
 		//攻撃
 		Attack();
+		//回転
 		Rotation();
 		//死亡*スコア値
-		Death(10);
+		Death(SCORE);
+		DeathEnemyBallContact(SCORE);
 	}
 }
 
@@ -40,28 +57,29 @@ void Enemy02::Move()
 	if (!m_isAttacked) {
 		//ぴょんぴょん
 		if (m_charaCon.IsOnGround()) {
-			m_jumpSpeed = 2000.0f;
+			m_jumpSpeed = PYON_SPEED;
 			m_isJump = true;
 		}
 		if (m_isJump == true) {
 			m_moveSpeed.y = m_jumpSpeed;
-			m_jumpSpeed *= 0.85f;
-			if (m_jumpSpeed < 200.0f) {
+			m_jumpSpeed *= JUMP_SPEED_DECAY;
+			if (m_jumpSpeed < JUMP_SPEED_ZERO_JUDGMENT) {
 				m_jumpSpeed = 0;
 				m_isJump = false;
 			}
 		}
+		//往復
 		m_timer++;
 		if (m_state == enState_right) {
-			m_moveSpeed.x = 400.0f;
-			if (m_timer == 120) {
+			m_moveSpeed.x = MOVE_SPEED_X;
+			if (m_timer == STOP_TIMER) {
 				m_timer = 0;
 				m_state = enState_left;
 			}
 		}
 		if (m_state == enState_left) {
-			m_moveSpeed.x = -400.0f;
-			if (m_timer == 120) {
+			m_moveSpeed.x = -MOVE_SPEED_X;
+			if (m_timer == STOP_TIMER) {
 				m_timer = 0;
 				m_state = enState_right;
 			}
@@ -75,7 +93,7 @@ void Enemy02::Move()
 	//重力
 	m_moveSpeed.y -= GRAVITY;
 
-	m_position = m_charaCon.Execute(1.0f / 60.0f, m_moveSpeed);
+	m_position = m_charaCon.Execute(DELTA_TIME, m_moveSpeed);
 }
 void Enemy02::Rotation()
 {
@@ -84,4 +102,47 @@ void Enemy02::Rotation()
 	moveSpeedXZ.y = 0.0f;
 	moveSpeedXZ.Normalize();
 	m_rotation.SetRotation(CVector3::AxisY(), atan2f(moveSpeedXZ.x, moveSpeedXZ.z));  //角度を求める関数
+}
+void Enemy02::Attack()
+{
+	//攻撃中じゃなかったら攻撃
+	if (m_isAttack == false) {
+		if (fabs(m_angle) > CMath::DegToRad(DEGREE_NUM) && m_len < LENGTH) {
+			m_v.y = 0.0f;
+			//ノックバックさせる速度
+			m_player->SetAddSpeed(m_v * PLAYER_NOCKBACK_SPEED);
+			m_player->SetIsAttacked(true);	//攻撃された。
+			m_isAttack = true;	//攻撃した。	
+			m_game->SetHP(ATTACK_MINUS_PLAYER_HP);
+		}
+	}
+	//攻撃したら少し待つ
+	else {
+		m_waitTimer++;
+		if (m_waitTimer == ATTACK_WAIT_TIME) {
+			m_waitTimer = 0;
+			m_isAttack = false;		//攻撃してない。
+			m_player->SetIsAttacked(false);		//攻撃されてない。
+		}
+	}
+}
+
+void Enemy02::Death(int score)
+{
+	//攻撃されてなかったら
+	if (m_isAttacked == false) {
+		if (fabs(m_angle) <= CMath::DegToRad(DEGREE_NUM) && m_len < LENGTH) {
+			m_scale.z /= SCALE_DIVISION;
+			m_player->SetJumpFlag(true);	//ジャンプさせる
+			m_isAttacked = true;		//攻撃された
+		}
+	}
+	//攻撃されたら少し待ってから削除
+	if (m_isAttacked == true) {
+		m_waitTimer++;
+		if (m_waitTimer == ATTACKED_WAIT_TIME) {
+			m_game->SetScore(score);
+			g_goMgr.DeleteGameObject(this);
+		}
+	}
 }

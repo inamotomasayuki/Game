@@ -38,11 +38,6 @@ Sprite::~Sprite()
 	if (m_samplerState != nullptr) {
 		m_samplerState->Release();
 	}
-
-	if (m_translucentBlendState != nullptr) {
-		m_translucentBlendState->Release();
-	}
-
 }
 
 void Sprite::Init(const wchar_t* textureFilePath, float w, float h)
@@ -249,78 +244,4 @@ void Sprite::Draw(CMatrix mView, CMatrix mProj)
 	deviceContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 	//ここまで設定した内容でドロー
 	deviceContext->DrawIndexed(4, 0, 0);
-}
-
-//void Sprite::ChangeRenderTarget(ID3D11DeviceContext* d3dDeviceContext, RenderTarget* renderTarget, D3D11_VIEWPORT* viewport)
-//{
-//	ChangeRenderTarget(
-//		d3dDeviceContext,
-//		renderTarget->GetRenderTargetView(),
-//		renderTarget->GetDepthStensilView(),
-//		viewport
-//	);
-//}
-//void Sprite::ChangeRenderTarget(ID3D11DeviceContext* d3dDeviceContext, ID3D11RenderTargetView* renderTarget, ID3D11DepthStencilView* depthStensil, D3D11_VIEWPORT* viewport)
-//{
-//	ID3D11RenderTargetView* rtTbl[] = {
-//		renderTarget
-//	};
-//	//レンダリングターゲットの切り替え。
-//	d3dDeviceContext->OMSetRenderTargets(1, rtTbl, depthStensil);
-//
-//	if (viewport != nullptr) {
-//		//ビューポートが指定されていたら、ビューポートも変更する。
-//		d3dDeviceContext->RSSetViewports(1, viewport);
-//	}
-//}
-
-void Sprite::InitTranslucentBlendState()
-{
-	//例のごとく、作成するブレンドステートの情報を設定する。
-	CD3D11_DEFAULT defaultSettings;
-	//デフォルトセッティングで初期化する。
-	CD3D11_BLEND_DESC blendDesc(defaultSettings);
-
-	//αブレンディングを有効にする。
-	blendDesc.RenderTarget[0].BlendEnable = true;
-
-	//ソースカラーのブレンディング方法を指定している。
-	//ソースカラーとはピクセルシェーダ―からの出力を指している。
-	//この指定では、ソースカラーをSRC(rgba)とすると、
-	//最終的なソースカラーは下記のように計算される。
-	//最終的なソースカラー = SRC.rgb × SRC.a・・・・・・　①
-	blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
-
-	//ディスティネーションカラーのブレンディング方法を指定している。
-	//ディスティネーションカラーとは、
-	//すでに描き込まれているレンダリングターゲットのカラーを指している。
-	//この指定では、ディスティネーションカラーをDEST(rgba)、
-	//ソースカラーをSRC(RGBA)とすると、最終的なディスティネーションカラーは
-	//下記のように計算される。
-	//最終的なディスティネーションカラー = DEST.rgb × (1.0f - SRC.a)・・・・・②
-	blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-
-	//最終的にレンダリングターゲットに描き込まれるカラーの計算方法を指定している。
-	//この指定だと、①＋②のカラーが書き込まれる。
-	//つまり、最終的にレンダリングターゲットに描き込まれるカラーは
-	//SRC.rgb × SRC.a + DEST.rgb × (1.0f - SRC.a)
-	//となる。
-	blendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-
-	//この設定で、ブレンドステートを作成すると
-	//半透明合成を行えるブレンドステートが作成できる。
-	auto d3dDevice = g_graphicsEngine->GetD3DDevice();
-	d3dDevice->CreateBlendState(&blendDesc, &m_translucentBlendState);
-
-}
-void Sprite::SetBlendState()
-{
-	auto d3dDeviceContext = g_graphicsEngine->GetD3DDeviceContext();
-	float blendFactor[] = { 0.0f, 0.0f, 0.0f, 0.0f };
-	//半透明合成のブレンドステートを設定する。
-	d3dDeviceContext->OMSetBlendState(
-		m_translucentBlendState,	//設定するブレンディングステート
-		blendFactor,				//ブレンディングファクター。気にしなくてよい
-		0xffffffff					//サンプリングマスク。気にしなくてよい。
-	);
 }

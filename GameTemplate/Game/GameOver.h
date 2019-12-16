@@ -10,13 +10,17 @@ public:
 	void Update();
 	void Draw() {};
 	void Draw2D();	
+	/// <summary>
+	/// ボタン表示フラグの取得
+	/// </summary>
+	/// <returns>ボタン表示フラグ</returns>
 	bool GetButtonFlag()
 	{
 		return m_buttonFlag;
 	}
 	enum EnSprite {
-		enSprite_gameOver,
-		enSprite_button,
+		enSprite_gameOver,		//ゲームオーバー
+		enSprite_button,		//ボタン
 		enSprite_Num
 	};
 
@@ -31,10 +35,10 @@ private:
 	bool m_buttonFlag = false;					//点滅フラグ
 	enum EnState
 	{
-		enState_kieru,
-		enState_kokunaru
+		enState_kieru,			//消える
+		enState_kokunaru		//濃くなる
 	};
-	EnState m_state = enState_kokunaru;		//ステート
+	EnState m_state = enState_kokunaru;		//alphaステート
 
 };
 

@@ -33,6 +33,10 @@ public:
 	{
 		m_scale = scale;
 	}
+	/// <summary>
+	/// ゴーストの取得
+	/// </summary>
+	/// <returns>ゴースト</returns>
 	PhysicsGhostObject* GetGhost()
 	{
 		return &m_ghostObject;

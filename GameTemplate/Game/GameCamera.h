@@ -8,6 +8,10 @@ public:
 	~GameCamera();
 	void Update();
 	void Draw();
+	/// <summary>
+	/// ƒJƒƒ‰‚ÌˆÊ’u‚Ìİ’è
+	/// </summary>
+	/// <param name="pos"></param>
 	void SetCameraPos(CVector3 pos)
 	{
 		m_cameraPos = m_cameraTarget + pos;

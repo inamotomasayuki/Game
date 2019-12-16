@@ -5,6 +5,8 @@
 #include "Player.h"
 #include "Enemy01.h"
 #include "Enemy02.h"
+#include "Enemy03.h"
+#include "EnemyBall.h"
 #include "BackGround.h"
 #include "MoveFloor.h"
 #include "JumpFloor.h"
@@ -60,18 +62,33 @@ public:
 	{
 		return m_hp;
 	}
+	/// <summary>
+	/// ゲームオーバーかどうか
+	/// </summary>
+	/// <returns></returns>
 	bool GetGameOverFlag()
 	{
 		return m_gameOverFlag;
 	}
+	/// <summary>
+	/// ゲームクリアしたかどうか
+	/// </summary>
+	/// <returns></returns>
 	bool GetGameClearFlag()
 	{
 		return m_gameClearFlag;
 	}
+	/// <summary>
+	/// 星を取ったフラグの設定
+	/// </summary>
 	void SetGetStarFlag()
 	{
 		m_getStar = true;
 	}
+	/// <summary>
+	/// 星を取ったかどうか
+	/// </summary>
+	/// <returns></returns>
 	bool GetStar()
 	{
 		return m_getStar;
@@ -82,6 +99,7 @@ private:
 	Coin* m_coin = nullptr;					//コイン
 	Enemy01* m_enemy01 = nullptr;			//敵01
 	Enemy02* m_enemy02 = nullptr;			//敵02
+	Enemy03* m_enemy03 = nullptr;			//敵03
 	GameCamera* m_gameCamera = nullptr;		//ゲームカメラ
 	BackGround* m_backGround = nullptr;		//ステージ
 	MoveFloor* m_moveFloor = nullptr;		//動く床
@@ -93,10 +111,10 @@ private:
 private:
 	int m_score = 0;			//スコア
 	int m_hp = 3;				//HP
-	int m_clearTimer = 0;
+	int m_clearTimer = 0;		//クリアまでのタイマー
 	bool m_gameOverFlag = false;	//ゲームオーバーフラグ
 	bool m_gameClearFlag = false;	//ゲームクリアフラグ
-	bool m_getStar = false;
-	CVector3 m_cameraPos;
-	CVector3 m_nextCameraPos;
+	bool m_getStar = false;			//星を取ったかどうか
+	CVector3 m_cameraPos;			//カメラの位置
+	CVector3 m_nextCameraPos;		//次のカメラの位置
 };

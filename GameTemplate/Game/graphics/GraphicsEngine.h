@@ -78,6 +78,14 @@ public:
 	{
 		return &m_mainRenderTarget;
 	}
+	/// <summary>
+	/// 半透明合成のブレンドステートを初期化
+	/// </summary>
+	void InitTranslucentBlendState();
+	/// <summary>
+	/// 半透明合成のブレンドステートを設定
+	/// </summary>
+	void SetBlendState();
 private:
 	D3D_FEATURE_LEVEL		m_featureLevel;				//Direct3D デバイスのターゲットとなる機能セット。
 	ID3D11Device*			m_pd3dDevice = NULL;		//D3D11デバイス。
@@ -88,11 +96,13 @@ private:
 	ID3D11Texture2D*		m_depthStencil = NULL;		//デプスステンシル。
 	ID3D11DepthStencilView* m_depthStencilView = NULL;	//デプスステンシルビュー。
 
+	PostEffect m_postEffect;
 	RenderTarget m_mainRenderTarget;		//メインレンダリングターゲット。	
 	Sprite m_copyMainRtToFrameBufferSprite;			//メインレンダリングターゲットに描かれた絵をフレームバッファにコピーするためのスプライト。
 	D3D11_VIEWPORT m_frameBufferViewports;			//フレームバッファのビューポート。
 	ID3D11RenderTargetView* m_frameBufferRenderTargetView = nullptr;	//フレームバッファのレンダリングターゲットビュー。
 	ID3D11DepthStencilView* m_frameBufferDepthStencilView = nullptr;	//フレームバッファのデプスステンシルビュー。
+	ID3D11BlendState* m_translucentBlendState = nullptr;	//半透明合成用のブレンドステート。
 };
 
 extern GraphicsEngine* g_graphicsEngine;			//グラフィックスエンジン

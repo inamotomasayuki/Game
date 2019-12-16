@@ -10,11 +10,14 @@ public:
 	/// <summary>
 	/// コンストラクタ。
 	/// </summary>
-	PostEffect();
+	PostEffect()=default;
 	/// <summary>
 	/// デストラクタ。
 	/// </summary>
 	~PostEffect();
+
+	void Init();
+
 	/// <summary>
 	/// 更新。
 	/// </summary>

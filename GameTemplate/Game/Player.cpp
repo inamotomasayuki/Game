@@ -24,7 +24,7 @@ const float ADD_SPEED_LENGTH = 0.01f;			//加速度加算中
 const float INPUT_AMOUNT_LENGTH = 0.8f;			//角度を求めるときの入力量
 const float INPUT_AMOUNT_DASH_LENGTH = 1000000.0f;	//走りアニメーションさせる
 const float INPUT_AMOUNT_WALK_LENGTH = 10.0f;		//歩きアニメーションさせる
-const int TIMER = 7;
+const int TIMER = 12;
 
 const float ANIMATION_DOWN_SPEED = 3.0f;		//ダウンアニメーションスピード
 const float ANIMATION_CLEAR_SPEED = 2.0f;		//クリアアニメーションスピード
@@ -50,17 +50,17 @@ void Player::Update()
 {
 
 
-	bool isJump = m_jumpFlag;
+
 	//ワールド行列の更新。
 	m_skinModel.UpdateWorldMatrix(m_position, m_rotation, m_scale);
 	//パッド操作
 	PadMove();
-	//プレイヤーの回転
-	Rotation();
 
 	m_moveFloor = g_goMgr.FindGameObject<MoveFloor>("moveFloor");
 	m_jumpFloor = g_goMgr.FindGameObject<JumpFloor>("jumpFloor");
 	m_star = g_goMgr.FindGameObject<Star>("star");
+
+	//デバッグショートカット
 	if (g_pad[0].IsTrigger(enButtonX)) {
 		m_charaCon.SetPosition(m_jumpFloor->GetPosition());
 	}
@@ -68,8 +68,35 @@ void Player::Update()
 		m_charaCon.SetPosition(m_moveFloor->GetPosition());
 	}
 
-	bool isContact = false;
+	//プレイヤーと他のゴーストとの接触処理
+	GhostContact();
 
+
+	if (m_game != nullptr) {
+		//プレイヤーの回転
+		Rotation();
+		//アニメーション
+		AnimationController();
+	}
+}
+
+void Player::Draw()
+{
+	m_skinModel.Draw(
+		g_camera3D.GetViewMatrix(),
+		g_camera3D.GetProjectionMatrix(),
+		enRenderMode_Silhouette
+	);
+	m_skinModel.Draw(
+		g_camera3D.GetViewMatrix(),
+		g_camera3D.GetProjectionMatrix(),
+		enRenderMode_Normal
+	);
+}
+void Player::GhostContact()
+{
+	bool isContact = false;
+	bool isJump = m_jumpFlag;
 	g_physics.ContactTest(m_charaCon, [&](const btCollisionObject& contactObject) {
 		//星とぶつかった
 		if (m_star->GetGhost()->IsSelf(contactObject) == true) {
@@ -83,10 +110,10 @@ void Player::Update()
 		}
 		//ジャンプ床とぶつかった
 		if (m_jumpFloor->GetGhost()->IsSelf(contactObject) == true) {
-			m_jumpSpeed = 23000.0f;
+			m_jumpSpeed = 20000.0f;
 			m_contactJumpFloor = true;
 		}
-	});
+		});
 
 	if (m_contactJumpFloor) {
 		m_jumpSpeed *= JUMP_FLOOR_SPEED_DECAY;
@@ -112,49 +139,25 @@ void Player::Update()
 		}
 		m_position = m_charaCon.Execute(DELTA_TIME, m_moveSpeed);
 	}
-	m_moveSpeed *= MOVE_SPEED_DECAY;
-	if (m_moveSpeed.Length() < MOVE_SPEED_LENGTH) {
-		m_moveSpeed = CVector3::Zero();
-	}
-	if (m_game != nullptr) {
-		//アニメーション
-		AnimationController();
-	}
-}
 
-void Player::Draw()
-{
-	m_skinModel.Draw(
-		g_camera3D.GetViewMatrix(),
-		g_camera3D.GetProjectionMatrix(),
-		enRenderMode_Silhouette
-	);
-	m_skinModel.Draw(
-		g_camera3D.GetViewMatrix(),
-		g_camera3D.GetProjectionMatrix(),
-		enRenderMode_Normal
-	);
 }
-
 void Player::PadMove()
-{
-
-	//Bダッシュ
-	if (g_pad[0].IsPress(enButtonB)) {
-		DASH_SPEED = 2.0f;
-		if (m_moveSpeed.Length() < DASH_SPEED_LENGTH) {
-			m_contactJumpFloor = false;
-		}
-	}
-	else {
-		DASH_SPEED = 1.0f;
-	}
-	
+{	
 	m_game = g_goMgr.FindGameObject<Game>("game");
 	if (m_game != nullptr) {
 		if (m_isAttacked == false 
 			&& !m_game->GetGameOverFlag()
 			&& !m_game->GetStar()) {
+			//Bダッシュ
+			if (g_pad[0].IsPress(enButtonB)) {
+				DASH_SPEED = 2.0f;
+				if (m_moveSpeed.Length() < DASH_SPEED_LENGTH) {
+					m_contactJumpFloor = false;
+				}
+			}
+			else {
+				DASH_SPEED = 1.0f;
+			}
 			//カメラを考慮したスティックでのプレイヤー移動
 			//前方向の移動
 			auto v = g_camera3D.GetTarget() - g_camera3D.GetPosition();
@@ -233,6 +236,13 @@ void Player::PadMove()
 			m_addSpeed = CVector3::Zero();
 		}
 	}
+
+	//移動速度減衰
+	m_moveSpeed *= MOVE_SPEED_DECAY;
+	if (m_moveSpeed.Length() < MOVE_SPEED_LENGTH) {
+		m_moveSpeed = CVector3::Zero();
+	}
+
 }
 void Player::Rotation()
 {
@@ -241,7 +251,7 @@ void Player::Rotation()
 	auto moveSpeedXZ = m_moveSpeed;
 	moveSpeedXZ.y = 0.0f;
 	moveSpeedXZ.Normalize();
-	if (m_isAttacked == false) {
+	if (m_isAttacked == false && !m_game->GetGameClearFlag()) {
 		if (moveSpeedXZ.LengthSq() < INPUT_AMOUNT_LENGTH) {
 			return;		//入力量が小さいときは回転しない
 		}
@@ -256,6 +266,17 @@ void Player::Rotation()
 		m_rotation.SetRotation(
 			CVector3::AxisY(), 
 			atan2f(-moveSpeedXZ.x, -moveSpeedXZ.z)
+		);
+	}	
+	if (!m_game->GetStar()) {
+		m_posXZ = m_position - g_camera3D.GetPosition();
+		m_posXZ.y = 0.0f;
+		m_posXZ.Normalize();
+	}
+	if (m_game->GetGameClearFlag()) {
+		m_rotation.SetRotation(
+			CVector3::AxisY(),
+			atan2f(m_posXZ.x, m_posXZ.z)
 		);
 	}
 }

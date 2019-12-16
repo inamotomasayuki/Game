@@ -2,7 +2,7 @@
 #include "PostEffect.h"
 
 
-PostEffect::PostEffect()
+void PostEffect::Init()
 {
 	//フルスクリーン描画のための四角形プリミティブを初期化。
 	InitFullScreenQuadPrimitive();

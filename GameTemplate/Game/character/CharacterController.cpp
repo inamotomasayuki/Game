@@ -100,7 +100,6 @@ namespace {
 	};
 }
 
-
 void CharacterController::Init(float radius, float height, const CVector3& position)
 {
 	m_position = position;
@@ -136,7 +135,7 @@ const CVector3& CharacterController::Execute(float deltaTime, CVector3& moveSpee
 	CVector3 addPos = moveSpeed;
 	addPos *= deltaTime;
 	nextPosition += addPos;
-	
+
 	CVector3 originalXZDir = addPos;
 	originalXZDir.y = 0.0f;
 	originalXZDir.Normalize();
@@ -172,8 +171,8 @@ const CVector3& CharacterController::Execute(float deltaTime, CVector3& moveSpee
 			callback.startPos = posTmp;
 			//衝突検出。
 			g_physics.ConvexSweepTest((const btConvexShape*)m_collider.GetBody(), start, end, callback);
-
 			if (callback.isHit) {
+				m_isWallHit = true;
 				//当たった。
 				//壁。
 #if 0
@@ -195,8 +194,16 @@ const CVector3& CharacterController::Execute(float deltaTime, CVector3& moveSpee
 				CVector3 hitNormalXZ = callback.hitNormal;
 				hitNormalXZ.y = 0.0f;
 				hitNormalXZ.Normalize();
+				//反射ベクトルを返したい：< r = f - 2 * Dot(f,n) * n >らしい
+				auto merikomi = vMerikomi;
+				merikomi.y = 0.0f;
+				//m_returnVector = merikomi + (hitNormalXZ * 2);			
+				m_returnVector = merikomi + (hitNormalXZ * (-2 * merikomi.Dot(hitNormalXZ)));
+				m_returnVector.y = 0.0f;
+				m_returnVector.Normalize();
 				//めり込みベクトルを壁の法線に射影する。
 				float fT0 = hitNormalXZ.Dot(vMerikomi);
+
 				//押し戻し返すベクトルを求める。
 				//押し返すベクトルは壁の法線に射影されためり込みベクトル+半径。
 				CVector3 vOffset;
@@ -266,7 +273,7 @@ const CVector3& CharacterController::Execute(float deltaTime, CVector3& moveSpee
 		callback.me = m_rigidBody.GetBody();
 		callback.startPos.Set(start.getOrigin());
 		//衝突検出。
-		if(fabsf(endPos.y - callback.startPos.y) > FLT_EPSILON){
+		if (fabsf(endPos.y - callback.startPos.y) > FLT_EPSILON) {
 			g_physics.ConvexSweepTest((const btConvexShape*)m_collider.GetBody(), start, end, callback);
 			if (callback.isHit) {
 				//当たった。

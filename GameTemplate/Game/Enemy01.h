@@ -14,8 +14,8 @@ public:
 		m_position = pos;
 		//キャラクターコントローラー
 		m_charaCon.Init(
-			COLLIDER_RADIUS,		//半径
-			COLLIDER_HIGHT,			//高さ
+			ENEMY_COLLIDER_RADIUS,		//半径
+			ENEMY_COLLIDER_HIGHT,			//高さ
 			m_position		//初期座標
 		);
 		m_initialPos = pos;
@@ -33,7 +33,21 @@ private:
 	/// 回転
 	/// </summary>
 	void Rotation();
+	/// <summary>
+	/// 攻撃
+	/// </summary>
+	void Attack();
+	/// <summary>
+	///	死亡
+	/// </summary>
+	/// <param name="score">スコア</param>
+	void Death(int score);
+
 private:
 	CVector3 m_initialPos = CVector3::Zero();			//初期位置
+	bool m_isAttack = false;		//攻撃したかどうか
+	bool m_isAttacked = false;		//攻撃されたかどうか
+	int m_waitTimer = 0;			//待機タイマー
+
 };
 

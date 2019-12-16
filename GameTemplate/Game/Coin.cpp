@@ -8,7 +8,7 @@ const int PYON_UP_TIME = 5;				//跳ね上がる時間
 const int PYON_DOWN_TIME = 8;			//跳ね落ちる時間
 const int DELETE_TIME = 10;				//削除までの待ち時間
 const int COIN_SCORE = 1;				//コインのスコア
-const float FLAG_LENGTH = 40.0f;		//コイン取得フラグさせるプレイヤーとの距離
+const float FLAG_LENGTH = 70.0f;		//コイン取得フラグさせるプレイヤーとの距離
 const float ROTATION_SPEED = 5.0f;		//回転速度
 
 Coin::Coin()
@@ -67,6 +67,15 @@ void Coin::GetCoin()
 			m_coinGetFlag = true;
 		}
 	}
+
+	g_goMgr.FindGameObjects<EnemyBall>("enemyBall", [this](EnemyBall* enemyBall)->bool {
+		auto enemy_v = enemyBall->GetPositon() - m_position;
+		auto enemy_len = enemy_v.Length();
+		if (enemy_len < FLAG_LENGTH) {
+			m_coinGetFlag = true;
+		}
+		return true;
+		});
 	//フラグが立ったら跳ねさせる
 	if (m_coinGetFlag == true) {
 		m_timer++;

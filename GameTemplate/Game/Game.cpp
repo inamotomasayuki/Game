@@ -27,15 +27,21 @@ Game::Game()
 				return true;
 			}
 			if (objData.EqualObjectName(L"kuribo")) {
-				m_enemy01 = g_goMgr.NewGameObject<Enemy01>("enemy01");
-				m_enemy01->SetPosition(objData.position);
-				m_enemy01->SetRotation(objData.rotation);
-				m_enemy01->SetScale(objData.scale);
+				//m_enemy01 = g_goMgr.NewGameObject<Enemy01>("enemy01");
+				//m_enemy01->SetPosition(objData.position);
+				//m_enemy01->SetRotation(objData.rotation);
+				//m_enemy01->SetScale(objData.scale);
 
 				//m_enemy02 = g_goMgr.NewGameObject<Enemy02>("enemy02");
 				//m_enemy02->SetPosition(objData.position);
 				//m_enemy02->SetRotation(objData.rotation);
 				//m_enemy02->SetScale(objData.scale);
+
+				m_enemy03 = g_goMgr.NewGameObject<Enemy03>("enemy03");
+				m_enemy03->SetPosition(objData.position);
+				m_enemy03->SetRotation(objData.rotation);
+				m_enemy03->SetScale(objData.scale);
+
 				return true;
 			}
 			if (objData.EqualObjectName(L"gameStage02")) {
@@ -84,10 +90,19 @@ Game::~Game()
 		g_goMgr.DeleteGameObject(enemy01);
 		return true;
 		});
-	g_goMgr.FindGameObjects<MoveFloor>("moveFloor", [](MoveFloor* moveFloor)->bool {
-		g_goMgr.DeleteGameObject(moveFloor);
+	g_goMgr.FindGameObjects<Enemy02>("enemy02", [](Enemy02* enemy02)->bool {
+		g_goMgr.DeleteGameObject(enemy02);
 		return true;
 		});
+	g_goMgr.FindGameObjects<Enemy03>("enemy03", [](Enemy03* enemy03)->bool {
+		g_goMgr.DeleteGameObject(enemy03);
+		return true;
+		});
+	g_goMgr.FindGameObjects<EnemyBall>("enemyBall", [](EnemyBall* enemyBall)->bool {
+		g_goMgr.DeleteGameObject(enemyBall);
+		return true;
+		});
+	g_goMgr.DeleteGameObject(m_moveFloor);
 	g_goMgr.DeleteGameObject(m_star);
 	g_goMgr.DeleteGameObject(m_player);
 	g_goMgr.DeleteGameObject(m_backGround);
@@ -104,18 +119,29 @@ void Game::Update()
 	g_shadowMap->RegistShadowCaster(m_backGround->GetSkinModel());
 	g_shadowMap->RegistShadowCaster(m_star->GetSkinModel());
 	g_shadowMap->RegistShadowCaster(m_player->GetSkinModel());
-	g_goMgr.FindGameObjects<Enemy01>("enemy01", [](Enemy01* enemy01)->bool {
-		g_shadowMap->RegistShadowCaster(enemy01->GetSkinModel());
-		return true;
-		});
-	g_goMgr.FindGameObjects<Coin>("coin", [](Coin* coin)->bool {
-		g_shadowMap->RegistShadowCaster(coin->GetSkinModel());
-		return true;
-		});
+	//g_goMgr.FindGameObjects<Enemy01>("enemy01", [](Enemy01* enemy01)->bool {
+	//	g_shadowMap->RegistShadowCaster(enemy01->GetSkinModel());
+	//	return true;
+	//	});
+	//g_goMgr.FindGameObjects<Enemy02>("enemy02", [](Enemy02* enemy02)->bool {
+	//	g_shadowMap->RegistShadowCaster(enemy02->GetSkinModel());
+	//	return true;
+	//	});
+	//g_goMgr.FindGameObjects<Enemy03>("enemy03", [](Enemy03* enemy03)->bool {
+	//	g_shadowMap->RegistShadowCaster(enemy03->GetSkinModel());
+	//	return true;
+	//	});
+	//g_goMgr.FindGameObjects<Coin>("coin", [](Coin* coin)->bool {
+	//	g_shadowMap->RegistShadowCaster(coin->GetSkinModel());
+	//	return true;
+	//	});
+
+
 	//ゲームオーバー
 	if (m_gameOver == nullptr) {
 		if (m_hp == 0
 			|| m_player->GetPositon().y < PLAYER_FALL_GAMEOVER_POS_Y) {
+			m_hp = 0;
 			m_gameOver = g_goMgr.NewGameObject<GameOver>(0);
 			m_gameOverFlag = true;
 
@@ -130,13 +156,14 @@ void Game::Update()
 			g_goMgr.DeleteGameObject(this);
 		}
 	}
+
 	//ゲームクリア
 	if (m_star->GetStarFlag()) {
 		m_clearTimer++;
 		if (m_gameClear == nullptr) {
 			m_gameClear = g_goMgr.NewGameObject<GameClear>(0);
 			if (!m_gameClearFlag) {
-				m_cameraPos = m_player->GetMoveSpeed();
+				m_cameraPos = m_player->GetPositon() - g_camera3D.GetPosition();
 				m_cameraPos.y = 0.0f;
 				m_cameraPos.Normalize();
 				m_nextCameraPos = m_cameraPos;

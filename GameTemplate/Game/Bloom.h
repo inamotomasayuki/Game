@@ -14,7 +14,7 @@ public:
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	Bloom();
+	Bloom()=default;
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
@@ -25,6 +25,8 @@ public:
 	/// </summary>
 	void Draw(PostEffect& postEffect);
 private:
+	void Init();
+
 	/// <summary>
 	/// アルファブレンディングのステートを初期化する。
 	/// </summary>
@@ -43,6 +45,7 @@ private:
 	/// </summary>
 	void InitSamplerState();
 private:
+	bool m_isInit = false;
 	static const int NUM_DOWN_SAMPLE = 4;				//ダウンサンプリングの回数。
 	ID3D11SamplerState* m_samplerState = nullptr;		//サンプラステート。
 	ID3D11BlendState* m_disableBlendState = nullptr;	//アルファブレンディングを無効にするブレンディングステート。

@@ -1,18 +1,16 @@
 #pragma once
 #include "EnemyBase.h"
-class Enemy02 : public EnemyBase
+#include "EnemyBall.h"
+
+class Enemy03 : public EnemyBase
 {
 public:
-	Enemy02();
+	Enemy03();
 	/// <summary>
 	/// 更新関数
 	/// </summary>
 	void Update();
 private:
-	/// <summary>
-	/// 移動
-	/// </summary>
-	void Move();
 	/// <summary>
 	/// 攻撃
 	/// </summary>
@@ -26,17 +24,16 @@ private:
 	/// 回転
 	/// </summary>
 	void Rotation();
-
+private:
 	bool m_isAttack = false;		//攻撃したかどうか
 	bool m_isAttacked = false;		//攻撃されたかどうか
 	int m_waitTimer = 0;			//待機タイマー
+	bool m_isChangeModel = false;		//モデルチェンジフラグ
+	bool m_isKicked = false;			//蹴られたかどうか
+	bool m_isPlayerJump = false;		//プレイヤーが飛んだかどうか
+	bool m_isBallAttack = false;		//ボール状態攻撃できるかどうか
+	bool m_isApproachAgain = false;		//再々近づいたかどうか
 
-	bool m_isJump = false;		//ジャンプフラグ
-	float m_jumpSpeed = 0.0f;	//ジャンプ速度
-	int m_timer = 0;			//往復用タイマー　単位：秒
-	enum EnState {
-		enState_right,		//行ったり
-		enState_left		//来たり
-	};
-	EnState m_state;		//ステート
+	EnemyBall* m_enemyBall = nullptr;
 };
+

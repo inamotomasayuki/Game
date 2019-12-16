@@ -2,7 +2,11 @@
 #include "MoveFloor.h"
 #include "Player.h"
 
-const float MOVE_X = 1800.0f;
+const float MOVE_X_SPEED = 1000.0f;		//X方向の移動速度
+const float RETURN_TIME = 220.0f;		//ステート切り替えし時間
+const float STOP_TIME = 170.0f;			//止まる時間
+const float ZERO = 0.0f;				//ゼロ
+
 MoveFloor::MoveFloor()
 {
 	m_skinModel.Init(L"Assets/modelData/moveFloor.cmo");
@@ -16,7 +20,7 @@ MoveFloor::~MoveFloor()
 {
 }
 void MoveFloor::Update()
-{		
+{
 	//ワールド行列の更新。
 	m_skinModel.UpdateWorldMatrix(m_position, m_rotation, m_scale);
 	//往復
@@ -35,31 +39,33 @@ void MoveFloor::Draw()
 void MoveFloor::RoundTrip()
 {
 	m_timer++;
+	//往復
 	if (m_state == enState_right) {
-		if (m_timer == 220) {
-			m_moveSpeed.x += 1000.0f;
-			m_timer = 0;
+		if (m_timer == RETURN_TIME) {
+			m_moveSpeed.x += MOVE_X_SPEED;
+			m_timer = ZERO;
 			m_state = enState_left;
 		}
-		else if (m_timer == 170.0f) {
-			m_moveSpeed.x = 0;
+		else if (m_timer == STOP_TIME) {
+			m_moveSpeed.x = ZERO;
 		}
 	}
 	if (m_state == enState_left) {
-		if (m_timer == 220) {
-			m_moveSpeed.x -= 1000.0f;
-			m_timer = 0;
+		if (m_timer == RETURN_TIME) {
+			m_moveSpeed.x -= MOVE_X_SPEED;
+			m_timer = ZERO;
 			m_state = enState_right;
 		}
-		else if (m_timer == 170.0f) {
-			m_moveSpeed.x = 0;
+		else if (m_timer == STOP_TIME) {
+			m_moveSpeed.x = ZERO;
 		}
 	}
-	
-	
+
+
 	m_position = m_charaCon.Execute(1.0f / 60.0f, m_moveSpeed);
 	m_player = g_goMgr.FindGameObject<Player>("player");
 	if (m_player != nullptr) {
+		//プレイヤーに速度を渡す
 		m_player->SetFloorSpeed(m_moveSpeed);
 	}
 }

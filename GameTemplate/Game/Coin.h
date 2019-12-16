@@ -1,5 +1,6 @@
 #pragma once
 #include "Player.h"
+#include "EnemyBall.h"
 #include "physics/PhysicsGhostObject.h"
 class Game;
 class Coin : public IGameObject
@@ -65,7 +66,7 @@ private:
 
 	Player* m_player = nullptr;				//プレイヤー
 	Game* m_game = nullptr;					//ゲーム
-
+	EnemyBall* m_enemyBall = nullptr;		//敵玉
 	int m_timer = 0;						//タイマー
 	bool m_coinGetFlag = false;				//コイン取得フラグ
 };

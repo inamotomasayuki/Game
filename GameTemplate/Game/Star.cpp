@@ -38,6 +38,7 @@ void Star::Update()
 			}
 		}
 	}
+	//ゴースト更新
 	m_ghost.SetPosition(m_position);
 	m_ghost.SetRotation(m_rotation);
 }

@@ -54,10 +54,6 @@ public:
 			m_alpha = 0.0f;
 		}
 	}
-	//void ChangeRenderTarget(ID3D11DeviceContext* d3dDeviceContext, RenderTarget* renderTarget, D3D11_VIEWPORT* viewport);
-	//void ChangeRenderTarget(ID3D11DeviceContext* d3dDeviceContext, ID3D11RenderTargetView* renderTarget, ID3D11DepthStencilView* depthStensil, D3D11_VIEWPORT* viewport);
-	void InitTranslucentBlendState();
-	void SetBlendState();
 private:
 	/// <summary>
 	/// シェーダーをロード。
@@ -101,6 +97,5 @@ private:
 	CMatrix m_world = CMatrix::Identity();					//ワールド行列。
 	float						m_alpha = 1.0f;							//スプライトのα値。
 	CVector2					m_size = CVector2::Zero();				//画像のサイズ。
-	ID3D11BlendState* m_translucentBlendState = nullptr;	//半透明合成用のブレンドステート。
 
 };

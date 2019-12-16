@@ -106,6 +106,8 @@
     <ClCompile Include="ConstantBufferGPU.cpp" />
     <ClCompile Include="Enemy01.cpp" />
     <ClCompile Include="Enemy02.cpp" />
+    <ClCompile Include="Enemy03.cpp" />
+    <ClCompile Include="EnemyBall.cpp" />
     <ClCompile Include="EnemyBase.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameCamera.cpp" />
@@ -165,6 +167,8 @@
     <ClInclude Include="ConstantBufferGPU.h" />
     <ClInclude Include="Enemy01.h" />
     <ClInclude Include="Enemy02.h" />
+    <ClInclude Include="Enemy03.h" />
+    <ClInclude Include="EnemyBall.h" />
     <ClInclude Include="EnemyBase.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameCamera.h" />

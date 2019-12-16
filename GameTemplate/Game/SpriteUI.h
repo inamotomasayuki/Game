@@ -9,51 +9,47 @@ public:
 	void Update();
 	void Draw() {}
 	void Draw2D();
-	enum EnSprite {
-		enSprite_unityChan,
-		enSprite_kakeru,
-		enSprite_coin,
-		enSprite_Num
+	enum EnSpriteUI {
+		enSpriteUI_unityChan,		//ユニティちゃん
+		enSpriteUI_kakeru,			//×
+		enSpriteUI_coin,			//コイン
+		enSpriteUI_Num
 	};
-	enum EnSpriteNum {
-		enSpriteNum_zero,
-		enSpriteNum_one,
-		enSpriteNum_two,
-		enSpriteNum_three,
-		enSpriteNum_four,
-		enSpriteNum_five,
-		enSpriteNum_six,
-		enSpriteNum_seven,
-		enSpriteNum_eight,
-		enSpriteNum_nine,
-		enSpriteNum_Num
+	enum EnSpriteScore {
+		enSpriteScore_zero,		//スコア0
+		enSpriteScore_one,		//スコア1
+		enSpriteScore_two,		//スコア2
+		enSpriteScore_three,	//スコア3
+		enSpriteScore_four,		//スコア4
+		enSpriteScore_five,		//スコア5
+		enSpriteScore_six,		//スコア6
+		enSpriteScore_seven,	//スコア7
+		enSpriteScore_eight,	//スコア8
+		enSpriteScore_nine,		//スコア9
+		enSpriteScore_Num
 	};
 	enum EnSpriteHP {
-		enSpriteHP_zero,
-		enSpriteHP_one,
-		enSpriteHP_two,
-		enSpriteHP_three,
-		enSpriteHP_four,
-		enSpriteHP_five,
+		enSpriteHP_zero,		//HP0
+		enSpriteHP_one,			//HP1
+		enSpriteHP_two,			//HP2
+		enSpriteHP_three,		//HP3
+		enSpriteHP_four,		//HP4
+		enSpriteHP_five,		//HP5
 		enSpriteHP_Num
 	};
 private:
-//	/// <summary>
-///// 半透明合成のブレンドステートを初期化。
-///// </summary>
-//	void InitTranslucentBlendState();
-private:
-	Sprite m_spriteUI[enSprite_Num];
-	Sprite m_spriteNumUI[enSpriteNum_Num];
-	Sprite m_spriteNumUI2[enSpriteNum_Num];
-	Sprite m_spriteHP[enSpriteHP_Num];
-	CVector3 m_positionUI[enSprite_Num];
-	CVector3 m_positionNum;
-	CVector3 m_positionNum2;
-	CVector3 m_positionHP;
-	CQuaternion m_rotation = CQuaternion::Identity();
-	CVector3 m_scale = CVector3::One();
-	//ID3D11BlendState* m_translucentBlendState = nullptr;	//半透明合成用のブレンドステート。
-	Game* m_game = nullptr;
-
+	Sprite m_spriteUI[enSpriteUI_Num];			//UIスプライト
+	Sprite m_spriteScoreUI[enSpriteScore_Num];	//スコアスプライト
+	Sprite m_spriteScoreUI2[enSpriteScore_Num];	//スコアスプライト
+	Sprite m_spriteScoreUI3[enSpriteScore_Num];	//スコアスプライト
+	Sprite m_spriteHP[enSpriteHP_Num];			//HPスプライト
+	CVector3 m_positionUI[enSpriteUI_Num];		//UI位置
+	CVector3 m_positionScoreUI;				//スコア位置
+	CVector3 m_positionScoreUI2;			//スコア２位置
+	CVector3 m_positionScoreUI3;			//スコア３位置
+	CVector3 m_positionHP;				//HP位置
+	CQuaternion m_rotation = CQuaternion::Identity();		//回転
+	CVector3 m_scale = CVector3::One();					//スケール
+	Game* m_game = nullptr;					//ゲーム
+	bool m_isHpUp = true;			//HPアップできるかどうか
 };

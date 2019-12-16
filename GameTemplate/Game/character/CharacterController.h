@@ -81,10 +81,28 @@ public:
 	* @brief	剛体を物理エンジンから削除。。
 	*/
 	void RemoveRigidBoby();
+	/// <summary>
+	/// 反射ベクトルの取得
+	/// </summary>
+	/// <returns></returns>
+	CVector3 GetReturnVector()
+	{
+		return m_returnVector;
+	}
+	/// <summary>
+	/// 壁に当たったかどうか
+	/// </summary>
+	/// <returns></returns>
+	bool IsWallHit()
+	{
+		return m_isWallHit;
+	}
 private:
 	CVector3 			m_position = CVector3::Zero();	//座標。
+	CVector3			m_returnVector = CVector3::Zero();		//折り返しベクトル
 	bool 				m_isJump = false;				//ジャンプ中？
 	bool				m_isOnGround = true;			//地面の上にいる？
+	bool				m_isWallHit = false;
 	CapsuleCollider		m_collider;						//コライダー。
 	float				m_radius = 0.0f;
 	float				m_height = 0.0f;		

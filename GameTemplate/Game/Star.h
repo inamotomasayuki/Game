@@ -49,6 +49,10 @@ public:
 	{
 		return &m_ghost;
 	}
+	/// <summary>
+	/// 星取得フラグの取得
+	/// </summary>
+	/// <returns>星取得フラグ</returns>
 	bool GetStarFlag()
 	{
 		return m_getStar;
@@ -64,9 +68,9 @@ private:
 	CVector3 m_position = CVector3::Zero();					//座標
 	CQuaternion m_rotation = CQuaternion::Identity();		//回転
 	CVector3 m_scale = CVector3::One();						//拡大率。
-	int m_timer = 0;
-	bool m_getStar = false;
+	int m_timer = 0;						//星取得フラグたてるまでのタイマー　単位：秒
+	bool m_getStar = false;					//星取得フラグ
 	Player* m_player = nullptr;				//プレイヤー
-	Game* m_game = nullptr;
+	Game* m_game = nullptr;					//ゲーム
 };
 

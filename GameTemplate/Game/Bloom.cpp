@@ -3,7 +3,8 @@
 #include "Game.h"
 #include "PostEffect.h"
 
-Bloom::Bloom()
+
+void Bloom::Init()
 {
 	//各種レンダリングターゲットの初期化。
 	InitRenderTarget();
@@ -21,6 +22,8 @@ Bloom::Bloom()
 		//次のガウスブラーで使用するソーステクスチャを設定する。
 		srcBlurTexture = gaussianBlur.GetResultTextureSRV();
 	}
+
+	m_isInit = true;
 }
 
 
@@ -99,6 +102,10 @@ void Bloom::InitAlphaBlendState()
 }
 void Bloom::Draw(PostEffect& postEffect)
 {
+	if (!m_isInit) {
+		Init();
+	}
+
 	auto deviceContext = g_graphicsEngine->GetD3DDeviceContext();
 	deviceContext->PSSetSamplers(0, 1, &m_samplerState);
 	//まずは輝度を抽出する。

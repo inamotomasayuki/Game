@@ -153,6 +153,8 @@
     <ClCompile Include="GaussianBlur.cpp" />
     <ClCompile Include="PostEffect.cpp" />
     <ClCompile Include="ConstantBufferGPU.cpp" />
+    <ClCompile Include="Enemy03.cpp" />
+    <ClCompile Include="EnemyBall.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Vector.h">
@@ -277,6 +279,8 @@
     <ClInclude Include="GaussianBlur.h" />
     <ClInclude Include="PostEffect.h" />
     <ClInclude Include="ConstantBufferGPU.h" />
+    <ClInclude Include="Enemy03.h" />
+    <ClInclude Include="EnemyBall.h" />
   </ItemGroup>
   <ItemGroup>
     <MeshContentTask Include="Assets\modelData\gameStage01.FBX">

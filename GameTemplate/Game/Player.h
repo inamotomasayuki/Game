@@ -5,8 +5,8 @@
 class JumpFloor;
 class Game;
 const float GRAVITY = 400.0f;					//重力
-const float COLLIDER_HIGHT = 100.0f;		//カプセルコライダーの高さ
-const float COLLIDER_RADIUS = 20.0f;		//カプセルコライダーの半径
+const float PLAYER_COLLIDER_HIGHT = 100.0f;		//カプセルコライダーの高さ
+const float PLAYER_COLLIDER_RADIUS = 20.0f;		//カプセルコライダーの半径
 
 class Player : public IGameObject
 {
@@ -33,8 +33,8 @@ public:
 		m_position = pos;
 		//キャラクターコントローラー
 		m_charaCon.Init(
-			COLLIDER_RADIUS,			//半径
-			COLLIDER_HIGHT,			//高さ
+			PLAYER_COLLIDER_RADIUS,			//半径
+			PLAYER_COLLIDER_HIGHT,			//高さ
 			m_position		//初期座標
 		);
 	}
@@ -66,7 +66,7 @@ public:
 	/// 攻撃を受けてるかどうか。
 	/// </summary>
 	/// <param name="isAttacked">フラグ</param>
-	void SetIsAttacked(bool isAttacked) 
+	void SetIsAttacked(bool isAttacked)
 	{
 		m_isAttacked = isAttacked;
 	}
@@ -104,6 +104,10 @@ public:
 	{
 		return &m_skinModel;
 	}
+	/// <summary>
+	/// 移動速度の取得
+	/// </summary>
+	/// <returns>移動速度</returns>
 	CVector3 GetMoveSpeed()
 	{
 		return m_moveSpeed;
@@ -126,6 +130,10 @@ private:
 	/// アニメーションコントローラー
 	/// </summary>
 	void AnimationController();
+	/// <summary>
+	/// プレイヤーと他のゴーストとの接触処理
+	/// </summary>
+	void GhostContact();
 private:
 	SkinModel m_skinModel;								//スキンモデル。
 	CharacterController m_charaCon;						//キャラクターコントローラー
@@ -135,6 +143,7 @@ private:
 	CVector3 m_moveSpeed = CVector3::Zero();			//移動速度
 	CVector3 m_addSpeed = CVector3::Zero();				//加速度
 	CQuaternion m_jumpRot = CQuaternion::Identity();	//3段ジャンプ目の回転
+	CVector3 m_posXZ;								//XZベクトル
 
 	JumpFloor* m_jumpFloor = nullptr;				//ジャンプ床
 	MoveFloor* m_moveFloor = nullptr;				//動く床
@@ -164,5 +173,5 @@ private:
 	int m_threeStep = 0;			//3段ジャンプカウント
 	int m_timer = 0;				//タイマー 単位：秒
 	float angle = 0.0f;				//角度
-	float m_gravity;				//重力
+	float m_gravity = 0.0f;				//重力
 };

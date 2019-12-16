@@ -21,9 +21,9 @@ public:
 	{
 		m_position = pos;
 		m_charaCon.Init(
-			FLOOR_COLLIDER_RADIUS,
-			FLOOR_COLLIDER_HIGHT,
-			m_position
+			FLOOR_COLLIDER_RADIUS,		//半径
+			FLOOR_COLLIDER_HIGHT,		//高さ
+			m_position					//位置
 		);
 	}
 	/// <summary>
@@ -42,6 +42,10 @@ public:
 	{
 		m_scale = scale;
 	}
+	/// <summary>
+	/// ゴーストの取得
+	/// </summary>
+	/// <returns>ゴースト</returns>
 	PhysicsGhostObject* GetGhost()
 	{
 		return &m_ghostObject;
@@ -68,11 +72,10 @@ private:
 	Player* m_player = nullptr;			//プレイヤー
 
 	int m_timer = 0;		//タイマー
-	float m_speed = 1400.0f;
 	enum EnState {
-		enState_right,
-		enState_left
+		enState_right,		//行ったり
+		enState_left		//来たり
 	};
-	EnState m_state;
+	EnState m_state;		//ステート
 };
 
