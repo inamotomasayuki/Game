@@ -20,7 +20,7 @@ const float DELTA_TIME = 1.0f / 60.0f;		//経過時間　単位：秒
 Enemy02::Enemy02()
 {
 	//cmoファイルの読み込み。
-	m_skinModel.Init(L"Assets/modelData/kuribo.cmo");
+	m_skinModel.Init(L"Assets/modelData/wingKuribo.cmo");
 	m_state = enState_right;
 }
 
@@ -38,10 +38,12 @@ void Enemy02::Update()
 		VectorToPlayer();
 		//角度を求める
 		Angle();
-		//動く処理
-		Move();
-		//攻撃
-		Attack();
+		if (!m_isDeath) {
+			//動く処理
+			Move();
+			//攻撃
+			Attack();
+		}
 		//回転
 		Rotation();
 		//死亡*スコア値

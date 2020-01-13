@@ -49,5 +49,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	{
 		GameUpdate();	
 		g_graphicsEngine->GameDraw();
+		g_goMgr.Delete();
 	}
 }

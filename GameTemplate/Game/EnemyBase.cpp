@@ -4,8 +4,8 @@
 #include "EnemyBall.h"
 
 const float LENGTH = 75.0f;				//玉との距離
-const float PYON_UP = 1000.0f;			//跳ね上がるときの速度
-const float PYON_DOWN = -1000.0f;			//跳ね落ちるときの速度
+const float PYON_UP = 500.0f;			//跳ね上がるときの速度
+const float PYON_DOWN = -500.0f;			//跳ね落ちるときの速度
 const int PYON_UP_TIME = 6;				//跳ね上がる時間
 const int PYON_DOWN_TIME = 9;			//跳ね落ちる時間
 const int DELETE_TIME = 11;				//削除までの待ち時間

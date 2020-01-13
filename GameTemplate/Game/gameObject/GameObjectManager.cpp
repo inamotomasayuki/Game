@@ -28,6 +28,9 @@ void GameObjectManager::Update()
 		go->Update();
 	}
 	
+}
+void GameObjectManager::Delete()
+{
 	//全てのゲームオブジェクトの1フレーム分の処理が終わってから、削除する。
 	for (auto it = m_goList.begin(); it != m_goList.end();) {
 		if ((*it)->IsRequestDelete()) {		

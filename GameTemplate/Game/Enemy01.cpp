@@ -2,7 +2,7 @@
 #include "Enemy01.h"
 #include "Game.h"
 
-const float LENGTH_UPPER = 1000.0f;			//追跡上限距離
+const float LENGTH_UPPER = 900.0f;			//追跡上限距離
 const float LENGTH_UNDER = 50.0f;			//追跡下限距離
 const float MOVE_SPEED = 400.0f;			//移動速度
 const float MINIMUM = 0.0001f;				//極小
@@ -39,13 +39,14 @@ void Enemy01::Update()
 		VectorToPlayer();
 		//角度を求める
 		Angle();
-		//追跡
-		Search();
-		//攻撃（プレイヤーをノックバック）
-		Attack();
-		//元の位置に戻る
-		Return();
-
+		if (!m_isDeath) {
+			//追跡
+			Search();
+			//攻撃（プレイヤーをノックバック）
+			Attack();
+			//元の位置に戻る
+			Return();
+		}
 		m_position = m_charaCon.Execute(DELTA_TIME, m_moveSpeed);
 
 		//回転

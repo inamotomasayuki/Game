@@ -2,6 +2,8 @@
 #include "character/CharacterController.h"
 #include "MoveFloor.h"
 #include "Star.h"
+class Warp00;
+class Warp01;
 class JumpFloor;
 class Game;
 const float GRAVITY = 400.0f;					//重力
@@ -112,6 +114,38 @@ public:
 	{
 		return m_moveSpeed;
 	}
+	/// <summary>
+	/// ワープ00フラグ
+	/// </summary>
+	/// <param name="warp"></param>
+	void SetIsWarp00(bool warp)
+	{
+		m_isWarp00 = warp;
+	}
+	/// <summary>
+	/// ワープ01フラグ
+	/// </summary>
+	/// <param name="warp"></param>
+	void SetIsWarp01(bool warp)
+	{
+		m_isWarp01 = warp;
+	}
+	/// <summary>
+	/// 離れたかどうか
+	/// </summary>
+	/// <param name="leave"></param>
+	void SetIsLeave(bool leave)
+	{
+		m_isLeave = leave;
+	}
+	/// <summary>
+	/// 離れたかどうかフラグ取得
+	/// </summary>
+	/// <returns></returns>
+	bool GetIsLeave()
+	{
+		return m_isLeave;
+	}
 private:
 	/// <summary>
 	/// カメラを考慮したスティックでの移動
@@ -134,6 +168,15 @@ private:
 	/// プレイヤーと他のゴーストとの接触処理
 	/// </summary>
 	void GhostContact();
+	/// <summary>
+	/// ワープ0
+	/// </summary>
+	void Warp_0();
+	/// <summary>
+	/// ワープ1
+	/// </summary>
+	void Warp_1();
+
 private:
 	SkinModel m_skinModel;								//スキンモデル。
 	CharacterController m_charaCon;						//キャラクターコントローラー
@@ -149,6 +192,8 @@ private:
 	MoveFloor* m_moveFloor = nullptr;				//動く床
 	Game* m_game = nullptr;							//ゲーム
 	Star* m_star = nullptr;							//星
+	Warp00* m_warp00 = nullptr;						//ワープ０
+	Warp01* m_warp01 = nullptr;						//ワープ１
 
 	CVector3 m_floorSpeed = CVector3::Zero();		//床の速度
 
@@ -169,9 +214,15 @@ private:
 	bool m_jumpFlag = false;		//ジャンプしてるかどうか
 	bool m_contactFloor = false;	//床と接触してるかどうか
 	bool m_contactJumpFloor = false;	//ジャンプ床と接触してるかどうか
+	bool m_isWarp = false;				//ワープしたかどうか
+	bool m_isWarp00 = false;			//ワープ00中？
+	bool m_isWarp01 = false;			//ワープ01中？
+	bool m_isLeave = false;				//離れたかどうか
 	float m_jumpSpeed;				//ジャンプ速度
+	float m_rotSpeed = 0.0f;		//回転速度
 	int m_threeStep = 0;			//3段ジャンプカウント
 	int m_timer = 0;				//タイマー 単位：秒
+	int m_warpTimer = 0;			//ワープに使うタイマー　単位：秒　
 	float angle = 0.0f;				//角度
 	float m_gravity = 0.0f;				//重力
 };

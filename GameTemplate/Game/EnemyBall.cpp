@@ -18,7 +18,7 @@ const float DELETE_LENGTH = 100000.0f;			//íœ‹——£
 
 EnemyBall::EnemyBall()
 {
-	m_skinModel.Init(L"Assets/modelData/unityChan.cmo");
+	m_skinModel.Init(L"Assets/modelData/turtleShell.cmo");
 	m_gravity = ENEMY_GRAVITY;
 }
 

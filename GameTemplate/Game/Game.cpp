@@ -11,7 +11,7 @@ const int CLEAR_TIME = 25;				//クリアまでの時間
 Game::Game()
 {
 	if (g_gameData.GetStageNo() == 0) {
-		m_level.Init(L"Assets/level/stage_05.tkl", [&](LevelObjectData& objData) {
+		m_level.Init(L"Assets/level/stage_00.tkl", [&](LevelObjectData& objData) {
 			if (objData.EqualObjectName(L"unityChan")) {
 				m_player = g_goMgr.NewGameObject<Player>("player");
 				m_player->SetPosition(objData.position);
@@ -27,21 +27,25 @@ Game::Game()
 				return true;
 			}
 			if (objData.EqualObjectName(L"kuribo")) {
-				//m_enemy01 = g_goMgr.NewGameObject<Enemy01>("enemy01");
-				//m_enemy01->SetPosition(objData.position);
-				//m_enemy01->SetRotation(objData.rotation);
-				//m_enemy01->SetScale(objData.scale);
-
-				//m_enemy02 = g_goMgr.NewGameObject<Enemy02>("enemy02");
-				//m_enemy02->SetPosition(objData.position);
-				//m_enemy02->SetRotation(objData.rotation);
-				//m_enemy02->SetScale(objData.scale);
+				m_enemy01 = g_goMgr.NewGameObject<Enemy01>("enemy01");
+				m_enemy01->SetPosition(objData.position);
+				m_enemy01->SetRotation(objData.rotation);
+				m_enemy01->SetScale(objData.scale);
+				return true;
+			}
+			if (objData.EqualObjectName(L"wingKuribo")) {
+				m_enemy02 = g_goMgr.NewGameObject<Enemy02>("enemy02");
+				m_enemy02->SetPosition(objData.position);
+				m_enemy02->SetRotation(objData.rotation);
+				m_enemy02->SetScale(objData.scale);
+				return true;
+			}
+			if (objData.EqualObjectName(L"turtle")) {
 
 				m_enemy03 = g_goMgr.NewGameObject<Enemy03>("enemy03");
 				m_enemy03->SetPosition(objData.position);
 				m_enemy03->SetRotation(objData.rotation);
 				m_enemy03->SetScale(objData.scale);
-
 				return true;
 			}
 			if (objData.EqualObjectName(L"gameStage02")) {
@@ -63,6 +67,20 @@ Game::Game()
 				m_jumpFloor->SetPosition(objData.position);
 				m_jumpFloor->SetRotation(objData.rotation);
 				m_jumpFloor->SetScale(objData.scale);
+				return true;
+			}
+			if (objData.EqualObjectName(L"warp01")) {
+				m_warp00 = g_goMgr.NewGameObject<Warp00>("warp00");
+				m_warp00->SetPosition(objData.position);
+				m_warp00->SetRotation(objData.rotation);
+				m_warp00->SetScale(objData.scale);
+				return true;
+			}
+			if (objData.EqualObjectName(L"warp02")) {
+				m_warp01 = g_goMgr.NewGameObject<Warp01>("warp01");
+				m_warp01->SetPosition(objData.position);
+				m_warp01->SetRotation(objData.rotation);
+				m_warp01->SetScale(objData.scale);
 				return true;
 			}
 			if (objData.EqualObjectName(L"star")) {
@@ -116,25 +134,30 @@ Game::~Game()
 void Game::Update()
 {
 	//シャドウキャスターを登録。
-	g_shadowMap->RegistShadowCaster(m_backGround->GetSkinModel());
+	//g_shadowMap->RegistShadowCaster(m_backGround->GetSkinModel());
 	g_shadowMap->RegistShadowCaster(m_star->GetSkinModel());
 	g_shadowMap->RegistShadowCaster(m_player->GetSkinModel());
-	//g_goMgr.FindGameObjects<Enemy01>("enemy01", [](Enemy01* enemy01)->bool {
-	//	g_shadowMap->RegistShadowCaster(enemy01->GetSkinModel());
-	//	return true;
-	//	});
-	//g_goMgr.FindGameObjects<Enemy02>("enemy02", [](Enemy02* enemy02)->bool {
-	//	g_shadowMap->RegistShadowCaster(enemy02->GetSkinModel());
-	//	return true;
-	//	});
-	//g_goMgr.FindGameObjects<Enemy03>("enemy03", [](Enemy03* enemy03)->bool {
-	//	g_shadowMap->RegistShadowCaster(enemy03->GetSkinModel());
-	//	return true;
-	//	});
-	//g_goMgr.FindGameObjects<Coin>("coin", [](Coin* coin)->bool {
-	//	g_shadowMap->RegistShadowCaster(coin->GetSkinModel());
-	//	return true;
-	//	});
+	g_goMgr.FindGameObjects<Enemy01>("enemy01", [](Enemy01* enemy01)->bool {
+		g_shadowMap->RegistShadowCaster(enemy01->GetSkinModel());
+		return true;
+		});
+	g_goMgr.FindGameObjects<Enemy02>("enemy02", [](Enemy02* enemy02)->bool {
+		g_shadowMap->RegistShadowCaster(enemy02->GetSkinModel());
+		return true;
+		});
+	g_goMgr.FindGameObjects<Enemy03>("enemy03", [](Enemy03* enemy03)->bool {
+		g_shadowMap->RegistShadowCaster(enemy03->GetSkinModel());
+		return true;
+		});
+
+	g_goMgr.FindGameObjects<Coin>("coin", [this](Coin* coin)->bool {
+		auto v = m_player->GetPositon() - coin->GetPositon();
+		auto len = v.Length();
+		if (len < 3000) {
+			g_shadowMap->RegistShadowCaster(coin->GetSkinModel());
+		}
+		return true;
+		});
 
 
 	//ゲームオーバー

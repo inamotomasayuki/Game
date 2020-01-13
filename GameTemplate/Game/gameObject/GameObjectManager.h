@@ -106,6 +106,10 @@ public:
 			}
 		}
 	}
+	/// <summary>
+	/// 削除
+	/// </summary>
+	void Delete();
 private:
 
 	std::vector< IGameObject* > m_goList;		//ゲームオブジェクトのリスト。

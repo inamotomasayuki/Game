@@ -42,10 +42,15 @@ public:
 	{
 		return &m_skinModel;
 	}
-	PhysicsGhostObject* GetGhost()
+	/// <summary>
+	/// À•W‚Ìæ“¾
+	/// </summary>
+	/// <returns>À•W</returns>
+	CVector3 GetPositon()
 	{
-		return &m_ghostObject;
+		return m_position;
 	}
+
 private:
 	/// <summary>
 	/// ‰ñ“]

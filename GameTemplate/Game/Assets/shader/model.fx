@@ -167,7 +167,12 @@ PSInput VSMainSkin( VSInputNmTxWeights In )
 	}
 	psInput.Normal = normalize( mul(skinning, In.Normal) );
 	psInput.Tangent = normalize( mul(skinning, In.Tangent) );
-	
+	float4 worldPos = pos;
+	if (isShadowReciever == 1) {
+		//続いて、ライトビュープロジェクション空間に変換。
+		psInput.posInLVP = mul(mLightView, worldPos);
+		psInput.posInLVP = mul(mLightProj, psInput.posInLVP);
+	}
 	pos = mul(mView, pos);
 	pos = mul(mProj, pos);
 	psInput.Position = pos;
@@ -200,7 +205,7 @@ float4 PSMain( PSInput In ) : SV_Target0
 			//スペキュラ反射の強さを求める。
 			float specPower = max(0, dot(R, -E));
 			specPower = pow(specPower, specPow);
-			lig += dligColor[i] * specPower / 2;
+			lig += dligColor[i] * specPower/2;
 			lig += ambient;
 		}
 	}

@@ -15,6 +15,8 @@
 #include "GameOver.h"
 #include "GameClear.h"
 #include "Star.h"
+#include "Warp00.h"
+#include "Warp01.h"
 class Game : public IGameObject
 {
 public:
@@ -105,6 +107,8 @@ private:
 	MoveFloor* m_moveFloor = nullptr;		//動く床
 	SpriteUI* m_spriteUI = nullptr;			//スプライト
 	JumpFloor* m_jumpFloor = nullptr;		//ジャンプ床
+	Warp00* m_warp00 = nullptr;				//ワープ0床
+	Warp01* m_warp01 = nullptr;				//ワープ１床
 	GameOver* m_gameOver = nullptr;			//ゲームオーバー
 	GameClear* m_gameClear = nullptr;		//ゲームクリア
 	Star* m_star = nullptr;					//星

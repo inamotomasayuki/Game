@@ -158,6 +158,8 @@
     </ClCompile>
     <ClCompile Include="system\system.cpp" />
     <ClCompile Include="Title.cpp" />
+    <ClCompile Include="Warp00.cpp" />
+    <ClCompile Include="Warp01.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BackGround.h" />
@@ -218,16 +220,11 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="system\system.h" />
     <ClInclude Include="Title.h" />
+    <ClInclude Include="Warp00.h" />
+    <ClInclude Include="Warp01.h" />
   </ItemGroup>
   <ItemGroup>
-    <MeshContentTask Include="Assets\modelData\coin.fbx" />
-    <MeshContentTask Include="Assets\modelData\gameStage01.FBX" />
-    <MeshContentTask Include="Assets\modelData\gameStage02.fbx" />
-    <MeshContentTask Include="Assets\modelData\jumpFloor.FBX" />
-    <MeshContentTask Include="Assets\modelData\kuribo.FBX" />
-    <MeshContentTask Include="Assets\modelData\moveFloor.FBX" />
-    <MeshContentTask Include="Assets\modelData\star.fbx" />
-    <MeshContentTask Include="Assets\modelData\unityChan.fbx" />
+    <MeshContentTask Include="Assets\modelData\warp.fbx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

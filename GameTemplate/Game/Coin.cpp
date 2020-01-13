@@ -7,7 +7,7 @@ const float PYON_DOWN = -20.0f;			//跳ね落ちるときの速度
 const int PYON_UP_TIME = 5;				//跳ね上がる時間
 const int PYON_DOWN_TIME = 8;			//跳ね落ちる時間
 const int DELETE_TIME = 10;				//削除までの待ち時間
-const int COIN_SCORE = 1;				//コインのスコア
+const int COIN_SCORE = 10;				//コインのスコア
 const float FLAG_LENGTH = 70.0f;		//コイン取得フラグさせるプレイヤーとの距離
 const float ROTATION_SPEED = 5.0f;		//回転速度
 

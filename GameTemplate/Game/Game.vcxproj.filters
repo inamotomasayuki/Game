@@ -31,11 +31,11 @@
     <Filter Include="system">
       <UniqueIdentifier>{48b58c60-bbe2-40d8-9d2f-e81d065b6820}</UniqueIdentifier>
     </Filter>
-    <Filter Include="gameObject">
-      <UniqueIdentifier>{e7519008-d027-4148-8418-df6e51bf2347}</UniqueIdentifier>
-    </Filter>
     <Filter Include="graphics\2D">
       <UniqueIdentifier>{b784de8d-d55e-4cb6-9320-ea293d815b17}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics\gameObject">
+      <UniqueIdentifier>{e7519008-d027-4148-8418-df6e51bf2347}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -122,10 +122,10 @@
       <Filter>graphics\2D</Filter>
     </ClCompile>
     <ClCompile Include="gameObject\IGameObject.cpp">
-      <Filter>gameObject</Filter>
+      <Filter>graphics\gameObject</Filter>
     </ClCompile>
     <ClCompile Include="gameObject\GameObjectManager.cpp">
-      <Filter>gameObject</Filter>
+      <Filter>graphics\gameObject</Filter>
     </ClCompile>
     <ClCompile Include="Enemy01.cpp" />
     <ClCompile Include="GameData.cpp" />
@@ -153,8 +153,10 @@
     <ClCompile Include="GaussianBlur.cpp" />
     <ClCompile Include="PostEffect.cpp" />
     <ClCompile Include="ConstantBufferGPU.cpp" />
-    <ClCompile Include="Enemy03.cpp" />
     <ClCompile Include="EnemyBall.cpp" />
+    <ClCompile Include="Enemy03.cpp" />
+    <ClCompile Include="Warp00.cpp" />
+    <ClCompile Include="Warp01.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Vector.h">
@@ -248,10 +250,10 @@
       <Filter>graphics\2D</Filter>
     </ClInclude>
     <ClInclude Include="gameObject\GameObjectManager.h">
-      <Filter>gameObject</Filter>
+      <Filter>graphics\gameObject</Filter>
     </ClInclude>
     <ClInclude Include="gameObject\IGameObject.h">
-      <Filter>gameObject</Filter>
+      <Filter>graphics\gameObject</Filter>
     </ClInclude>
     <ClInclude Include="Enemy01.h" />
     <ClInclude Include="GameData.h" />
@@ -281,30 +283,11 @@
     <ClInclude Include="ConstantBufferGPU.h" />
     <ClInclude Include="Enemy03.h" />
     <ClInclude Include="EnemyBall.h" />
+    <ClInclude Include="Warp00.h" />
+    <ClInclude Include="Warp01.h" />
   </ItemGroup>
   <ItemGroup>
-    <MeshContentTask Include="Assets\modelData\gameStage01.FBX">
-      <Filter>Assets\modelData</Filter>
-    </MeshContentTask>
-    <MeshContentTask Include="Assets\modelData\kuribo.FBX">
-      <Filter>Assets\modelData</Filter>
-    </MeshContentTask>
-    <MeshContentTask Include="Assets\modelData\unityChan.fbx">
-      <Filter>Assets\modelData</Filter>
-    </MeshContentTask>
-    <MeshContentTask Include="Assets\modelData\coin.fbx">
-      <Filter>Assets\modelData</Filter>
-    </MeshContentTask>
-    <MeshContentTask Include="Assets\modelData\moveFloor.FBX">
-      <Filter>Assets\modelData</Filter>
-    </MeshContentTask>
-    <MeshContentTask Include="Assets\modelData\jumpFloor.FBX">
-      <Filter>Assets\modelData</Filter>
-    </MeshContentTask>
-    <MeshContentTask Include="Assets\modelData\star.fbx">
-      <Filter>Assets\modelData</Filter>
-    </MeshContentTask>
-    <MeshContentTask Include="Assets\modelData\gameStage02.fbx">
+    <MeshContentTask Include="Assets\modelData\warp.fbx">
       <Filter>Assets\modelData</Filter>
     </MeshContentTask>
   </ItemGroup>

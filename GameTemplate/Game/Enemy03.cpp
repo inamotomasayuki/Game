@@ -20,7 +20,7 @@ const float DELETE_LENGTH = 100000.0f;			//削除距離
 Enemy03::Enemy03()
 {
 	//cmoファイルの読み込み。
-	m_skinModel.Init(L"Assets/modelData/kuribo.cmo");
+	m_skinModel.Init(L"Assets/modelData/turtle.cmo");
 	m_gravity = ENEMY_GRAVITY;
 }
 
@@ -46,7 +46,6 @@ void Enemy03::Update()
 		//死亡*スコア値
 		Death(SCORE);
 		DeathEnemyBallContact(SCORE);
-
 		m_position = m_charaCon.Execute(DELTA_TIME, m_moveSpeed);
 	}
 

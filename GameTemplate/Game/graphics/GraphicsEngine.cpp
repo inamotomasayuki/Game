@@ -1,6 +1,7 @@
 ﻿#include "stdafx.h"
 #include "GraphicsEngine.h"
 #include "../ShadowMap.h"
+#include "../Player.h"
 GraphicsEngine::GraphicsEngine()
 {
 }
@@ -198,13 +199,22 @@ void GraphicsEngine::GameDraw()
 	unsigned int numViewport = 1;
 	d3dDeviceContext->RSGetViewports(&numViewport, &m_frameBufferViewports);
 
+	////シャドウマップを更新。
+	//g_shadowMap->UpdateFromLightTarget(
+	//	{ 1000.0f,1000.0f,1000.0f },
+	//	{ 0.0f,0.0f,0.0f }
+	//);
 
-
-	//シャドウマップを更新。
-	g_shadowMap->UpdateFromLightTarget(
-		{ 1000.0f, 1000.0f, 1000.0f },
-		{ 0.0f, 0.0f, 0.0f }
-	);
+	auto player = g_goMgr.FindGameObject<Player>("player");
+	if (player != nullptr) {
+		auto cameraPos = player->GetPositon();
+		cameraPos.y += 1000.0f;
+		//シャドウマップを更新。
+		g_shadowMap->UpdateFromLightTarget(
+			cameraPos,
+			player->GetPositon()
+		);
+	}
 
 	///////////////////////////////////////////////
 	//シャドウマップにレンダリング
@@ -256,7 +266,7 @@ void GraphicsEngine::GameDraw()
 		m_frameBufferRenderTargetView,
 		m_frameBufferDepthStencilView,
 		&m_frameBufferViewports
-	);	
+	);
 
 	CMatrix mView;
 	CMatrix mProj;

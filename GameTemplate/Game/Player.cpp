@@ -2,8 +2,11 @@
 #include "Player.h"
 #include "Game.h"
 #include "JumpFloor.h"
+#include "Warp00.h"
+#include "Warp01.h"
 const float DELTA_TIME = 1.0f / 60.0f;			//経過時間　単位：秒
 const float INTERPOLATE_TIME = 0.1f;			//補完時間　単位：秒
+const float ROTATION_SPEED = 1.0f;				//回転加算速度
 
 const float MOVE_SPEED = 50.0f;					//移動速度
 float DASH_SPEED = 1.0f;						//ダッシュ速度
@@ -53,13 +56,12 @@ void Player::Update()
 
 	//ワールド行列の更新。
 	m_skinModel.UpdateWorldMatrix(m_position, m_rotation, m_scale);
-	//パッド操作
-	PadMove();
 
 	m_moveFloor = g_goMgr.FindGameObject<MoveFloor>("moveFloor");
 	m_jumpFloor = g_goMgr.FindGameObject<JumpFloor>("jumpFloor");
 	m_star = g_goMgr.FindGameObject<Star>("star");
-
+	m_warp00 = g_goMgr.FindGameObject<Warp00>("warp00");
+	m_warp01 = g_goMgr.FindGameObject<Warp01>("warp01");
 	//デバッグショートカット
 	if (g_pad[0].IsTrigger(enButtonX)) {
 		m_charaCon.SetPosition(m_jumpFloor->GetPosition());
@@ -67,17 +69,24 @@ void Player::Update()
 	if (g_pad[0].IsTrigger(enButtonY)) {
 		m_charaCon.SetPosition(m_moveFloor->GetPosition());
 	}
-
-	//プレイヤーと他のゴーストとの接触処理
-	GhostContact();
-
-
-	if (m_game != nullptr) {
-		//プレイヤーの回転
-		Rotation();
-		//アニメーション
-		AnimationController();
+	if (!m_isWarp00 && !m_isWarp01) {
+		//パッド操作
+		PadMove();
+		//プレイヤーと他のゴーストとの接触処理
+		GhostContact();
+		if (m_game != nullptr) {
+			//プレイヤーの回転
+			Rotation();
+			//アニメーション
+			AnimationController();
+		}
 	}
+	if (m_isWarp00) {
+		Warp_0();
+	}
+	//if (m_isWarp01) {
+	//	Warp_1();
+	//}
 }
 
 void Player::Draw()
@@ -92,6 +101,47 @@ void Player::Draw()
 		g_camera3D.GetProjectionMatrix(),
 		enRenderMode_Normal
 	);
+}
+void Player::Warp_0()
+{
+	if (!m_isWarp) {
+		m_warpTimer++;
+		//一定速度で回転させる
+		m_rotSpeed += ROTATION_SPEED;
+		if (m_warpTimer == 120) {
+			m_charaCon.SetPosition(m_warp01->GetPosition());
+			m_position = m_charaCon.Execute(DELTA_TIME, m_moveSpeed);
+			m_isWarp = true;
+		}
+	}
+	if (m_isWarp) {
+		if (m_rotSpeed > 0) {
+			m_rotSpeed -= ROTATION_SPEED;
+		}
+		else {
+			m_isWarp00 = false;
+			m_isWarp = false;
+		}
+	}
+	CQuaternion addRot;
+	addRot.SetRotationDeg(CVector3::AxisY(), m_rotSpeed);
+	m_rotation.Multiply(addRot);
+
+}
+void Player::Warp_1()
+{
+	m_warpTimer++;
+	//一定速度で回転させる
+	m_rotSpeed += ROTATION_SPEED;
+	CQuaternion addRot;
+	addRot.SetRotationDeg(CVector3::AxisY(), m_rotSpeed);
+	m_rotation.Multiply(addRot);
+	if (m_warpTimer == 120) {
+		m_charaCon.SetPosition(m_warp00->GetPosition());
+		m_position = m_charaCon.Execute(DELTA_TIME, m_moveSpeed);
+		m_timer = 0;
+	}
+
 }
 void Player::GhostContact()
 {
@@ -139,13 +189,12 @@ void Player::GhostContact()
 		}
 		m_position = m_charaCon.Execute(DELTA_TIME, m_moveSpeed);
 	}
-
 }
 void Player::PadMove()
-{	
+{
 	m_game = g_goMgr.FindGameObject<Game>("game");
 	if (m_game != nullptr) {
-		if (m_isAttacked == false 
+		if (m_isAttacked == false
 			&& !m_game->GetGameOverFlag()
 			&& !m_game->GetStar()) {
 			//Bダッシュ
@@ -264,10 +313,10 @@ void Player::Rotation()
 	}
 	else {
 		m_rotation.SetRotation(
-			CVector3::AxisY(), 
+			CVector3::AxisY(),
 			atan2f(-moveSpeedXZ.x, -moveSpeedXZ.z)
 		);
-	}	
+	}
 	if (!m_game->GetStar()) {
 		m_posXZ = m_position - g_camera3D.GetPosition();
 		m_posXZ.y = 0.0f;
@@ -290,13 +339,13 @@ void Player::AnimationController()
 			if (m_moveSpeed.LengthSq() >= INPUT_AMOUNT_DASH_LENGTH) {
 				//走りアニメーション
 				m_animation.Play(enAnimationClip_run, INTERPOLATE_TIME);
-				m_animation.Update(DELTA_TIME);
+				m_animation.Update(DELTA_TIME * 2);
 			}
 			//通常移動中
 			else if (m_moveSpeed.LengthSq() >= INPUT_AMOUNT_WALK_LENGTH) {
 				//歩きアニメーション
 				m_animation.Play(enAnimationClip_walk, INTERPOLATE_TIME);
-				m_animation.Update(DELTA_TIME);
+				m_animation.Update(DELTA_TIME * 2);
 			}
 			//何も操作されてない
 			else {
@@ -319,7 +368,7 @@ void Player::AnimationController()
 		}
 	}
 	//ゲームオーバーなら
-	if(m_game->GetGameOverFlag()) {
+	if (m_game->GetGameOverFlag()) {
 		//ダウンアニメーション
 		m_animation.Play(enAnimationClip_down, INTERPOLATE_TIME);
 		m_animation.Update(DELTA_TIME * ANIMATION_DOWN_SPEED);
@@ -330,7 +379,7 @@ void Player::AnimationController()
 		//クリアアニメーション
 		m_animation.Play(enAnimationClip_clear, INTERPOLATE_TIME);
 		m_animation.Update(DELTA_TIME * ANIMATION_CLEAR_SPEED);
-	}	
+	}
 	else if (m_game->GetStar()) {
 		//ダッシュ中
 		if (m_moveSpeed.LengthSq() >= INPUT_AMOUNT_DASH_LENGTH) {
