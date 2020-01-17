@@ -17,6 +17,10 @@
 #include "Star.h"
 #include "Warp00.h"
 #include "Warp01.h"
+#include "Box.h"
+#include "Item.h"
+#include "sound/SoundEngine.h"
+#include "sound/SoundSource.h"
 class Game : public IGameObject
 {
 public:
@@ -95,6 +99,29 @@ public:
 	{
 		return m_getStar;
 	}
+	/// <summary>
+	/// 敵を踏む音
+	/// </summary>
+	void fumuSE()
+	{
+		m_se[enSE_fumu].Play(false);
+	}
+	/// <summary>
+	/// ボール蹴る音
+	/// </summary>
+	void pokoSE()
+	{
+		m_se[enSE_poko].Play(false);
+	}
+private:
+	/// <summary>
+	/// サウンド初期化
+	/// </summary>
+	void InitSound();
+	/// <summary>
+	/// サウンド再生
+	/// </summary>
+	void SoundPlay();
 private:
 	Level m_level;
 	Player* m_player = nullptr;				//プレイヤー
@@ -112,13 +139,29 @@ private:
 	GameOver* m_gameOver = nullptr;			//ゲームオーバー
 	GameClear* m_gameClear = nullptr;		//ゲームクリア
 	Star* m_star = nullptr;					//星
+	Box* m_box = nullptr;					//箱
+	Item* m_item = nullptr;
+	CSoundEngine m_soundEngine;
+	CSoundSource m_bgm;			//BGM	
+	enum EnSE{
+		enSE_coin,			//コインゲット音
+		enSE_gameClear,		//ゲームクリア音
+		enSE_gameOver,		//ゲームオーバー音
+		enSE_fumu,			//敵を踏む音
+		enSE_poko,			//ボール蹴る音
+		enSE_Num			//効果音の数
+	};				
+	CSoundSource m_se[enSE_Num];			//効果音
+
 private:
 	int m_score = 0;			//スコア
-	int m_hp = 3;				//HP
+	int m_hp = 5;				//HP
 	int m_clearTimer = 0;		//クリアまでのタイマー
 	bool m_gameOverFlag = false;	//ゲームオーバーフラグ
 	bool m_gameClearFlag = false;	//ゲームクリアフラグ
 	bool m_getStar = false;			//星を取ったかどうか
+	bool m_isGameClearSE = false;	//SE鳴らしたか
+	bool m_isGameOverSE = false;	//SE鳴らしたか
 	CVector3 m_cameraPos;			//カメラの位置
 	CVector3 m_nextCameraPos;		//次のカメラの位置
 };

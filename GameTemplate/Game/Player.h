@@ -2,6 +2,10 @@
 #include "character/CharacterController.h"
 #include "MoveFloor.h"
 #include "Star.h"
+#include "sound/SoundEngine.h"
+#include "sound/SoundSource.h"
+#include "Box.h"
+#include "Item.h"
 class Warp00;
 class Warp01;
 class JumpFloor;
@@ -89,6 +93,7 @@ public:
 		m_jumpFlag = jumpFlag;
 		m_jumpSpeed = 4000.0f;
 		m_gravity = GRAVITY;
+		m_se[enSE_jump].Play(false);
 	}
 	/// <summary>
 	/// 動く床の速度の設定
@@ -134,17 +139,45 @@ public:
 	/// 離れたかどうか
 	/// </summary>
 	/// <param name="leave"></param>
-	void SetIsLeave(bool leave)
+	void SetIsLeave00(bool leave)
 	{
-		m_isLeave = leave;
+		m_isLeave00 = leave;
 	}
 	/// <summary>
 	/// 離れたかどうかフラグ取得
 	/// </summary>
 	/// <returns></returns>
-	bool GetIsLeave()
+	bool GetIsLeave00()
 	{
-		return m_isLeave;
+		return m_isLeave00;
+	}
+	/// <summary>
+	/// 離れたかどうか
+	/// </summary>
+	/// <param name="leave"></param>
+	void SetIsLeave01(bool leave)
+	{
+		m_isLeave01 = leave;
+	}
+	/// <summary>
+	/// 離れたかどうかフラグ取得
+	/// </summary>
+	/// <returns></returns>
+	bool GetIsLeave01()
+	{
+		return m_isLeave01;
+	}
+	/// <summary>
+	/// ヒップドロップ中
+	/// </summary>
+	/// <returns></returns>
+	bool IsHipDrop()
+	{
+		return m_isHipDrop;
+	}
+	void SetIsDamageSE(bool SE)
+	{
+		m_isDamageSE = SE;
 	}
 private:
 	/// <summary>
@@ -176,7 +209,14 @@ private:
 	/// ワープ1
 	/// </summary>
 	void Warp_1();
-
+	/// <summary>
+	/// サウンドの初期化
+	/// </summary>
+	void InitSound();
+	/// <summary>
+	/// サウンド再生
+	/// </summary>
+	void SoundPlay();
 private:
 	SkinModel m_skinModel;								//スキンモデル。
 	CharacterController m_charaCon;						//キャラクターコントローラー
@@ -187,14 +227,14 @@ private:
 	CVector3 m_addSpeed = CVector3::Zero();				//加速度
 	CQuaternion m_jumpRot = CQuaternion::Identity();	//3段ジャンプ目の回転
 	CVector3 m_posXZ;								//XZベクトル
-
 	JumpFloor* m_jumpFloor = nullptr;				//ジャンプ床
 	MoveFloor* m_moveFloor = nullptr;				//動く床
 	Game* m_game = nullptr;							//ゲーム
 	Star* m_star = nullptr;							//星
 	Warp00* m_warp00 = nullptr;						//ワープ０
 	Warp01* m_warp01 = nullptr;						//ワープ１
-
+	Box* m_box = nullptr;
+	Item* m_item = nullptr;
 	CVector3 m_floorSpeed = CVector3::Zero();		//床の速度
 
 	enum EnAnimationClip {
@@ -210,6 +250,19 @@ private:
 	AnimationClip m_animClips[enAnimationClip_Num];		//アニメーションクリップ。
 	Animation m_animation;								//アニメーション
 
+	CSoundEngine m_soundEngine;
+	enum EnSE {
+		enSE_jump,		//ジャンプ音
+		enSE_jumpFloor,	//ジャンプ床音
+		enSE_walk,		//歩行音
+		enSE_dash,		//ダッシュ音
+		enSE_warp0,		//ワープ前
+		enSE_warp1,		//ワープ後
+		enSE_damage,	//ダメージ音
+		enSE_Num		//SEの数
+	};
+	CSoundSource m_se[enSE_Num];			//効果音[SEの数分]
+
 	bool m_isAttacked = false;		//攻撃を受けてるかどうか
 	bool m_jumpFlag = false;		//ジャンプしてるかどうか
 	bool m_contactFloor = false;	//床と接触してるかどうか
@@ -217,12 +270,17 @@ private:
 	bool m_isWarp = false;				//ワープしたかどうか
 	bool m_isWarp00 = false;			//ワープ00中？
 	bool m_isWarp01 = false;			//ワープ01中？
-	bool m_isLeave = false;				//離れたかどうか
+	bool m_isLeave00 = false;				//離れたかどうか
+	bool m_isLeave01 = false;				//離れたかどうか
+	bool m_isHipDrop = false;				//ヒップドロップ中
+	bool m_isDamageSE = false;
+	bool m_hitBox = false;
 	float m_jumpSpeed;				//ジャンプ速度
 	float m_rotSpeed = 0.0f;		//回転速度
 	int m_threeStep = 0;			//3段ジャンプカウント
 	int m_timer = 0;				//タイマー 単位：秒
-	int m_warpTimer = 0;			//ワープに使うタイマー　単位：秒　
+	int m_warpTimer = 0;			//ワープに使うタイマー　単位：秒
+	int m_hipDropTimer = 0;			//ヒップドロップ
 	float angle = 0.0f;				//角度
 	float m_gravity = 0.0f;				//重力
 };

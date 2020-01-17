@@ -3,6 +3,7 @@
 #include "Game.h"
 
 const int ATTACK_WAIT_TIME = 40;		//攻撃したときの待ち時間
+const float ATTACKED_WAIT_TIME = 20.0f;		//攻撃されたときの待ち時間
 const float DEGREE_NUM = 80.0f;			//角度　単位：degree
 const float LENGTH = 50.0f;				//プレイヤーとの距離
 const float PLAYER_JUMP_LENGTH = 80.0f;		//プレイヤーがジャンプした時との距離
@@ -11,7 +12,7 @@ const float PLAYER_NOCKBACK_SPEED = 2500.0f;	//プレイヤーのノックバックスピード
 const float ENEMY_GRAVITY = 10.0f;					//重力
 const float GRAVITY_ACCELERATION = 1.1f;		//重力加速
 const float GRAVITY_UPPER = 400.0f;				//重力上限
-const int SCORE = 5;					//スコア
+const int SCORE = 1;					//スコア
 const float KICKED_SPEED = -2000.0f;		//蹴られた時のスピード（蹴った方向に飛ばすためにマイナス）
 const float DELTA_TIME = 1.0f / 60.0f;		//経過時間　単位：秒
 const float ROTATION_SPEED = 40.0f;					//回転速度
@@ -70,44 +71,74 @@ void Enemy03::Rotation()
 }
 void Enemy03::Attack()
 {
-	//攻撃中じゃなかったら攻撃
-	if (!m_isAttacked 
-		|| (m_isAttacked && m_isBallAttack) 
-		&& !m_isAttack) {
-		if (fabs(m_angle) > CMath::DegToRad(DEGREE_NUM)
-			&& m_len < LENGTH) {
-			m_v.y = 0.0f;
-			//ノックバックさせる速度
-			m_player->SetAddSpeed(m_v * PLAYER_NOCKBACK_SPEED);
-			m_player->SetIsAttacked(true);	//攻撃された。
-			m_isAttack = true;	//攻撃した。	
-			m_game->SetHP(ATTACK_MINUS_PLAYER_HP);
-		}
-	}
-	//攻撃したら少し待つ
-	if(m_isAttack){
-		m_waitTimer++;
-		if (m_waitTimer == ATTACK_WAIT_TIME) {
-			m_waitTimer = 0;
-			m_isAttack = false;		//攻撃してない。
-			m_player->SetIsAttacked(false);		//攻撃されてない。
+	if (!m_isAttacked) {
+		if (!m_player->IsHipDrop()) {
+			//攻撃中じゃなかったら攻撃
+			if (!m_isAttacked
+				|| (m_isAttacked && m_isBallAttack)
+				&& !m_isAttack) {
+				if (fabs(m_angle) > CMath::DegToRad(DEGREE_NUM)
+					&& m_len < LENGTH) {
+					m_v.y = 0.0f;
+					//ノックバックさせる速度
+					m_player->SetAddSpeed(m_v * PLAYER_NOCKBACK_SPEED);
+					m_player->SetIsAttacked(true);	//攻撃された。
+					m_isAttack = true;	//攻撃した。	
+					m_player->SetIsDamageSE(true);
+					m_game->SetHP(ATTACK_MINUS_PLAYER_HP);
+				}
+			}
+			//攻撃したら少し待つ
+			if (m_isAttack) {
+				m_waitTimer++;
+				if (m_waitTimer == ATTACK_WAIT_TIME) {
+					m_waitTimer = 0;
+					m_isAttack = false;		//攻撃してない。
+					m_player->SetIsAttacked(false);		//攻撃されてない。
+				}
+			}
 		}
 	}
 }
 
 void Enemy03::Death(int score)
 {
-	//攻撃されてなかったら
-	if (m_isAttacked == false) {
-		if (fabs(m_angle) <= CMath::DegToRad(DEGREE_NUM) && m_len < LENGTH) {
-			m_player->SetJumpFlag(true);	//ジャンプさせる	
-			m_game->SetScore(score);		//スコア
-			m_isAttacked = true;		//攻撃された
+	if (!m_player->IsHipDrop()) {
+		//攻撃されてなかったら
+		if (m_isAttacked == false) {
+			if (fabs(m_angle) <= CMath::DegToRad(DEGREE_NUM) && m_len < LENGTH) {
+				m_player->SetJumpFlag(true);	//ジャンプさせる	
+				m_game->fumuSE();
+				m_game->SetScore(score);		//スコア
+				m_isAttacked = true;		//攻撃された
+			}
+		}
+		if (!m_isHipDrop) {
+			if (m_isAttacked) {
+				m_enemyBall = g_goMgr.NewGameObject<EnemyBall>("enemyBall");
+				m_enemyBall->SetPosition(m_position);
+				g_goMgr.DeleteGameObject(this);
+			}
 		}
 	}
-	if (m_isAttacked) {
-		m_enemyBall = g_goMgr.NewGameObject<EnemyBall>("enemyBall");
-		m_enemyBall->SetPosition(m_position);
-		g_goMgr.DeleteGameObject(this);
+	else {
+		//攻撃されてなかったら
+		if (m_isAttacked == false) {
+			if (fabs(m_angle) <= CMath::DegToRad(90) && m_len < LENGTH) {
+				m_scale.z /= 10;
+				m_game->fumuSE();
+				m_isHipDrop = true;
+				m_isAttacked = true;		//攻撃された
+			}
+		}
+	}
+	if (m_isHipDrop) {
+		if (m_isAttacked) {
+			m_waitTimer++;
+			if (m_waitTimer == ATTACKED_WAIT_TIME) {
+				m_game->SetScore(score);
+				g_goMgr.DeleteGameObject(this);
+			}
+		}
 	}
 }

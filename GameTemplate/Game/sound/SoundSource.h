@@ -189,8 +189,12 @@ private:
 	unsigned int			m_readStartPos = 0;			//!<読み込み開始位置。
 	unsigned int			m_ringBufferSize = 0;		//!<リングバッファのサイズ。
 	EnStreamingStatus		m_streamingState = enStreamingBuffering;	//!<ストリーミングステータス。
-	FLOAT32 m_emitterAzimuths[INPUTCHANNELS];
-	FLOAT32 m_matrixCoefficients[INPUTCHANNELS * OUTPUTCHANNELS];
+	//FLOAT32 m_emitterAzimuths[INPUTCHANNELS];
+	//FLOAT32 m_matrixCoefficients[INPUTCHANNELS * OUTPUTCHANNELS];
+
+	FLOAT32 m_emitterAzimuths[2];
+	FLOAT32 m_matrixCoefficients[2 * 8];
+
 	bool m_isAvailable = false;			//!<インスタンスが利用可能？
 };
 

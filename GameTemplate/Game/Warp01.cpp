@@ -20,25 +20,27 @@ void Warp01::Update()
 	//‰ñ“]
 	Rotation();
 	m_player = g_goMgr.FindGameObject<Player>("player");
-	auto v = m_position - m_player->GetPositon();
-	auto len = v.Length();
-	if (len < 50
-		&& !m_player->GetIsLeave()) {
-		//m_player->SetIsWarp01(true);
-		//m_player->SetIsLeave(true);
+	if (m_player != nullptr) {
+		auto v = m_position - m_player->GetPositon();
+		auto len = v.Length();
+		if (len < 50
+			&& !m_player->GetIsLeave01()) {
+			m_player->SetIsWarp01(true);
+		}
+		if (len >= 100) {
+			m_player->SetIsLeave01(false);
+		}
 	}
-	else {
-		//m_player->SetIsLeave(false);
-	}
-
 }
 void Warp01::Draw()
 {
 	m_skinModel.Draw(
 		g_camera3D.GetViewMatrix(),
 		g_camera3D.GetProjectionMatrix(),
-		enRenderMode_Normal
+		enRenderMode_Normal,
+		1
 	);
+	m_skinModel.RimLightOff();
 }
 void Warp01::Rotation()
 {

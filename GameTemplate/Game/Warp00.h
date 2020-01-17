@@ -51,5 +51,6 @@ private:
 	CQuaternion m_rotation;		//回転
 	CVector3 m_scale;			//スケール
 	Player* m_player = nullptr;		//プレイヤー
+	bool m_isWarp = false;			//ワープしたか		
 };
 

@@ -17,6 +17,9 @@ const float SPRITE_HIGHT = 720.0f;			//スプライトの高さ
 Title::Title()
 {
 	m_sprite.Init(L"Assets/sprite/kaburon.dds", SPRITE_WIDTH, SPRITE_HIGHT);
+	m_soundEngine.Init();
+	m_bgm.Init(L"Assets/sound/TitleBGM.wav");
+	m_bgm.Play(true);
 }
 
 
@@ -26,9 +29,10 @@ Title::~Title()
 
 void Title::Update()
 {
+	m_soundEngine.Update();
 	m_sprite.UpdateWorldMatrix(CVector3::Zero(), CQuaternion::Identity(), CVector3::One());
 	//ゲームに遷移
-	if (g_pad[0].IsTrigger(enButtonA)){
+	if (g_pad[0].IsTrigger(enButtonA)) {
 		g_goMgr.NewGameObject<Game>("game");
 		g_goMgr.DeleteGameObject(this);
 	}
@@ -46,6 +50,6 @@ void Title::Draw()
 	mProj.MakeOrthoProjectionMatrix(VIEW_BOLUME_WIDTH, VIEW_BOLUME_HIGHT, F_NEAR, F_FAR);
 	//描画
 	m_sprite.Draw(mView, mProj);
-	
+
 }
 

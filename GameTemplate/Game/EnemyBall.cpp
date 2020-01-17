@@ -10,7 +10,7 @@ const int ATTACK_MINUS_PLAYER_HP = -1;		//攻撃時プレイヤーHPマイナス
 const float PLAYER_NOCKBACK_SPEED = 2500.0f;	//プレイヤーのノックバックスピード
 const float ENEMY_GRAVITY = 800.0f;					//重力
 const float ENEMY_GRAVITY_ACCELERATION = 1.02f;		//重力加速度
-const int SCORE = 5;					//スコア
+const int SCORE = 1;					//スコア
 const float KICKED_SPEED = -2000.0f;		//蹴られた時のスピード（蹴った方向に飛ばすためにマイナス）
 const float DELTA_TIME = 1.0f / 60.0f;		//経過時間　単位：秒
 const float ROTATION_SPEED = 40.0f;					//回転速度
@@ -62,6 +62,7 @@ void EnemyBall::Attack()
 			m_player->SetIsAttacked(true);	//攻撃された。
 			m_isAttack = true;	//攻撃した
 			m_isBallAttack = false;
+			m_player->SetIsDamageSE(true);
 			m_game->SetHP(ATTACK_MINUS_PLAYER_HP);
 		}
 	}
@@ -111,6 +112,7 @@ void EnemyBall::Ball()
 		m_v.y = 0.0f;
 		//ノックバック
 		m_moveSpeed = m_v * KICKED_SPEED;
+		m_game->pokoSE();
 		m_isKicked = true;
 		m_isApproachAgain = true;
 	}		

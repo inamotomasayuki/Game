@@ -7,7 +7,7 @@ const float PYON_DOWN = -20.0f;			//跳ね落ちるときの速度
 const int PYON_UP_TIME = 5;				//跳ね上がる時間
 const int PYON_DOWN_TIME = 8;			//跳ね落ちる時間
 const int DELETE_TIME = 10;				//削除までの待ち時間
-const int COIN_SCORE = 10;				//コインのスコア
+const int COIN_SCORE = 1;				//コインのスコア
 const float FLAG_LENGTH = 70.0f;		//コイン取得フラグさせるプレイヤーとの距離
 const float ROTATION_SPEED = 5.0f;		//回転速度
 
@@ -24,7 +24,7 @@ Coin::~Coin()
 }
 
 void Coin::Update()
-{
+{	
 	m_player = g_goMgr.FindGameObject<Player>("player");
 	m_game = g_goMgr.FindGameObject<Game>("game");
 	//ワールド行列の更新。
@@ -44,8 +44,12 @@ void Coin::Draw()
 	m_skinModel.Draw(
 		g_camera3D.GetViewMatrix(),
 		g_camera3D.GetProjectionMatrix(),
-		enRenderMode_Normal
+		enRenderMode_Normal,
+		1
 	);
+	m_skinModel.RimLightOff();
+	m_skinModel.SetDligColor(0, 2.0f);
+	m_skinModel.SetDligColor(1, 2.0f);
 }
 void Coin::Rotation()
 {
@@ -92,6 +96,7 @@ void Coin::GetCoin()
 			m_timer = 0;
 			m_game->SetScore(COIN_SCORE);
 			g_goMgr.DeleteGameObject(this);
+			m_isSE = true;
 		}
 	}
 }

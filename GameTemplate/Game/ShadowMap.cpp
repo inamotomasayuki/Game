@@ -80,7 +80,8 @@ void ShadowMap::RenderToShadowMap()
 		caster->Draw(
 			m_lightViewMatrix,
 			m_lightProjMatrix,
-			enRenderMode_CreateShadowMap
+			enRenderMode_CreateShadowMap,
+			1
 		);
 	}
 	//キャスターをクリア。

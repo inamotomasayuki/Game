@@ -90,10 +90,18 @@ Game::Game()
 				m_star->SetScale(objData.scale);
 				return true;
 			}
+			if (objData.EqualObjectName(L"Boxmae")) {
+				m_box = g_goMgr.NewGameObject<Box>("box");
+				m_box->SetPosition(objData.position);
+				m_box->SetRotation(objData.rotation);
+				m_box->SetScale(objData.scale);
+				return true;
+			}
 			return false;
 			});
 		m_spriteUI = g_goMgr.NewGameObject<SpriteUI>(0);
 		m_gameCamera = g_goMgr.NewGameObject<GameCamera>("gameCamera");
+		InitSound();
 	}
 }
 
@@ -120,6 +128,16 @@ Game::~Game()
 		g_goMgr.DeleteGameObject(enemyBall);
 		return true;
 		});
+	g_goMgr.FindGameObjects<Box>("box", [](Box* box)->bool {
+		g_goMgr.DeleteGameObject(box);
+		return true;
+		});
+	g_goMgr.FindGameObjects<Item>("item", [](Item* item)->bool {
+		g_goMgr.DeleteGameObject(item);
+		return true;
+		});
+	g_goMgr.DeleteGameObject(m_warp00);
+	g_goMgr.DeleteGameObject(m_warp01);
 	g_goMgr.DeleteGameObject(m_moveFloor);
 	g_goMgr.DeleteGameObject(m_star);
 	g_goMgr.DeleteGameObject(m_player);
@@ -133,10 +151,11 @@ Game::~Game()
 
 void Game::Update()
 {
+	SoundPlay();
 	//シャドウキャスターを登録。
 	//g_shadowMap->RegistShadowCaster(m_backGround->GetSkinModel());
 	g_shadowMap->RegistShadowCaster(m_star->GetSkinModel());
-	g_shadowMap->RegistShadowCaster(m_player->GetSkinModel());
+	//g_shadowMap->RegistShadowCaster(m_player->GetSkinModel());
 	g_goMgr.FindGameObjects<Enemy01>("enemy01", [](Enemy01* enemy01)->bool {
 		g_shadowMap->RegistShadowCaster(enemy01->GetSkinModel());
 		return true;
@@ -151,11 +170,15 @@ void Game::Update()
 		});
 
 	g_goMgr.FindGameObjects<Coin>("coin", [this](Coin* coin)->bool {
-		auto v = m_player->GetPositon() - coin->GetPositon();
-		auto len = v.Length();
-		if (len < 3000) {
+		//auto v = m_player->GetPositon() - coin->GetPositon();
+		//auto len = v.Length();
+		//if (len < 3000) {
 			g_shadowMap->RegistShadowCaster(coin->GetSkinModel());
-		}
+		//}
+		return true;
+		});
+	g_goMgr.FindGameObjects<Box>("box", [](Box* box)->bool {
+		g_shadowMap->RegistShadowCaster(box->GetSkinModel());
 		return true;
 		});
 
@@ -167,7 +190,6 @@ void Game::Update()
 			m_hp = 0;
 			m_gameOver = g_goMgr.NewGameObject<GameOver>(0);
 			m_gameOverFlag = true;
-
 		}
 
 	}
@@ -215,4 +237,42 @@ void Game::Update()
 void Game::Draw()
 {
 
+}
+
+void Game::InitSound()
+{
+	m_soundEngine.Init();
+	m_bgm.Init(L"Assets/sound/BGM.wav");
+	m_bgm.Play(true);
+	m_se[enSE_coin].Init(L"Assets/sound/coin.wav");
+	m_se[enSE_gameClear].Init(L"Assets/sound/gameClear.wav");
+	m_se[enSE_gameOver].Init(L"Assets/sound/gameOver.wav");
+	m_se[enSE_fumu].Init(L"Assets/sound/fumu.wav");
+	m_se[enSE_poko].Init(L"Assets/sound/poko.wav");
+}
+void Game::SoundPlay()
+{
+	m_soundEngine.Update();
+	//コイン音
+	g_goMgr.FindGameObjects<Coin>("coin", [this](Coin* coin)->bool {
+		if (coin->isGetCoin()) {
+			m_se[enSE_coin].Stop();
+			m_se[enSE_coin].Play(false);
+		}
+		return true;
+	});
+	//ゲームクリア音
+	if (m_gameClearFlag) {
+		if (!m_isGameClearSE) {
+			m_se[enSE_gameClear].Play(false);
+			m_isGameClearSE = true;
+		}
+	}
+	//ゲームオーバー音
+	if (m_gameOverFlag) {
+		if (!m_isGameOverSE) {
+			m_se[enSE_gameOver].Play(false);
+			m_isGameOverSE = true;
+		}
+	}
 }

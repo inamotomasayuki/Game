@@ -20,6 +20,8 @@ struct SDirectionLight {
 	CVector3			eyePos;				//視点の座標。
 	float				specPow;			//鏡面反射の絞り。
 	CVector4			ambient;
+	CVector3			eyeDir;
+	int isRimLight;
 };
 /*!
 *@brief	スキンモデルクラス。
@@ -27,6 +29,19 @@ struct SDirectionLight {
 class SkinModel
 {
 public:
+	void RimLightOff()
+	{
+		m_dirLight.isRimLight = 0;
+		m_isRim = true;
+	}
+	void SetDligColor(int num, float color)
+	{
+		m_dirLight.color[num] = { color,color,color,1.0f };	
+	}
+	void SetDligSpecPow(float specPow)
+	{
+		m_dirLight.specPow = specPow;
+	}
 	//メッシュが見つかったときのコールバック関数。
 	using OnFindMesh = std::function<void(const std::unique_ptr<DirectX::ModelMeshPart>&)>;
 	/*!
@@ -65,7 +80,7 @@ public:
 	* param [in]renderMode
 	*  描画ステップ。0なら通常描画、1ならシルエット描画。
 	*/
-	void Draw( CMatrix viewMatrix, CMatrix projMatrix, EnRenderMode renderMode);
+	void Draw( CMatrix viewMatrix, CMatrix projMatrix, EnRenderMode renderMode, int shadowReciver);
 	/*!
 	*@brief	スケルトンの取得。
 	*/
@@ -118,7 +133,7 @@ private:
 		CMatrix mLightProj;	//ライトプロジェクション行列。
 		int isShadowReciever;	//シャドウレシーバーフラグ。
 	};
-
+	bool m_isRim = false;
 	EnFbxUpAxis			m_enFbxUpAxis = enFbxUpAxisZ;	//!<FBXの上方向。
 	ID3D11Buffer*		m_cb = nullptr;					//!<定数バッファ。
 	ID3D11Buffer*		m_lightCb = nullptr;				//!<ライト用の定数バッファ。

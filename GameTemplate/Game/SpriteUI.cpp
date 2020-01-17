@@ -115,17 +115,19 @@ void SpriteUI::Update()
 				m_spriteHP[i].DeltaAlpha(ALPHA_MINUS);		//非表示
 			}
 		}
-		//スコア１００でHP１アップ
-		auto hpUp = m_game->GetScore() % 150;
-		if (m_isHpUp) {
-			if (hpUp >= 100) {
-				m_game->SetHP(1);
-				m_isHpUp = false;
-			}
-			else if (hpUp > 0) {
-				m_isHpUp = true;
-			}
-		}
+		////スコア１００でHP１アップ
+		//for (int i = 1; i < enSpriteHP_Num; i++) {
+		//	auto hpUp = m_game->GetScore() % ((i * 100) + 50);
+		//	if (m_isHpUp) {
+		//		if (hpUp >= i * 100) {
+		//			m_game->SetHP(1);
+		//			m_isHpUp = false;
+		//		}
+		//		else if (hpUp > 0) {
+		//			m_isHpUp = true;
+		//		}
+		//	}
+		//}
 	}
 	//更新
 	for (int i = 0; i < enSpriteUI_Num; i++) {

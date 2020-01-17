@@ -113,23 +113,25 @@ void CSoundSource::Play(bool isLoop)
 				
 		return;
 	}
-	if (m_isPlaying) {
-		//再生中のものを再開する。
-		m_sourceVoice->Start(0);
-	}
-	else {
-		if (m_isStreaming) {
-			//バッファリング開始
-			m_waveFile->ResetFile();
-			StartStreamingBuffring();
-			m_sourceVoice->Start(0, 0);
+	if (m_sourceVoice != nullptr) {
+		if (m_isPlaying) {
+			//再生中のものを再開する。
+			m_sourceVoice->Start(0);
 		}
 		else {
-			m_sourceVoice->FlushSourceBuffers();
-			m_sourceVoice->Start(0);
-			Play(m_waveFile->GetReadBuffer(), m_waveFile->GetSize());
+			if (m_isStreaming) {
+				//バッファリング開始
+				m_waveFile->ResetFile();
+				StartStreamingBuffring();
+				m_sourceVoice->Start(0, 0);
+			}
+			else {
+				m_sourceVoice->FlushSourceBuffers();
+				m_sourceVoice->Start(0);
+				Play(m_waveFile->GetReadBuffer(), m_waveFile->GetSize());
+			}
+			m_isPlaying = true;
 		}
-		m_isPlaying = true;
 	}
 	g_soundEngine->AddSoundSource(this);
 	m_isLoop = isLoop;
@@ -183,7 +185,9 @@ void CSoundSource::UpdateOnMemory()
 		return;
 	}
 	XAUDIO2_VOICE_STATE state;
-	m_sourceVoice->GetState(&state);
+	if (m_sourceVoice != nullptr) {
+		m_sourceVoice->GetState(&state);
+	}
 	if (state.BuffersQueued <= 0) {
 		m_isPlaying = false;
 		if (m_isLoop) {

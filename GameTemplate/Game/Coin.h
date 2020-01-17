@@ -50,7 +50,10 @@ public:
 	{
 		return m_position;
 	}
-
+	bool isGetCoin()
+	{
+		return m_isSE;
+	}
 private:
 	/// <summary>
 	/// 回転
@@ -74,5 +77,6 @@ private:
 	EnemyBall* m_enemyBall = nullptr;		//敵玉
 	int m_timer = 0;						//タイマー
 	bool m_coinGetFlag = false;				//コイン取得フラグ
+	bool m_isSE = false;
 };
 

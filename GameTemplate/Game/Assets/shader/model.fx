@@ -40,9 +40,11 @@ static const int NUM_DIRECTION_LIG = 4;
 cbuffer LightCb : register(b1) {
 	float3 dligDirection[NUM_DIRECTION_LIG];
 	float4 dligColor[NUM_DIRECTION_LIG];
-	float3 eyePos;		//カメラの視点
+	float3 eyePos;		//カメラの視点	
 	float specPow;		//スペキュラライトの絞り
 	float3 ambient;		//アンビエントライト
+	float3 eyeDir;		//カメラの前方向
+	int isRimLight;
 };
 /// <summary>
 /// シャドウマップ用の定数バッファ。
@@ -191,7 +193,6 @@ float4 PSMain( PSInput In ) : SV_Target0
 	float3 lig = 0.0f;
 	for (int i = 0; i < NUM_DIRECTION_LIG; i++) {
 		lig += max(0.0f, dot(In.Normal * -1.0f, dligDirection[i])) * dligColor[i];
-
 		//ディレクションライトの鏡面反射光を計算する。
 		{
 			//実習　鏡面反射を計算しなさい。
@@ -205,10 +206,10 @@ float4 PSMain( PSInput In ) : SV_Target0
 			//スペキュラ反射の強さを求める。
 			float specPower = max(0, dot(R, -E));
 			specPower = pow(specPower, specPow);
-			lig += dligColor[i] * specPower/2;
-			lig += ambient;
+			lig += dligColor[i] * specPower;
 		}
-	}
+	}		
+	lig += ambient;			//アンビエント
 	if (isShadowReciever == 1) {	//シャドウレシーバー。
 	//LVP空間から見た時の最も手前の深度値をシャドウマップから取得する。
 		float2 shadowMapUV = In.posInLVP.xy / In.posInLVP.w;
@@ -232,6 +233,12 @@ float4 PSMain( PSInput In ) : SV_Target0
 				lig *= 0.5f;
 			}
 		}
+	}
+	if (isRimLight == 1) {
+		//リムライトの計算
+		float rim = saturate( 1.0f - dot(-eyeDir, In.Normal) );
+		rim = pow(rim, 3.0f);
+		lig += float3(2.5f, 2.5f, 0.5f) * rim;
 	}
 	float4 finalColor = float4(0.0f, 0.0f, 0.0f, 1.0f);
 	finalColor.xyz = albedoColor.xyz * lig;

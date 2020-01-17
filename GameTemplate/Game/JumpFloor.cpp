@@ -26,6 +26,8 @@ void JumpFloor::Draw()
 	m_skinModel.Draw(
 		g_camera3D.GetViewMatrix(),
 		g_camera3D.GetProjectionMatrix(),
-		enRenderMode_Normal
+		enRenderMode_Normal,
+		1
 	);
+	m_skinModel.RimLightOff();
 }

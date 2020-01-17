@@ -9,7 +9,7 @@ const float PYON_DOWN = -500.0f;			//跳ね落ちるときの速度
 const int PYON_UP_TIME = 6;				//跳ね上がる時間
 const int PYON_DOWN_TIME = 9;			//跳ね落ちる時間
 const int DELETE_TIME = 11;				//削除までの待ち時間
-const int SCORE = 5;					//スコア
+const int SCORE = 1;					//スコア
 const float DELTA_TIME = 1.0f / 60.0f;		//経過時間　単位：秒
 
 void EnemyBase::Draw()
@@ -17,8 +17,10 @@ void EnemyBase::Draw()
 	m_skinModel.Draw(
 		g_camera3D.GetViewMatrix(),
 		g_camera3D.GetProjectionMatrix(),
-		enRenderMode_Normal
+		enRenderMode_Normal,
+		1
 	);
+	m_skinModel.RimLightOff();
 }
 
 void EnemyBase::DeathEnemyBallContact(int score)
@@ -46,6 +48,7 @@ void EnemyBase::DeathEnemyBallContact(int score)
 		//削除
 		if (m_timer == DELETE_TIME) {
 			m_timer = 0;
+			m_game->fumuSE();
 			m_game->SetScore(score);
 			g_goMgr.DeleteGameObject(this);
 		}

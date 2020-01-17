@@ -42,19 +42,20 @@ void SkinModel::Init(const wchar_t* filePath, EnFbxUpAxis enFbxUpAxis)
 void SkinModel::InitDirectionLight()
 {
 	m_dirLight.direction[0] = { 1.0f, 0.0f, 0.0f, 0.0f };
-	m_dirLight.color[0] = { 0.7f, 0.7f, 0.7f, 1.0f };
+	m_dirLight.color[0] = { 0.2f, 0.2f, 0.2f, 1.0f };
 
 	m_dirLight.direction[1] = { -0.707f, -0.707f, 0.0f, 0.0f };
-	m_dirLight.color[1] = { 0.5f, 0.5f, 0.5f, 1.0f };
+	m_dirLight.color[1] = { 0.2f, 0.2f, 0.2f, 1.0f };
 
 	m_dirLight.direction[2] = { 0.0f, -0.707f, 0.707f, 0.0f };
-	m_dirLight.color[2] = { 0.5f, 0.5f, 0.5f, 1.0f };
+	m_dirLight.color[2] = { 0.2f, 0.2f, 0.2f, 1.0f };
 
 	m_dirLight.direction[3] = { 1.0f, 0.0f, -1.0f, 0.0f };
-	m_dirLight.color[3] = { 0.5f, 0.5f, 0.5f, 1.0f };
+	m_dirLight.direction[3].Normalize();
+	m_dirLight.color[3] = { 0.2f, 0.2f, 0.2f, 1.0f };
 
 	m_dirLight.specPow = 10.0f;
-	m_dirLight.ambient = { 0.0f,0.0f,0.0f,0.0f };
+	m_dirLight.ambient = { 0.3f,0.3f,0.3f,1.0f };
 }
 void SkinModel::InitSkeleton(const wchar_t* filePath)
 {
@@ -96,7 +97,8 @@ void SkinModel::InitConstantBuffer()
 	g_graphicsEngine->GetD3DDevice()->CreateBuffer(&bufferDesc, NULL, &m_cb);
 	//続いて、ライト用の定数バッファを作成。
 	//作成するバッファのサイズを変更するだけ。
-	bufferDesc.ByteWidth = sizeof(SDirectionLight);				//SDirectionLightは16byteの倍数になっているので、切り上げはやらない。
+	bufferSize = sizeof(SDirectionLight);
+	bufferDesc.ByteWidth = (((bufferSize - 1) / 16) + 1) * 16;
 	g_graphicsEngine->GetD3DDevice()->CreateBuffer(&bufferDesc, NULL, &m_lightCb);
 }
 void SkinModel::InitSamplerState()
@@ -135,7 +137,7 @@ void SkinModel::UpdateWorldMatrix(CVector3 position, CQuaternion rotation, CVect
 	//スケルトンの更新。
 	m_skeleton.Update(m_worldMatrix);
 }
-void SkinModel::Draw(CMatrix viewMatrix, CMatrix projMatrix, EnRenderMode renderMode)
+void SkinModel::Draw(CMatrix viewMatrix, CMatrix projMatrix, EnRenderMode renderMode, int shadowReciver)
 {
 	DirectX::CommonStates state(g_graphicsEngine->GetD3DDevice());
 
@@ -153,6 +155,12 @@ void SkinModel::Draw(CMatrix viewMatrix, CMatrix projMatrix, EnRenderMode render
 	//視点を更新
 	//視点を設定。
 	m_dirLight.eyePos = g_camera3D.GetPosition();
+	CVector3 eyeDir = g_camera3D.GetTarget() - g_camera3D.GetPosition();
+	eyeDir.Normalize();
+	m_dirLight.eyeDir = eyeDir;
+	if (!m_isRim) {
+		m_dirLight.isRimLight = 1;
+	}
 	//ライト用の定数バッファを更新。
 	d3dDeviceContext->UpdateSubresource(m_lightCb, 0, nullptr, &m_dirLight, 0, 0);
 	//定数バッファをGPUに転送。

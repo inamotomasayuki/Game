@@ -4,13 +4,6 @@
 #include "gameObject/GameObjectManager.h"
 #include "Title.h"
 
-
-//RenderTarget m_mainRenderTarget;		//メインレンダリングターゲット。	
-//Sprite m_copyMainRtToFrameBufferSprite;			//メインレンダリングターゲットに描かれた絵をフレームバッファにコピーするためのスプライト。
-//D3D11_VIEWPORT m_frameBufferViewports;			//フレームバッファのビューポート。
-//ID3D11RenderTargetView* m_frameBufferRenderTargetView = nullptr;	//フレームバッファのレンダリングターゲットビュー。
-//ID3D11DepthStencilView* m_frameBufferDepthStencilView = nullptr;	//フレームバッファのデプスステンシルビュー。
-
 void GameUpdate()
 {
 	//ゲームパッドの更新。	
@@ -43,6 +36,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	//半透明合成のブレンドステートを初期化する。
 	g_graphicsEngine->InitTranslucentBlendState();
 
+	
 
 	//ゲームループ。
 	while (DispatchWindowMessage() == true)

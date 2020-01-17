@@ -157,6 +157,12 @@
     <ClCompile Include="Enemy03.cpp" />
     <ClCompile Include="Warp00.cpp" />
     <ClCompile Include="Warp01.cpp" />
+    <ClCompile Include="sound\WaveFileBank.cpp" />
+    <ClCompile Include="sound\WaveFile.cpp" />
+    <ClCompile Include="sound\SoundSource.cpp" />
+    <ClCompile Include="sound\SoundEngine.cpp" />
+    <ClCompile Include="Box.cpp" />
+    <ClCompile Include="Item.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Vector.h">
@@ -285,10 +291,19 @@
     <ClInclude Include="EnemyBall.h" />
     <ClInclude Include="Warp00.h" />
     <ClInclude Include="Warp01.h" />
+    <ClInclude Include="sound\SoundSource.h" />
+    <ClInclude Include="sound\WaveFileBank.h" />
+    <ClInclude Include="sound\WaveFile.h" />
+    <ClInclude Include="sound\SoundEngine.h" />
+    <ClInclude Include="Box.h" />
+    <ClInclude Include="Item.h" />
   </ItemGroup>
   <ItemGroup>
     <MeshContentTask Include="Assets\modelData\warp.fbx">
       <Filter>Assets\modelData</Filter>
     </MeshContentTask>
+    <MeshContentTask Include="Assets\modelData\mikan.fbx" />
+    <MeshContentTask Include="Assets\modelData\Boxato.fbx" />
+    <MeshContentTask Include="Assets\modelData\Boxmae.fbx" />
   </ItemGroup>
 </Project>

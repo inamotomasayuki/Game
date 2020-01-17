@@ -103,44 +103,70 @@ void Enemy01::Rotation()
 }
 void Enemy01::Attack()
 {
-	//UŒ‚’†‚¶‚á‚È‚©‚Á‚½‚çUŒ‚
-	if (m_isAttack == false) {
-		if (fabs(m_angle) > CMath::DegToRad(DEGREE_NUM) && m_len < LENGTH) {
-			m_v.y = 0.0f;
-			//ƒmƒbƒNƒoƒbƒN‚³‚¹‚é‘¬“x
-			m_player->SetAddSpeed(m_v * PLAYER_NOCKBACK_SPEED);
-			m_player->SetIsAttacked(true);	//UŒ‚‚³‚ê‚½B
-			m_isAttack = true;	//UŒ‚‚µ‚½B	
-			m_game->SetHP(ATTACK_MINUS_PLAYER_HP);
-		}
-	}
-	//UŒ‚‚µ‚½‚ç­‚µ‘Ò‚Â
-	else {
-		m_waitTimer++;
-		if (m_waitTimer == ATTACK_WAIT_TIME) {
-			m_waitTimer = 0;
-			m_isAttack = false;		//UŒ‚‚µ‚Ä‚È‚¢B
-			m_player->SetIsAttacked(false);		//UŒ‚‚³‚ê‚Ä‚È‚¢B
+	if (!m_isAttacked) {
+		if (!m_player->IsHipDrop()) {
+			//UŒ‚’†‚¶‚á‚È‚©‚Á‚½‚çUŒ‚
+			if (m_isAttack == false) {
+				if (fabs(m_angle) > CMath::DegToRad(DEGREE_NUM) && m_len < LENGTH) {
+					m_v.y = 0.0f;
+					//ƒmƒbƒNƒoƒbƒN‚³‚¹‚é‘¬“x
+					m_player->SetAddSpeed(m_v * PLAYER_NOCKBACK_SPEED);
+					m_player->SetIsAttacked(true);	//UŒ‚‚³‚ê‚½B
+					m_isAttack = true;	//UŒ‚‚µ‚½B
+					m_player->SetIsDamageSE(true);
+					m_game->SetHP(ATTACK_MINUS_PLAYER_HP);
+				}
+			}
+			//UŒ‚‚µ‚½‚ç­‚µ‘Ò‚Â
+			if (m_isAttack) {
+				m_waitTimer++;
+				if (m_waitTimer == ATTACK_WAIT_TIME) {
+					m_waitTimer = 0;
+					m_isAttack = false;		//UŒ‚‚µ‚Ä‚È‚¢B
+					m_player->SetIsAttacked(false);		//UŒ‚‚³‚ê‚Ä‚È‚¢B
+				}
+			}
 		}
 	}
 }
 
 void Enemy01::Death(int score)
 {
-	//UŒ‚‚³‚ê‚Ä‚È‚©‚Á‚½‚ç
-	if (m_isAttacked == false) {
-		if (fabs(m_angle) <= CMath::DegToRad(80) && m_len < LENGTH) {
-			m_scale.z /= SCALE_DIVISION;
-			m_player->SetJumpFlag(true);	//ƒWƒƒƒ“ƒv‚³‚¹‚é
-			m_isAttacked = true;		//UŒ‚‚³‚ê‚½
+	if (!m_player->IsHipDrop()) {
+		//UŒ‚‚³‚ê‚Ä‚È‚©‚Á‚½‚ç
+		if (m_isAttacked == false) {
+			if (fabs(m_angle) <= CMath::DegToRad(80) && m_len < LENGTH) {
+				m_scale.z /= SCALE_DIVISION;
+				m_player->SetJumpFlag(true);	//ƒWƒƒƒ“ƒv‚³‚¹‚é
+				m_game->fumuSE();
+				m_isAttacked = true;		//UŒ‚‚³‚ê‚½
+			}
+		}
+		//UŒ‚‚³‚ê‚½‚ç­‚µ‘Ò‚Á‚Ä‚©‚çíœ
+		if (m_isAttacked == true) {
+			m_waitTimer++;
+			if (m_waitTimer == ATTACKED_WAIT_TIME) {
+				m_game->SetScore(score);
+				g_goMgr.DeleteGameObject(this);
+			}
 		}
 	}
-	//UŒ‚‚³‚ê‚½‚ç­‚µ‘Ò‚Á‚Ä‚©‚çíœ
-	if (m_isAttacked == true) {
-		m_waitTimer++;
-		if (m_waitTimer == ATTACKED_WAIT_TIME) {
-			m_game->SetScore(score);
-			g_goMgr.DeleteGameObject(this);
+	else {
+		//UŒ‚‚³‚ê‚Ä‚È‚©‚Á‚½‚ç
+		if (m_isAttacked == false) {
+			if (fabs(m_angle) <= CMath::DegToRad(90) && m_len < LENGTH) {
+				m_scale.z /= 10;
+				m_game->fumuSE();
+				m_isAttacked = true;		//UŒ‚‚³‚ê‚½
+			}
+		}
+		//UŒ‚‚³‚ê‚½‚ç­‚µ‘Ò‚Á‚Ä‚©‚çíœ
+		if (m_isAttacked == true) {
+			m_waitTimer++;
+			if (m_waitTimer == ATTACKED_WAIT_TIME) {
+				m_game->SetScore(score);
+				g_goMgr.DeleteGameObject(this);
+			}
 		}
 	}
 }

@@ -1,5 +1,7 @@
 #pragma once
 #include "graphics/2D/Sprite.h"
+#include "sound/SoundEngine.h"
+#include "sound/SoundSource.h"
 class Title : public IGameObject
 {
 public:
@@ -10,5 +12,7 @@ public:
 
 private:
 	Sprite m_sprite;		//スプライト
+	CSoundEngine m_soundEngine;				//サウンドエンジン。
+	CSoundSource m_bgm;		//BGM
 };
 

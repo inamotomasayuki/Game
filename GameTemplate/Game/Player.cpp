@@ -42,6 +42,9 @@ Player::Player()
 	InitAnimationClip();
 
 	m_animation.Init(m_skinModel, m_animClips, enAnimationClip_Num);
+
+	//サウンドの初期化
+	InitSound();
 }
 
 
@@ -51,9 +54,6 @@ Player::~Player()
 
 void Player::Update()
 {
-
-
-
 	//ワールド行列の更新。
 	m_skinModel.UpdateWorldMatrix(m_position, m_rotation, m_scale);
 
@@ -62,6 +62,8 @@ void Player::Update()
 	m_star = g_goMgr.FindGameObject<Star>("star");
 	m_warp00 = g_goMgr.FindGameObject<Warp00>("warp00");
 	m_warp01 = g_goMgr.FindGameObject<Warp01>("warp01");
+	m_box = g_goMgr.FindGameObject<Box>("box");
+	m_item = g_goMgr.FindGameObject<Item>("item");
 	//デバッグショートカット
 	if (g_pad[0].IsTrigger(enButtonX)) {
 		m_charaCon.SetPosition(m_jumpFloor->GetPosition());
@@ -84,9 +86,11 @@ void Player::Update()
 	if (m_isWarp00) {
 		Warp_0();
 	}
-	//if (m_isWarp01) {
-	//	Warp_1();
-	//}
+	if (m_isWarp01) {
+		Warp_1();
+	}
+	//効果音再生処理
+	SoundPlay();
 }
 
 void Player::Draw()
@@ -94,12 +98,14 @@ void Player::Draw()
 	m_skinModel.Draw(
 		g_camera3D.GetViewMatrix(),
 		g_camera3D.GetProjectionMatrix(),
-		enRenderMode_Silhouette
+		enRenderMode_Silhouette,
+		1
 	);
 	m_skinModel.Draw(
 		g_camera3D.GetViewMatrix(),
 		g_camera3D.GetProjectionMatrix(),
-		enRenderMode_Normal
+		enRenderMode_Normal,
+		1
 	);
 }
 void Player::Warp_0()
@@ -108,13 +114,15 @@ void Player::Warp_0()
 		m_warpTimer++;
 		//一定速度で回転させる
 		m_rotSpeed += ROTATION_SPEED;
-		if (m_warpTimer == 120) {
+		if (m_warpTimer == 100) {
 			m_charaCon.SetPosition(m_warp01->GetPosition());
 			m_position = m_charaCon.Execute(DELTA_TIME, m_moveSpeed);
 			m_isWarp = true;
+			m_warpTimer = 0;////
 		}
 	}
 	if (m_isWarp) {
+		m_isLeave01 = true;
 		if (m_rotSpeed > 0) {
 			m_rotSpeed -= ROTATION_SPEED;
 		}
@@ -130,18 +138,30 @@ void Player::Warp_0()
 }
 void Player::Warp_1()
 {
-	m_warpTimer++;
-	//一定速度で回転させる
-	m_rotSpeed += ROTATION_SPEED;
+	if (!m_isWarp) {
+		m_warpTimer++;
+		//一定速度で回転させる
+		m_rotSpeed += ROTATION_SPEED;
+		if (m_warpTimer == 100) {
+			m_charaCon.SetPosition(m_warp00->GetPosition());
+			m_position = m_charaCon.Execute(DELTA_TIME, m_moveSpeed);
+			m_isWarp = true;
+			m_warpTimer = 0;
+		}
+	}
+	if (m_isWarp) {
+		m_isLeave00 = true;
+		if (m_rotSpeed > 0) {
+			m_rotSpeed -= ROTATION_SPEED;
+		}
+		else {
+			m_isWarp01 = false;
+			m_isWarp = false;
+		}
+	}
 	CQuaternion addRot;
 	addRot.SetRotationDeg(CVector3::AxisY(), m_rotSpeed);
 	m_rotation.Multiply(addRot);
-	if (m_warpTimer == 120) {
-		m_charaCon.SetPosition(m_warp00->GetPosition());
-		m_position = m_charaCon.Execute(DELTA_TIME, m_moveSpeed);
-		m_timer = 0;
-	}
-
 }
 void Player::GhostContact()
 {
@@ -161,10 +181,22 @@ void Player::GhostContact()
 		//ジャンプ床とぶつかった
 		if (m_jumpFloor->GetGhost()->IsSelf(contactObject) == true) {
 			m_jumpSpeed = 20000.0f;
+			m_se[enSE_jumpFloor].Play(false);
 			m_contactJumpFloor = true;
 		}
-		});
-
+		if (m_box->GetGhost()->IsSelf(contactObject) == true) {
+			m_box->SetIsContact(true);
+			if (!m_hitBox) {
+				m_jumpSpeed = 0.0f;
+				m_moveSpeed.y = 0.0f;
+				m_hitBox = true;
+			}
+			m_moveSpeed.y -= m_gravity;
+		}
+	});
+	if (m_charaCon.IsOnGround()) {
+		m_hitBox = false;
+	}
 	if (m_contactJumpFloor) {
 		m_jumpSpeed *= JUMP_FLOOR_SPEED_DECAY;
 		m_moveSpeed.y = m_jumpSpeed;
@@ -197,6 +229,28 @@ void Player::PadMove()
 		if (m_isAttacked == false
 			&& !m_game->GetGameOverFlag()
 			&& !m_game->GetStar()) {
+			//ヒップドロップもどき
+			if (!m_charaCon.IsOnGround()) {
+				if (g_pad[0].IsTrigger(enButtonRB2)) {
+					m_isHipDrop = true;
+				}
+			}
+			else {
+				m_isHipDrop = false;
+				m_hipDropTimer = 0;
+			}
+			if (m_isHipDrop) {
+				m_moveSpeed.x = 0.0f;
+				m_moveSpeed.z = 0.0f;
+				m_hipDropTimer++;
+				if (m_hipDropTimer < 15) {
+					m_moveSpeed = CVector3::Zero();
+					m_gravity = 0.0f;
+				}
+				else {
+					m_gravity = 3000.0f;
+				}
+			}
 			//Bダッシュ
 			if (g_pad[0].IsPress(enButtonB)) {
 				DASH_SPEED = 2.0f;
@@ -224,6 +278,8 @@ void Player::PadMove()
 			if (m_charaCon.IsOnGround()) {
 				m_jumpFlag = false;
 				if (g_pad[0].IsTrigger(enButtonA)) {
+					//ジャンプ音
+					m_se[enSE_jump].Play(false);
 					//移動しながらジャンプしてたら段を進める
 					if (m_moveSpeed.x || m_moveSpeed.z != 0) {
 						m_threeStep++;
@@ -339,7 +395,7 @@ void Player::AnimationController()
 			if (m_moveSpeed.LengthSq() >= INPUT_AMOUNT_DASH_LENGTH) {
 				//走りアニメーション
 				m_animation.Play(enAnimationClip_run, INTERPOLATE_TIME);
-				m_animation.Update(DELTA_TIME * 2);
+				m_animation.Update(DELTA_TIME * 3);
 			}
 			//通常移動中
 			else if (m_moveSpeed.LengthSq() >= INPUT_AMOUNT_WALK_LENGTH) {
@@ -422,4 +478,76 @@ void Player::InitAnimationClip()
 	m_animClips[enAnimationClip_down].SetLoopFlag(false);
 	m_animClips[enAnimationClip_clear].SetLoopFlag(false);
 
+}
+
+void Player::InitSound()
+{
+	m_soundEngine.Init();
+	//サウンドの初期化
+	m_se[enSE_jump].Init(L"Assets/sound/jump.wav");
+	m_se[enSE_walk].Init(L"Assets/sound/walk.wav");
+	m_se[enSE_dash].Init(L"Assets/sound/dash.wav");
+	m_se[enSE_warp0].Init(L"Assets/sound/warp0.wav");
+	m_se[enSE_warp1].Init(L"Assets/sound/warp1.wav");
+	m_se[enSE_jumpFloor].Init(L"Assets/sound/jumpFloor.wav");
+	m_se[enSE_damage].Init(L"Assets/sound/damage.wav");
+}
+
+void Player::SoundPlay()
+{
+	m_soundEngine.Update();
+	if (!m_jumpFlag) {
+		//ダッシュ中
+		if (m_moveSpeed.LengthSq() >= INPUT_AMOUNT_DASH_LENGTH) {
+			//ダッシュ音
+			m_se[enSE_dash].SetVolume(1.0f);
+			m_se[enSE_dash].Play(false);
+			m_se[enSE_walk].Stop();
+		}
+		//通常移動中
+		else if (m_moveSpeed.LengthSq() >= INPUT_AMOUNT_WALK_LENGTH) {
+			//歩き音
+			m_se[enSE_walk].SetVolume(1.0f);
+			m_se[enSE_walk].SetFrequencyRatio(1.5f);
+			m_se[enSE_walk].Play(false);
+			m_se[enSE_dash].Stop();
+		}
+		//何も操作されてない
+		else {
+			m_se[enSE_walk].Stop();
+		}
+	}
+	else {
+		m_se[enSE_walk].Pause();
+		m_se[enSE_dash].Pause();
+	}
+	//ワープ音
+	if (m_isWarp00 || m_isWarp01) {
+		m_se[enSE_walk].Stop();
+		m_se[enSE_dash].Stop();
+		m_se[enSE_warp0].Play(false);
+	}
+	if (m_isWarp) {
+		m_se[enSE_warp0].Stop();
+		m_se[enSE_warp1].SetVolume(2.0f);
+		m_se[enSE_warp1].Play(false);
+	}
+	else {
+		m_se[enSE_warp1].Stop();
+	}
+	//ダメージ音
+	if (m_isDamageSE) {
+		m_se[enSE_damage].Stop();
+		m_isDamageSE = false;
+	}
+	if (m_isAttacked) {
+		m_se[enSE_damage].Play(false);
+	}
+	if (m_game != nullptr) {
+		if (m_game->GetGameClearFlag()
+			|| m_game->GetGameOverFlag()) {
+			m_se[enSE_walk].Stop();
+			m_se[enSE_dash].Stop();
+		}
+	}
 }

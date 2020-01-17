@@ -52,6 +52,7 @@ GameOver::~GameOver()
 
 void GameOver::Update()
 {
+	m_player = g_goMgr.FindGameObject<Player>("player");
 	//スケールを拡大する
 	m_scale[enSprite_gameOver] *= SCALE_EXPANSION;
 	//一定以上大きくなったらスケールを固定する
@@ -70,6 +71,9 @@ void GameOver::Update()
 	m_rotation[enSprite_gameOver].Multiply(addRot);
 	//フラグが立ったら点滅させる
 	if (m_buttonFlag) {
+		if (m_player != nullptr) {
+			m_player->SetIsAttacked(false);
+		}
 		if (m_state == enState_kieru) {
 			m_buttonAlpha += ALPHA_MINUS;
 			m_sprite[enSprite_button].DeltaAlpha(m_buttonAlpha);

@@ -1,5 +1,6 @@
 #pragma once
 #include "graphics/2D/Sprite.h"
+#include "Player.h"
 class Game;
 
 class GameOver : public IGameObject
@@ -33,6 +34,7 @@ private:
 	float m_rotCount = 0;					//回転カウント
 	float m_buttonAlpha = 0.1f;			//ボタンのalpha値
 	bool m_buttonFlag = false;					//点滅フラグ
+	Player* m_player = nullptr;
 	enum EnState
 	{
 		enState_kieru,			//消える
