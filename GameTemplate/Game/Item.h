@@ -1,6 +1,9 @@
 #pragma once
 #include "physics/PhysicsGhostObject.h"
-#include "physics/PhysicsStaticObject.h"
+#include "character/CharacterController.h"
+class Box;
+const float ITEM_COLLIDER_RADIUS = 5.0f;
+const float ITEM_COLLIDER_HIGHT = 5.0f;
 
 class Item : public IGameObject
 {
@@ -16,6 +19,12 @@ public:
 	void SetPosition(CVector3 pos)
 	{
 		m_position = pos;
+		//キャラクターコントローラー
+		m_charaCon.Init(
+			ITEM_COLLIDER_RADIUS,			//半径
+			ITEM_COLLIDER_HIGHT,			//高さ
+			m_position		//初期座標
+		);
 	}
 	/// <summary>
 	/// 回転の設定
@@ -33,12 +42,30 @@ public:
 	{
 		m_scale = scale;
 	}
+	/// <summary>
+/// ゴーストの取得
+/// </summary>
+/// <returns>ゴースト</returns>
+	PhysicsGhostObject* GetGhost()
+	{
+		return &m_ghostObject;
+	}
+	/// <summary>
+	/// 取得したを設定
+	/// </summary>
+	void SetIsGet()
+	{
+		m_isGet = true;
+	}
 private:
 	SkinModel m_skinModel;							//スキンモデル
-	//PhysicsStaticObject m_staticObject;				//静的オブジェクト
 	PhysicsGhostObject m_ghostObject;				//ゴースト
+	CharacterController m_charaCon;					//キャラコン
+	CVector3 m_moveSpeed;							//移動速度
 	CVector3 m_position = CVector3::Zero();				//座標
 	CQuaternion m_rotation = CQuaternion::Identity();	//回転
 	CVector3 m_scale = CVector3::One();					//拡大率
+	bool m_isGet = false;			//取得されたか
+	Box* m_box = nullptr;			//箱
 };
 

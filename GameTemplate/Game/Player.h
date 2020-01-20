@@ -175,9 +175,21 @@ public:
 	{
 		return m_isHipDrop;
 	}
+	/// <summary>
+	/// ダメージ音を鳴らしたか設定
+	/// </summary>
+	/// <param name="SE">鳴らしたか</param>
 	void SetIsDamageSE(bool SE)
 	{
 		m_isDamageSE = SE;
+	}
+	/// <summary>
+	/// アイテム取得？
+	/// </summary>
+	/// <returns>フラグ</returns>
+	bool GetisItem()
+	{
+		return m_isItem;
 	}
 private:
 	/// <summary>
@@ -233,8 +245,8 @@ private:
 	Star* m_star = nullptr;							//星
 	Warp00* m_warp00 = nullptr;						//ワープ０
 	Warp01* m_warp01 = nullptr;						//ワープ１
-	Box* m_box = nullptr;
-	Item* m_item = nullptr;
+	Box* m_box = nullptr;							//箱
+	Item* m_item = nullptr;							//アイテム
 	CVector3 m_floorSpeed = CVector3::Zero();		//床の速度
 
 	enum EnAnimationClip {
@@ -259,6 +271,8 @@ private:
 		enSE_warp0,		//ワープ前
 		enSE_warp1,		//ワープ後
 		enSE_damage,	//ダメージ音
+		enSE_kyodaika,	//大きくなる音
+		enSE_boxPoko,	//箱たたいた時の音
 		enSE_Num		//SEの数
 	};
 	CSoundSource m_se[enSE_Num];			//効果音[SEの数分]
@@ -273,8 +287,11 @@ private:
 	bool m_isLeave00 = false;				//離れたかどうか
 	bool m_isLeave01 = false;				//離れたかどうか
 	bool m_isHipDrop = false;				//ヒップドロップ中
-	bool m_isDamageSE = false;
-	bool m_hitBox = false;
+	bool m_isDamageSE = false;			//ダメージ音ならしたか
+	bool m_hitBox = false;				//箱にぶつかったか
+	bool m_isItem = false;			//アイテム取ったか
+	bool m_isBoxItem = false;		//アイテムでてくる
+	bool m_isSetGravity = false;
 	float m_jumpSpeed;				//ジャンプ速度
 	float m_rotSpeed = 0.0f;		//回転速度
 	int m_threeStep = 0;			//3段ジャンプカウント

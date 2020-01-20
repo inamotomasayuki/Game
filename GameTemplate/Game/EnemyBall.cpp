@@ -63,7 +63,9 @@ void EnemyBall::Attack()
 			m_isAttack = true;	//UŒ‚‚µ‚½
 			m_isBallAttack = false;
 			m_player->SetIsDamageSE(true);
-			m_game->SetHP(ATTACK_MINUS_PLAYER_HP);
+			if (!m_player->GetisItem()) {
+				m_game->SetHP(ATTACK_MINUS_PLAYER_HP);
+			}
 		}
 	}
 	//UŒ‚‚µ‚½‚ç­‚µ‘Ò‚Â

@@ -27,6 +27,12 @@ public:
 		*@param[in]	position	初期位置。
 		*/
 	void Init(float radius, float height, const CVector3& position);
+	void SetColliderRadiusAndHeight(float radius, float height)
+	{
+		m_radius = radius;
+		m_height = height;
+		m_collider.Create(radius, height);
+	}
 	/*!
 		* @brief	実行。
 		*@param[in]	deltaTime		経過時間。単位は秒。

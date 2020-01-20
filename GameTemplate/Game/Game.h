@@ -140,7 +140,7 @@ private:
 	GameClear* m_gameClear = nullptr;		//ゲームクリア
 	Star* m_star = nullptr;					//星
 	Box* m_box = nullptr;					//箱
-	Item* m_item = nullptr;
+	Item* m_item = nullptr;					//アイテム
 	CSoundEngine m_soundEngine;
 	CSoundSource m_bgm;			//BGM	
 	enum EnSE{

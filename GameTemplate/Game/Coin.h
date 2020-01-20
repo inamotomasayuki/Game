@@ -50,6 +50,10 @@ public:
 	{
 		return m_position;
 	}
+	/// <summary>
+	/// コインを取得したかどうかでSEを鳴らす
+	/// </summary>
+	/// <returns></returns>
 	bool isGetCoin()
 	{
 		return m_isSE;
@@ -77,6 +81,6 @@ private:
 	EnemyBall* m_enemyBall = nullptr;		//敵玉
 	int m_timer = 0;						//タイマー
 	bool m_coinGetFlag = false;				//コイン取得フラグ
-	bool m_isSE = false;
+	bool m_isSE = false;					//SEを鳴らすか
 };
 

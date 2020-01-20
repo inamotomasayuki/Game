@@ -31,7 +31,12 @@ void Star::Update()
 		if (m_game->GetStar()) {
 			m_timer++;
 			auto pos = m_player->GetPositon();
-			pos.y += GET_STAR_POSITION_Y;
+			if (m_player->GetisItem()) {
+				pos.y += 150.0f;
+			}
+			else {
+				pos.y += GET_STAR_POSITION_Y;
+			}
 			m_position = pos;
 			if (m_timer == CLEAR_TIME) {
 				m_getStar = true;
@@ -48,10 +53,12 @@ void Star::Draw()
 	m_skinModel.Draw(
 		g_camera3D.GetViewMatrix(),
 		g_camera3D.GetProjectionMatrix(),
-		enRenderMode_Normal,
-		1
+		enRenderMode_Normal
 	);
 	m_skinModel.RimLightOff();
+	m_skinModel.SetDligColor(0, 30.0f);
+	m_skinModel.SetDligColor(1, 30.0f);
+
 }
 
 void Star::Rotation()

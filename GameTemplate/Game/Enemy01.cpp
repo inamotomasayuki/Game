@@ -114,7 +114,9 @@ void Enemy01::Attack()
 					m_player->SetIsAttacked(true);	//UŒ‚‚³‚ê‚½B
 					m_isAttack = true;	//UŒ‚‚µ‚½B
 					m_player->SetIsDamageSE(true);
-					m_game->SetHP(ATTACK_MINUS_PLAYER_HP);
+					if (!m_player->GetisItem()) {
+						m_game->SetHP(ATTACK_MINUS_PLAYER_HP);
+					}
 				}
 			}
 			//UŒ‚‚µ‚½‚ç­‚µ‘Ò‚Â

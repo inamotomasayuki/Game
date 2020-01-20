@@ -9,7 +9,7 @@
 //アルベドテクスチャ。
 Texture2D<float4> albedoTexture : register(t0);	
 Texture2D<float4> g_shadowMap : register(t1);		//todo シャドウマップ。
-
+Texture2D<float4> toonMap : register(t3);  //toonシェーダー用のテクスチャー
 //ボーン行列
 StructuredBuffer<float4x4> boneMatrix : register(t2);
 
@@ -238,7 +238,23 @@ float4 PSMain( PSInput In ) : SV_Target0
 		//リムライトの計算
 		float rim = saturate( 1.0f - dot(-eyeDir, In.Normal) );
 		rim = pow(rim, 3.0f);
-		lig += float3(2.5f, 2.5f, 0.5f) * rim;
+		//黄色
+		lig += float3(50.5f, 50.5f, 0.5f) * rim;
+	}
+	{
+		//ハーフランバート拡散照明によるライティング計算
+		float p[NUM_DIRECTION_LIG];
+		float4 Col[NUM_DIRECTION_LIG];
+		for (int i = 0; i < NUM_DIRECTION_LIG; i++) {
+			p[i] = dot(In.Normal * -1.0f, dligDirection[i].xyz);
+			p[i] = p[i] * 0.5f + 0.5f;
+			p[i] = p[i] * p[i];
+			//計算結果よりトゥーンシェーダー用のテクスチャから色をフェッチする
+			Col[i] = toonMap.Sample(Sampler, float2(p[i], 0.0f));
+
+			//求まった色を乗算する
+			albedoColor.xyz *= Col[i].xyz;
+		}
 	}
 	float4 finalColor = float4(0.0f, 0.0f, 0.0f, 1.0f);
 	finalColor.xyz = albedoColor.xyz * lig;

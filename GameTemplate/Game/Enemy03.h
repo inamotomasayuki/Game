@@ -33,7 +33,7 @@ private:
 	bool m_isPlayerJump = false;		//プレイヤーが飛んだかどうか
 	bool m_isBallAttack = false;		//ボール状態攻撃できるかどうか
 	bool m_isApproachAgain = false;		//再々近づいたかどうか
-	bool m_isHipDrop = false;
-	EnemyBall* m_enemyBall = nullptr;
+	bool m_isHipDrop = false;			//ヒップドロップかどうか
+	EnemyBall* m_enemyBall = nullptr;	//敵（甲羅）
 };
 

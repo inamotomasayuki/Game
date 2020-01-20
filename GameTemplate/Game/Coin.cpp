@@ -44,12 +44,11 @@ void Coin::Draw()
 	m_skinModel.Draw(
 		g_camera3D.GetViewMatrix(),
 		g_camera3D.GetProjectionMatrix(),
-		enRenderMode_Normal,
-		1
+		enRenderMode_Normal
 	);
 	m_skinModel.RimLightOff();
-	m_skinModel.SetDligColor(0, 2.0f);
-	m_skinModel.SetDligColor(1, 2.0f);
+	m_skinModel.SetDligColor(0, 30.0f);
+	m_skinModel.SetDligColor(1, 30.0f);
 }
 void Coin::Rotation()
 {

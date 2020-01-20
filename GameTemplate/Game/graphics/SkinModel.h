@@ -29,15 +29,27 @@ struct SDirectionLight {
 class SkinModel
 {
 public:
+	/// <summary>
+	/// リムライトをオフにする
+	/// </summary>
 	void RimLightOff()
 	{
 		m_dirLight.isRimLight = 0;
 		m_isRim = true;
 	}
+	/// <summary>
+	/// ディレクションライトの番号と色（明るさ）の設定
+	/// </summary>
+	/// <param name="num">ディレクションライトの番号</param>
+	/// <param name="color">色（明るさ）</param>
 	void SetDligColor(int num, float color)
 	{
 		m_dirLight.color[num] = { color,color,color,1.0f };	
 	}
+	/// <summary>
+	/// スペキュラの設定
+	/// </summary>
+	/// <param name="specPow">スペキュラの絞り値</param>
 	void SetDligSpecPow(float specPow)
 	{
 		m_dirLight.specPow = specPow;
@@ -80,7 +92,7 @@ public:
 	* param [in]renderMode
 	*  描画ステップ。0なら通常描画、1ならシルエット描画。
 	*/
-	void Draw( CMatrix viewMatrix, CMatrix projMatrix, EnRenderMode renderMode, int shadowReciver);
+	void Draw( CMatrix viewMatrix, CMatrix projMatrix, EnRenderMode renderMode);
 	/*!
 	*@brief	スケルトンの取得。
 	*/
@@ -133,7 +145,7 @@ private:
 		CMatrix mLightProj;	//ライトプロジェクション行列。
 		int isShadowReciever;	//シャドウレシーバーフラグ。
 	};
-	bool m_isRim = false;
+	bool m_isRim = false;					//リムライトするか
 	EnFbxUpAxis			m_enFbxUpAxis = enFbxUpAxisZ;	//!<FBXの上方向。
 	ID3D11Buffer*		m_cb = nullptr;					//!<定数バッファ。
 	ID3D11Buffer*		m_lightCb = nullptr;				//!<ライト用の定数バッファ。

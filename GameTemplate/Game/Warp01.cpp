@@ -37,8 +37,7 @@ void Warp01::Draw()
 	m_skinModel.Draw(
 		g_camera3D.GetViewMatrix(),
 		g_camera3D.GetProjectionMatrix(),
-		enRenderMode_Normal,
-		1
+		enRenderMode_Normal
 	);
 	m_skinModel.RimLightOff();
 }

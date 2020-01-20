@@ -19,6 +19,8 @@ public:
 		m_position = pos;
 		m_ghostPos = pos;
 		m_ghostPos.y -= 50.0f;
+		m_ghostMeshPos = pos;
+		m_ghostMeshPos.y += 30.0f;
 	}
 	/// <summary>
 	/// 回転の設定
@@ -44,6 +46,19 @@ public:
 	{
 		return &m_ghostObject;
 	}
+	/// <summary>
+/// ゴーストの取得
+/// </summary>
+/// <returns>ゴースト</returns>
+	PhysicsGhostObject* GetGhostMesh()
+	{
+		return &m_ghostMesh;
+	}
+
+	/// <summary>
+	/// ぶつかった設定
+	/// </summary>
+	/// <param name="contact">ぶつかったかどうか</param>
 	void SetIsContact(bool contact)
 	{
 		m_isContact = contact;
@@ -55,20 +70,43 @@ public:
 	{
 		return &m_skinModel;
 	}
-
+	/// <summary>
+	/// 座標の取得
+	/// </summary>
+	/// <returns>座標（位置）</returns>
+	CVector3 GetPosition()
+	{
+		return m_position;
+	}
+	/// <summary>
+	/// ヒップドロップ
+	/// </summary>
+	void SetIsHipDrop()
+	{
+		m_isHipDrop = true;
+	}
+	/// <summary>
+	/// ヒップドロップ？
+	/// </summary>
+	/// <returns></returns>
+	bool GetIsHipDrop()
+	{
+		return m_isHipDrop;
+	}
 private:
 	SkinModel m_skinModel;							//スキンモデル
 	PhysicsStaticObject m_staticObject;				//静的オブジェクト
 	PhysicsGhostObject m_ghostObject;				//ゴースト
+	PhysicsGhostObject m_ghostMesh;				//ゴースト
 	CVector3 m_position = CVector3::Zero();				//座標
 	CQuaternion m_rotation = CQuaternion::Identity();	//回転
 	CVector3 m_scale = CVector3::One();					//拡大率
-	CVector3 m_ghostPos;
-	CVector3 m_ghostScale = { 50.0f,1.0f,50.0f };
-	bool m_isContact = false;
-	bool m_isInitModel = false;
-	int m_timer = 0;									//タイマー　単位：秒
-	
-	Item* m_item = nullptr;
+	CVector3 m_ghostPos;								//ゴーストの位置
+	CVector3 m_ghostMeshPos;								//ゴーストの位置
+	CVector3 m_ghostScale = { 50.0f,1.0f,50.0f };		//ゴーストの大きさ
+	bool m_isContact = false;							//ぶつかったかどうか
+	bool m_isInitModel = false;							//モデルチェンジしたか
+	bool m_isHipDrop = false;
+	Item* m_item = nullptr;								//アイテム
 };
 

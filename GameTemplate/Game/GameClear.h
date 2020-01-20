@@ -11,15 +11,15 @@ public:
 	enum EnSprite {
 		enSprite_clear,			//クリア
 		enSprite_button,		//ボタン
-		enSprite_Num
+		enSprite_Num			//スプライトの数
 	};
 private:
-	Sprite m_sprite[enSprite_Num];			//スプライト
-	CVector3 m_position[enSprite_Num];		//位置
+	Sprite m_sprite[enSprite_Num];							//スプライト
+	CVector3 m_position[enSprite_Num];						//位置
 	CQuaternion m_rotation = CQuaternion::Identity();		//回転
-	CVector3 m_scale[enSprite_Num];				//スケール
-	float m_buttonAlpha = 0.1f;			//ボタンのalpha値
-	bool m_buttonFlag = false;					//点滅フラグ
+	CVector3 m_scale[enSprite_Num];							//スケール
+	float m_buttonAlpha = 0.1f;								//ボタンのalpha値
+	bool m_buttonFlag = false;								//点滅フラグ
 
 	enum EnAlphaState
 	{
@@ -34,6 +34,6 @@ private:
 		enScaleState_down			//縮小
 	};
 	EnScaleState m_scaleState = enScaleState_up;		//スケールステート
-	int m_scaleTimer = 0;			//スケールタイマー　単位：秒
+	int m_scaleTimer = 0;								//スケールタイマー　単位：秒
 };
 

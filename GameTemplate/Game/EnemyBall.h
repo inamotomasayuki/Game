@@ -57,6 +57,5 @@ private:
 	bool m_isPlayerJump = false;		//プレイヤーが飛んだかどうか
 	bool m_isBallAttack = false;		//ボール状態攻撃できるかどうか
 	bool m_isApproachAgain = false;		//再々近づいたかどうか
-	bool a = false;
 };
 

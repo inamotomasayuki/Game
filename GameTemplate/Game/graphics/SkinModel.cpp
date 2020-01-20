@@ -41,21 +41,34 @@ void SkinModel::Init(const wchar_t* filePath, EnFbxUpAxis enFbxUpAxis)
 //ディレクションライトの初期化。
 void SkinModel::InitDirectionLight()
 {
+	//m_dirLight.direction[0] = { 1.0f, 0.0f, 0.0f, 0.0f };
+	//m_dirLight.color[0] = { 0.2f, 0.2f, 0.2f, 1.0f };
+
+	//m_dirLight.direction[1] = { -0.707f, -0.707f, 0.0f, 0.0f };
+	//m_dirLight.color[1] = { 0.2f, 0.2f, 0.2f, 1.0f };
+
+	//m_dirLight.direction[2] = { 0.0f, -0.707f, 0.707f, 0.0f };
+	//m_dirLight.color[2] = { 0.2f, 0.2f, 0.2f, 1.0f };
+
+	//m_dirLight.direction[3] = { 1.0f, 0.0f, -1.0f, 0.0f };
+	//m_dirLight.direction[3].Normalize();
+	//m_dirLight.color[3] = { 0.2f, 0.2f, 0.2f, 1.0f };
+
 	m_dirLight.direction[0] = { 1.0f, 0.0f, 0.0f, 0.0f };
-	m_dirLight.color[0] = { 0.2f, 0.2f, 0.2f, 1.0f };
+	m_dirLight.color[0] = { 0.5f, 0.5f, 0.5f, 1.0f };
 
 	m_dirLight.direction[1] = { -0.707f, -0.707f, 0.0f, 0.0f };
-	m_dirLight.color[1] = { 0.2f, 0.2f, 0.2f, 1.0f };
+	m_dirLight.color[1] = { 0.5f, 0.5f, 0.5f, 1.0f };
 
 	m_dirLight.direction[2] = { 0.0f, -0.707f, 0.707f, 0.0f };
-	m_dirLight.color[2] = { 0.2f, 0.2f, 0.2f, 1.0f };
+	m_dirLight.color[2] = { 0.5f, 0.5f, 0.5f, 1.0f };
 
 	m_dirLight.direction[3] = { 1.0f, 0.0f, -1.0f, 0.0f };
 	m_dirLight.direction[3].Normalize();
-	m_dirLight.color[3] = { 0.2f, 0.2f, 0.2f, 1.0f };
+	m_dirLight.color[3] = { 0.5f, 0.5f, 0.5f, 1.0f };
 
 	m_dirLight.specPow = 10.0f;
-	m_dirLight.ambient = { 0.3f,0.3f,0.3f,1.0f };
+	m_dirLight.ambient = { 10.0f,10.0f,10.0f,1.0f };
 }
 void SkinModel::InitSkeleton(const wchar_t* filePath)
 {
@@ -137,7 +150,7 @@ void SkinModel::UpdateWorldMatrix(CVector3 position, CQuaternion rotation, CVect
 	//スケルトンの更新。
 	m_skeleton.Update(m_worldMatrix);
 }
-void SkinModel::Draw(CMatrix viewMatrix, CMatrix projMatrix, EnRenderMode renderMode, int shadowReciver)
+void SkinModel::Draw(CMatrix viewMatrix, CMatrix projMatrix, EnRenderMode renderMode)
 {
 	DirectX::CommonStates state(g_graphicsEngine->GetD3DDevice());
 

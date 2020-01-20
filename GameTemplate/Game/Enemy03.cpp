@@ -85,7 +85,9 @@ void Enemy03::Attack()
 					m_player->SetIsAttacked(true);	//UŒ‚‚³‚ê‚½B
 					m_isAttack = true;	//UŒ‚‚µ‚½B	
 					m_player->SetIsDamageSE(true);
-					m_game->SetHP(ATTACK_MINUS_PLAYER_HP);
+					if (!m_player->GetisItem()) {
+						m_game->SetHP(ATTACK_MINUS_PLAYER_HP);
+					}
 				}
 			}
 			//UŒ‚‚µ‚½‚ç­‚µ‘Ò‚Â
@@ -124,7 +126,7 @@ void Enemy03::Death(int score)
 	else {
 		//UŒ‚‚³‚ê‚Ä‚È‚©‚Á‚½‚ç
 		if (m_isAttacked == false) {
-			if (fabs(m_angle) <= CMath::DegToRad(90) && m_len < LENGTH) {
+			if (fabs(m_angle) <= CMath::DegToRad(100) && m_len < LENGTH) {
 				m_scale.z /= 10;
 				m_game->fumuSE();
 				m_isHipDrop = true;

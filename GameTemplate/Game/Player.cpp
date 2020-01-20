@@ -98,15 +98,20 @@ void Player::Draw()
 	m_skinModel.Draw(
 		g_camera3D.GetViewMatrix(),
 		g_camera3D.GetProjectionMatrix(),
-		enRenderMode_Silhouette,
-		1
+		enRenderMode_Silhouette
 	);
 	m_skinModel.Draw(
 		g_camera3D.GetViewMatrix(),
 		g_camera3D.GetProjectionMatrix(),
-		enRenderMode_Normal,
-		1
+		enRenderMode_Normal
 	);
+	if (m_game != nullptr) {
+		if (m_game->GetGameClearFlag()) {
+			for (int i = 0; i < 4; i++) {
+				m_skinModel.SetDligColor(i, 10.0f);
+			}
+		}
+	}
 }
 void Player::Warp_0()
 {
@@ -118,7 +123,7 @@ void Player::Warp_0()
 			m_charaCon.SetPosition(m_warp01->GetPosition());
 			m_position = m_charaCon.Execute(DELTA_TIME, m_moveSpeed);
 			m_isWarp = true;
-			m_warpTimer = 0;////
+			m_warpTimer = 0;
 		}
 	}
 	if (m_isWarp) {
@@ -184,16 +189,69 @@ void Player::GhostContact()
 			m_se[enSE_jumpFloor].Play(false);
 			m_contactJumpFloor = true;
 		}
-		if (m_box->GetGhost()->IsSelf(contactObject) == true) {
-			m_box->SetIsContact(true);
-			if (!m_hitBox) {
-				m_jumpSpeed = 0.0f;
-				m_moveSpeed.y = 0.0f;
-				m_hitBox = true;
+		g_goMgr.FindGameObjects<Box>("box", [&](Box* box)->bool {
+
+			//箱に下からぶつかった
+			if (box->GetGhost()->IsSelf(contactObject) == true) {
+				box->SetIsContact(true);
+				if (!m_hitBox) {
+					m_jumpSpeed = 0.0f;
+					m_moveSpeed.y = 0.0f;
+					m_hitBox = true;
+				}
+				m_moveSpeed.y -= m_gravity;
 			}
-			m_moveSpeed.y -= m_gravity;
+			if (box->GetGhostMesh()->IsSelf(contactObject) == true) {
+				if (m_isHipDrop) {
+					box->SetIsContact(true);
+					box->SetIsHipDrop();
+					if (!m_hitBox) {
+						m_hitBox = true;
+					}
+				}
+			}
+			return true;
+			});
+		g_goMgr.FindGameObjects<Item>("item", [&](Item* item)->bool {
+			//アイテムにぶつかった
+			if (item->GetGhost()->IsSelf(contactObject) == true) {
+				item->SetIsGet();
+				m_isItem = true;
+			}
+			return true;
+			});
+		});
+	//大きくなる
+	if (m_isItem) {
+		auto scale = CVector3::One()*1.5;
+		if (m_scale.Length() < scale.Length()) {
+			m_scale *= 1.02f;
+			m_se[enSE_kyodaika].Play(false);
 		}
-	});
+		else {
+			m_scale = CVector3::One() * 1.5f;
+			auto radius = PLAYER_COLLIDER_RADIUS * 1.2f;
+			auto height = PLAYER_COLLIDER_HIGHT * 1.1f;
+			m_charaCon.SetColliderRadiusAndHeight(radius, height);
+
+		}
+	}
+	//小さくなる
+	else {
+		if (m_scale.Length() > CVector3::One().Length()) {
+			m_scale *= 0.97f;
+		}
+		else {
+			m_scale = CVector3::One();
+			m_charaCon.SetColliderRadiusAndHeight(PLAYER_COLLIDER_RADIUS, PLAYER_COLLIDER_HIGHT);
+		}
+	}
+	if (m_hitBox) {
+		if (!m_isBoxItem) {
+			m_se[enSE_boxPoko].Play(false);
+			m_isBoxItem = true;
+		}
+	}
 	if (m_charaCon.IsOnGround()) {
 		m_hitBox = false;
 	}
@@ -237,6 +295,7 @@ void Player::PadMove()
 			}
 			else {
 				m_isHipDrop = false;
+				m_isSetGravity = false;
 				m_hipDropTimer = 0;
 			}
 			if (m_isHipDrop) {
@@ -248,8 +307,14 @@ void Player::PadMove()
 					m_gravity = 0.0f;
 				}
 				else {
-					m_gravity = 3000.0f;
+					if (!m_isSetGravity) {
+						m_gravity = 3000.0f;
+						m_isSetGravity = true;
+					}
 				}
+			}
+			if (m_isSetGravity) {
+				m_gravity *= 1.03f;
 			}
 			//Bダッシュ
 			if (g_pad[0].IsPress(enButtonB)) {
@@ -334,6 +399,7 @@ void Player::PadMove()
 
 	//攻撃されたらノックバックする。
 	if (m_isAttacked == true) {
+		m_isItem = false;
 		m_moveSpeed = m_addSpeed;
 		m_moveSpeed.y -= KNOCK_BACK_SPEED;
 		m_addSpeed *= ADD_SPEED_DECAY;
@@ -461,22 +527,22 @@ void Player::AnimationController()
 void Player::InitAnimationClip()
 {
 	//アニメーションクリップのロード。
-	m_animClips[enAnimationClip_idle].Load(L"Assets/animData/idle.tka");
-	m_animClips[enAnimationClip_run].Load(L"Assets/animData/run.tka");
-	m_animClips[enAnimationClip_jump].Load(L"Assets/animData/jump.tka");
-	m_animClips[enAnimationClip_damage].Load(L"Assets/animData/damage.tka");
-	m_animClips[enAnimationClip_walk].Load(L"Assets/animData/walk.tka");
-	m_animClips[enAnimationClip_down].Load(L"Assets/animData/KneelDown.tka");
-	m_animClips[enAnimationClip_clear].Load(L"Assets/animData/clear.tka");
+	m_animClips[enAnimationClip_idle].Load(L"Assets/animData/idle.tka");		//立ち
+	m_animClips[enAnimationClip_run].Load(L"Assets/animData/run.tka");			//走り
+	m_animClips[enAnimationClip_jump].Load(L"Assets/animData/jump.tka");		//ジャンプ
+	m_animClips[enAnimationClip_damage].Load(L"Assets/animData/damage.tka");	//ダメージ
+	m_animClips[enAnimationClip_walk].Load(L"Assets/animData/walk.tka");		//歩き
+	m_animClips[enAnimationClip_down].Load(L"Assets/animData/KneelDown.tka");	//ダウン
+	m_animClips[enAnimationClip_clear].Load(L"Assets/animData/clear.tka");		//クリア
 	//ループフラグを設定する
 	//走りアニメーションはループフラグを設定していないのでワンショット再生で停止。
-	m_animClips[enAnimationClip_idle].SetLoopFlag(true);
-	m_animClips[enAnimationClip_run].SetLoopFlag(true);
-	m_animClips[enAnimationClip_walk].SetLoopFlag(true);
-	m_animClips[enAnimationClip_jump].SetLoopFlag(false);
-	m_animClips[enAnimationClip_damage].SetLoopFlag(false);
-	m_animClips[enAnimationClip_down].SetLoopFlag(false);
-	m_animClips[enAnimationClip_clear].SetLoopFlag(false);
+	m_animClips[enAnimationClip_idle].SetLoopFlag(true);		//立ち
+	m_animClips[enAnimationClip_run].SetLoopFlag(true);			//走り
+	m_animClips[enAnimationClip_walk].SetLoopFlag(true);		//歩き
+	m_animClips[enAnimationClip_jump].SetLoopFlag(false);		//ジャンプ
+	m_animClips[enAnimationClip_damage].SetLoopFlag(false);		//ダメージ
+	m_animClips[enAnimationClip_down].SetLoopFlag(false);		//ダウン
+	m_animClips[enAnimationClip_clear].SetLoopFlag(false);		//クリア
 
 }
 
@@ -484,13 +550,15 @@ void Player::InitSound()
 {
 	m_soundEngine.Init();
 	//サウンドの初期化
-	m_se[enSE_jump].Init(L"Assets/sound/jump.wav");
-	m_se[enSE_walk].Init(L"Assets/sound/walk.wav");
-	m_se[enSE_dash].Init(L"Assets/sound/dash.wav");
-	m_se[enSE_warp0].Init(L"Assets/sound/warp0.wav");
-	m_se[enSE_warp1].Init(L"Assets/sound/warp1.wav");
-	m_se[enSE_jumpFloor].Init(L"Assets/sound/jumpFloor.wav");
-	m_se[enSE_damage].Init(L"Assets/sound/damage.wav");
+	m_se[enSE_jump].Init(L"Assets/sound/jump.wav");				//ジャンプ
+	m_se[enSE_walk].Init(L"Assets/sound/walk.wav");				//歩き
+	m_se[enSE_dash].Init(L"Assets/sound/dash.wav");				//走り
+	m_se[enSE_warp0].Init(L"Assets/sound/warp0.wav");			//ワープ前
+	m_se[enSE_warp1].Init(L"Assets/sound/warp1.wav");			//ワープ後
+	m_se[enSE_jumpFloor].Init(L"Assets/sound/jumpFloor.wav");	//ジャンプ床
+	m_se[enSE_damage].Init(L"Assets/sound/damage.wav");			//ダメージ
+	m_se[enSE_kyodaika].Init(L"Assets/sound/kyodaika.wav");		//巨大化
+	m_se[enSE_boxPoko].Init(L"Assets/sound/boxPoko.wav");		//箱アイテム
 }
 
 void Player::SoundPlay()
@@ -517,7 +585,7 @@ void Player::SoundPlay()
 			m_se[enSE_walk].Stop();
 		}
 	}
-	else {
+	if (!m_charaCon.IsOnGround()) {
 		m_se[enSE_walk].Pause();
 		m_se[enSE_dash].Pause();
 	}
@@ -529,7 +597,7 @@ void Player::SoundPlay()
 	}
 	if (m_isWarp) {
 		m_se[enSE_warp0].Stop();
-		m_se[enSE_warp1].SetVolume(2.0f);
+		m_se[enSE_warp1].SetVolume(1.0f);
 		m_se[enSE_warp1].Play(false);
 	}
 	else {

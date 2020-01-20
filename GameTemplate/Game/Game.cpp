@@ -170,11 +170,7 @@ void Game::Update()
 		});
 
 	g_goMgr.FindGameObjects<Coin>("coin", [this](Coin* coin)->bool {
-		//auto v = m_player->GetPositon() - coin->GetPositon();
-		//auto len = v.Length();
-		//if (len < 3000) {
-			g_shadowMap->RegistShadowCaster(coin->GetSkinModel());
-		//}
+		g_shadowMap->RegistShadowCaster(coin->GetSkinModel());
 		return true;
 		});
 	g_goMgr.FindGameObjects<Box>("box", [](Box* box)->bool {
@@ -232,6 +228,11 @@ void Game::Update()
 		}
 		m_gameCamera->SetCameraPos(m_cameraPos);
 	}
+	if (g_pad[0].IsTrigger(enButtonStart)) {
+		g_goMgr.NewGameObject<Title>(0);
+		g_goMgr.DeleteGameObject(this);
+
+	}
 }
 
 void Game::Draw()
@@ -260,7 +261,7 @@ void Game::SoundPlay()
 			m_se[enSE_coin].Play(false);
 		}
 		return true;
-	});
+		});
 	//ÉQÅ[ÉÄÉNÉäÉAâπ
 	if (m_gameClearFlag) {
 		if (!m_isGameClearSE) {

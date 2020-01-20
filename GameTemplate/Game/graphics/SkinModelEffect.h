@@ -23,6 +23,8 @@ protected:
 
 	bool isSkining;
 	ID3D11ShaderResourceView* m_albedoTex = nullptr;
+	ID3D11ShaderResourceView* m_toonMapTex = nullptr;
+	bool isToonInit = false;
 	EnRenderMode m_renderMode = enRenderMode_Invalid;	//レンダリングモード。
 	ID3D11DepthStencilState* m_silhouettoDepthStepsilState = nullptr;	//シルエット描画用のデプスステンシルステート。
 private:
@@ -50,6 +52,9 @@ public:
 	{
 		if (m_albedoTex) {
 			m_albedoTex->Release();
+		}
+		if (m_toonMapTex) {
+			m_toonMapTex->Release();
 		}
 		if (m_silhouettoDepthStepsilState != nullptr) {
 			m_silhouettoDepthStepsilState->Release();
