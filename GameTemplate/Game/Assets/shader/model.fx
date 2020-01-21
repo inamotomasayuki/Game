@@ -192,7 +192,7 @@ float4 PSMain( PSInput In ) : SV_Target0
 	//ディレクションライトの拡散反射光を計算する。
 	float3 lig = 0.0f;
 	for (int i = 0; i < NUM_DIRECTION_LIG; i++) {
-		lig += max(0.0f, dot(In.Normal * -1.0f, dligDirection[i])) * dligColor[i];
+		//lig += max(0.0f, dot(In.Normal * -1.0f, dligDirection[i])) * dligColor[i];
 		//ディレクションライトの鏡面反射光を計算する。
 		{
 			//実習　鏡面反射を計算しなさい。
@@ -279,7 +279,7 @@ PSInput_ShadowMap VSMain_ShadowMap(VSInputNmTxVcTangent In)
 //--------------------------------------------------------------------------------------
 float4 PSMain_Silhouette(PSInput In) : SV_Target0
 {
-	return float4(0.5f, 0.5f, 0.5f, 1.0f);
+	return float4(0.4f, 0.4f, 1.0f, 1.0f);
 }
 /// <summary>
 /// ピクセルシェーダーのエントリ関数。
