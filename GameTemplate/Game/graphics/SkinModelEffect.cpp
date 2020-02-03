@@ -6,16 +6,6 @@ void __cdecl ModelEffect::Apply(ID3D11DeviceContext* deviceContext)
 {
 	//シェーダーを適用する。
 	deviceContext->VSSetShader((ID3D11VertexShader*)m_vsShader.GetBody(), NULL, 0);
-	if (!isToonInit) {
-		//テクスチャを読み込みます
-		DirectX::CreateDDSTextureFromFile(
-			g_graphicsEngine->GetD3DDevice(), // D3Dデバイス
-			L"Assets/shader/toonmap.dds",  //テクスチャのファイルパス
-			nullptr,   //nullptrでいい
-			&m_toonMapTex  //シェーダーリソースビュー
-		);
-		isToonInit = true;
-	}
 	switch (m_renderMode) {
 	case enRenderMode_Normal:{
 		//通常描画。
@@ -24,7 +14,7 @@ void __cdecl ModelEffect::Apply(ID3D11DeviceContext* deviceContext)
 		//todo シェーダーリソースビューを一気に設定する。
 		ID3D11ShaderResourceView* srvArray[] = {
 			m_albedoTex,							//アルベドテクスチャ。
-			g_shadowMap->GetShadowMapSRV(),	//シャドウマップ。
+			g_shadowMap->GetShadowMapSRV()	//シャドウマップ。
 		};
 		ID3D11ShaderResourceView* srvarray[] = {
 			m_toonMapTex
@@ -57,4 +47,15 @@ void ModelEffect::InitSilhouettoDepthStepsilState()
 	desc.DepthFunc = D3D11_COMPARISON_GREATER;		   //Z値が大きければフレームバッファに描き込む。
 
 	pd3d->CreateDepthStencilState(&desc, &m_silhouettoDepthStepsilState);
+}
+
+void ModelEffect::InitToonMap()
+{
+	//テクスチャを読み込みます
+	DirectX::CreateDDSTextureFromFile(
+		g_graphicsEngine->GetD3DDevice(), // D3Dデバイス
+		L"Assets/shader/toonmap.dds",  //テクスチャのファイルパス
+		nullptr,   //nullptrでいい
+		&m_toonMapTex  //シェーダーリソースビュー
+	);
 }

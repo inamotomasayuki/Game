@@ -3,13 +3,13 @@
 #include "Game.h"
 #include "EnemyBall.h"
 
-const float LENGTH = 75.0f;				//玉との距離
-const float PYON_UP = 500.0f;			//跳ね上がるときの速度
+const float LENGTH = 75.0f;					//玉との距離
+const float PYON_UP = 500.0f;				//跳ね上がるときの速度
 const float PYON_DOWN = -500.0f;			//跳ね落ちるときの速度
-const int PYON_UP_TIME = 6;				//跳ね上がる時間
-const int PYON_DOWN_TIME = 9;			//跳ね落ちる時間
-const int DELETE_TIME = 11;				//削除までの待ち時間
-const int SCORE = 1;					//スコア
+const int PYON_UP_TIME = 6;					//跳ね上がる時間
+const int PYON_DOWN_TIME = 9;				//跳ね落ちる時間
+const int DELETE_TIME = 11;					//削除までの待ち時間
+const int SCORE = 1;						//スコア
 const float DELTA_TIME = 1.0f / 60.0f;		//経過時間　単位：秒
 
 void EnemyBase::Draw()
@@ -33,7 +33,7 @@ void EnemyBase::DeathEnemyBallContact(int score)
 			m_isDeath = true;
 		}
 		return true;
-	});
+		});
 
 	//フラグが立ったら跳ねさせる
 	if (m_isDeath) {
@@ -47,7 +47,7 @@ void EnemyBase::DeathEnemyBallContact(int score)
 		//削除
 		if (m_timer == DELETE_TIME) {
 			m_timer = 0;
-			m_game->fumuSE();
+			m_fumuSE.Play(false);
 			m_game->SetScore(score);
 			g_goMgr.DeleteGameObject(this);
 		}

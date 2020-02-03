@@ -1,6 +1,8 @@
 #pragma once
 #include "physics/PhysicsGhostObject.h"
 #include "character/CharacterController.h"
+#include "sound/SoundSource.h"
+class Player;
 class Box;
 const float ITEM_COLLIDER_RADIUS = 5.0f;
 const float ITEM_COLLIDER_HIGHT = 5.0f;
@@ -66,6 +68,10 @@ private:
 	CQuaternion m_rotation = CQuaternion::Identity();	//‰ñ“]
 	CVector3 m_scale = CVector3::One();					//Šg‘å—¦
 	bool m_isGet = false;			//Žæ“¾‚³‚ê‚½‚©
-	Box* m_box = nullptr;			//” 
+	CSoundSource m_se;
+	Player* m_player = nullptr;
+	CVector3 m_boxPos;
+	float m_posUp = 0.0f;
+	bool m_isHipDrop = false;
 };
 

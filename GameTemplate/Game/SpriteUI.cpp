@@ -17,15 +17,20 @@ const float NUM_SPRITE_HIGHT = 50.0f;		//数字の縦幅
 const float ALPHA_MINUS = -1.0f;		//アルファ値をマイナス
 const float ALPHA_PLUS = 1.0f;			//アルファ値をプラス
 
-
+const float UNITY_SPRITE_WIDTH = 500.0f;		//ユニティの横幅
+const float UNITY_SPRITE_HIGHT = 200.0f;		//ユニティの縦幅
+const float COIN_SPRITE_WIDTH = 50.0f;			//コインの横幅
+const float COIN_SPRITE_HIGHT = 50.0f;			//コインの縦幅
+const float KAKERU_SPRITE_WIDTH = 50.0f;		//×の横幅
+const float KAKERU_SPRITE_HIGHT = 50.0f;		//×の縦幅
 
 SpriteUI::SpriteUI()
 {
-	m_spriteUI[enSpriteUI_unityChan].Init(L"Assets/sprite/unityChan.dds", 500, 200);
+	m_spriteUI[enSpriteUI_unityChan].Init(L"Assets/sprite/unityChan.dds", UNITY_SPRITE_WIDTH, UNITY_SPRITE_HIGHT);
 	m_positionUI[enSpriteUI_unityChan] = { -380.0f,250.0f,0.0f };
-	m_spriteUI[enSpriteUI_kakeru].Init(L"Assets/sprite/kakeru.dds", 50, 50);
+	m_spriteUI[enSpriteUI_kakeru].Init(L"Assets/sprite/kakeru.dds", KAKERU_SPRITE_WIDTH, KAKERU_SPRITE_HIGHT);
 	m_positionUI[enSpriteUI_kakeru] = { -550.0f,310.0f,0.0f };
-	m_spriteUI[enSpriteUI_coin].Init(L"Assets/sprite/coin.dds", 50, 50);
+	m_spriteUI[enSpriteUI_coin].Init(L"Assets/sprite/coin.dds", COIN_SPRITE_WIDTH, COIN_SPRITE_HIGHT);
 	m_positionUI[enSpriteUI_coin] = { 470.0f,320.0f,0.0f };
 
 	//一桁目の数字の画像初期化

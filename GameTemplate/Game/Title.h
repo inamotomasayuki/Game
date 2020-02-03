@@ -12,7 +12,6 @@ public:
 
 private:
 	Sprite m_sprite;		//スプライト
-	CSoundEngine m_soundEngine;				//サウンドエンジン。
 	CSoundSource m_bgm;		//BGM
 };
 

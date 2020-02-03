@@ -3,11 +3,18 @@
 #include "Player.h"
 #include "Game.h"
 
+const float CAMERA_POS_Y_UNDER = -0.2f;						//カメラ位置低さ
+const float CAMERA_POS_Y_UPPER = 0.8f;						//カメラ位置高さ
+const float CAMERA_TARGET_Y = 100.0f;						//カメラターゲットY位置
+const CVector3 CAMERA_POS = { 0.0f, 100.0f, -500.0f };		//カメラ位置
+const CVector3 CAMERA_TARGET = { 0.0f, 100.0f, 0.0f };		//カメラターゲット
+const float CAMERA_FAR = 100000.0f;							//カメラ遠平面
+
 GameCamera::GameCamera()
 {
-	g_camera3D.SetPosition({ 0.0f, 100.0f, -500.0f });
-	g_camera3D.SetTarget({ 0.0f, 100.0f, 0.0f });
-	g_camera3D.SetFar(100000.0f);
+	g_camera3D.SetPosition(CAMERA_POS);
+	g_camera3D.SetTarget(CAMERA_TARGET);
+	g_camera3D.SetFar(CAMERA_FAR);
 }
 
 
@@ -23,7 +30,7 @@ void GameCamera::Update()
 	if (m_player != nullptr
 		&& m_game != nullptr) {
 		m_cameraTarget = m_player->GetPositon(); //注視点を計算する
-		m_cameraTarget.y += 100.0f;		//プレイヤーの足元からちょっと上を注視点とする
+		m_cameraTarget.y += CAMERA_TARGET_Y;		//プレイヤーの足元からちょっと上を注視点とする
 
 		m_cameraPos = g_camera3D.GetPosition();
 		m_toCameraPos = m_cameraPos - g_camera3D.GetTarget(); //注視点
@@ -49,11 +56,11 @@ void GameCamera::Update()
 		//大きさが１になるということは、ベクトルから強さがなくなり、方向のみの情報となるということ。
 		auto toPosDir = m_toCameraPos;
 		toPosDir.Normalize();
-		if (toPosDir.y < -0.2f) {
+		if (toPosDir.y < CAMERA_POS_Y_UNDER) {
 			//カメラが下向きすぎ。
 			m_toCameraPos = toCameraPosOld;
 		}
-		else if (toPosDir.y > 0.8) {
+		else if (toPosDir.y > CAMERA_POS_Y_UPPER) {
 			//カメラが上向きすぎ。
 			m_toCameraPos = toCameraPosOld;
 		}

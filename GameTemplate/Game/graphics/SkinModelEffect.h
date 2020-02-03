@@ -24,7 +24,7 @@ protected:
 	bool isSkining;
 	ID3D11ShaderResourceView* m_albedoTex = nullptr;
 	ID3D11ShaderResourceView* m_toonMapTex = nullptr;
-	bool isToonInit = false;
+	
 	EnRenderMode m_renderMode = enRenderMode_Invalid;	//レンダリングモード。
 	ID3D11DepthStencilState* m_silhouettoDepthStepsilState = nullptr;	//シルエット描画用のデプスステンシルステート。
 private:
@@ -32,6 +32,7 @@ private:
 	/// シルエット描画用のデプスステンシルステートを初期化する。
 	/// </summary>
 	void InitSilhouettoDepthStepsilState();
+	void InitToonMap();
 public:
 	ModelEffect()
 	{
@@ -47,6 +48,7 @@ public:
 		m_pPSShadowMap = &m_psShadowMap;
 		//デプスステンシルの初期化。
 		InitSilhouettoDepthStepsilState();
+		InitToonMap();
 	}
 	virtual ~ModelEffect()
 	{

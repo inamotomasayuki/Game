@@ -2,18 +2,19 @@
 #include "Enemy01.h"
 #include "Game.h"
 
-const float LENGTH_UPPER = 900.0f;			//追跡上限距離
-const float LENGTH_UNDER = 50.0f;			//追跡下限距離
-const float MOVE_SPEED = 400.0f;			//移動速度
-const float MINIMUM = 0.0001f;				//極小
-const float DELTA_TIME = 1.0f / 60.0f;		//経過時間　単位：秒
-const float INIT_POS_LEN = 10.0f;			//リターン時の初期位置との距離
-const int ATTACK_WAIT_TIME = 40;		//攻撃したときの待ち時間
-const float ATTACKED_WAIT_TIME = 20.0f;		//攻撃されたときの待ち時間
-const float SCALE_DIVISION = 2.0f;		//スケールを割る数値
-const float DEGREE_NUM = 80.0f;			//角度　単位：degree
-const float LENGTH = 50.0f;				//プレイヤーとの距離
-const int ATTACK_MINUS_PLAYER_HP = -1;		//攻撃時プレイヤーHPマイナス
+const float LENGTH_UPPER = 900.0f;				//追跡上限距離
+const float LENGTH_UNDER = 50.0f;				//追跡下限距離
+const float MOVE_SPEED = 400.0f;				//移動速度
+const float MINIMUM = 0.0001f;					//極小
+const float DELTA_TIME = 1.0f / 60.0f;			//経過時間　単位：秒
+const float INIT_POS_LEN = 10.0f;				//リターン時の初期位置との距離
+const int ATTACK_WAIT_TIME = 40;				//攻撃したときの待ち時間
+const float ATTACKED_WAIT_TIME = 20.0f;			//攻撃されたときの待ち時間
+const float SCALE_DIVISION = 2.0f;				//スケールを割る数値
+const float DEGREE_NUM = 80.0f;					//角度　単位：degree
+const float RIGHT_ANGLE = 90.0f;				//直角
+const float LENGTH = 50.0f;						//プレイヤーとの距離
+const int ATTACK_MINUS_PLAYER_HP = -1;			//攻撃時プレイヤーHPマイナス
 const float PLAYER_NOCKBACK_SPEED = 2500.0f;	//プレイヤーのノックバックスピード
 
 const int SCORE = 1;					//スコア
@@ -22,6 +23,7 @@ Enemy01::Enemy01()
 {
 	//cmoファイルの読み込み。
 	m_skinModel.Init(L"Assets/modelData/kuribo.cmo");
+	m_fumuSE.Init(L"Assets/sound/fumu.wav");
 }
 
 void Enemy01::Update()
@@ -137,10 +139,10 @@ void Enemy01::Death(int score)
 	if (!m_player->IsHipDrop()) {
 		//攻撃されてなかったら
 		if (m_isAttacked == false) {
-			if (fabs(m_angle) <= CMath::DegToRad(80) && m_len < LENGTH) {
+			if (fabs(m_angle) <= CMath::DegToRad(DEGREE_NUM) && m_len < LENGTH) {
 				m_scale.z /= SCALE_DIVISION;
 				m_player->SetJumpFlag(true);	//ジャンプさせる
-				m_game->fumuSE();
+				m_fumuSE.Play(false);
 				m_isAttacked = true;		//攻撃された
 			}
 		}
@@ -156,9 +158,9 @@ void Enemy01::Death(int score)
 	else {
 		//攻撃されてなかったら
 		if (m_isAttacked == false) {
-			if (fabs(m_angle) <= CMath::DegToRad(90) && m_len < LENGTH) {
+			if (fabs(m_angle) <= CMath::DegToRad(RIGHT_ANGLE) && m_len < LENGTH) {
 				m_scale.z /= 10;
-				m_game->fumuSE();
+				m_fumuSE.Play(false);
 				m_isAttacked = true;		//攻撃された
 			}
 		}

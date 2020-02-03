@@ -1,8 +1,9 @@
 #include "stdafx.h"
 #include "Warp00.h"
 
-const float ROTATION_SPEED = 2.0f;					//‰ñ“]‘¬“x
-
+const float ROTATION_SPEED = 2.0f;				//‰ñ“]‘¬“x
+const float LENGTH_NEAR = 50.0f;				//‹ß‚¢	
+const float LENGTH_LEAVE = 100.0f;				//—£‚ê‚½
 Warp00::Warp00()
 {
 	m_skinModel.Init(L"Assets/modelData/warp.cmo");
@@ -23,11 +24,11 @@ void Warp00::Update()
 	if (m_player != nullptr) {
 		auto v = m_position - m_player->GetPositon();
 		auto len = v.Length();
-		if (len < 50
+		if (len < LENGTH_NEAR
 			&& !m_player->GetIsLeave00()) {
 			m_player->SetIsWarp00(true);
 		}
-		if (len >= 100) {
+		if (len >= LENGTH_LEAVE) {
 			m_player->SetIsLeave00(false);
 		}
 	}

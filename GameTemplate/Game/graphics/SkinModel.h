@@ -38,6 +38,15 @@ public:
 		m_isRim = true;
 	}
 	/// <summary>
+	/// ディレクションライトの番号と方向の設定
+	/// </summary>
+	void SetDligDir(int num, float x, float y, float z)
+	{
+		CVector4 dir = { x,y,z,1.0f };
+		dir.Normalize();
+		m_dirLight.direction[num] = dir;
+	}
+	/// <summary>
 	/// ディレクションライトの番号と色（明るさ）の設定
 	/// </summary>
 	/// <param name="num">ディレクションライトの番号</param>
@@ -119,6 +128,16 @@ public:
 		enSkinModelSRVReg_DiffuseTexture = 0,		//!<ディフューズテクスチャ。
 		enSkinModelSRVReg_BoneMatrix,				//!<ボーン行列。
 	};
+	/*!
+	*@brief	法線マップのロード
+	*@param[in]	filePath		ロードするddsファイルのファイルパス。
+	*/
+	void LoadNormalMap(const wchar_t* filePath);
+	/*!
+	*@brief	スペキュラマップのロード
+	*@param[in]	filePath		ロードするddsファイルのファイルパス。
+	*/
+	void LoadSpecularMap(const wchar_t* filePath);
 private:
 	/*!
 	*@brief	サンプラステートの初期化。
@@ -144,6 +163,8 @@ private:
 		CMatrix mLightView;	//ライトビュー行列。
 		CMatrix mLightProj;	//ライトプロジェクション行列。
 		int isShadowReciever;	//シャドウレシーバーフラグ。
+		int isHasNormalMap;		//法線マップを保持している？
+		int isHasSpecuraMap;	//スペキュラマップを保持している？
 	};
 	bool m_isRim = false;					//リムライトするか
 	EnFbxUpAxis			m_enFbxUpAxis = enFbxUpAxisZ;	//!<FBXの上方向。
@@ -153,6 +174,8 @@ private:
 	Skeleton			m_skeleton;						//!<スケルトン。
 	CMatrix				m_worldMatrix;					//!<ワールド行列。
 	DirectX::Model*		m_modelDx;						//!<DirectXTKが提供するモデルクラス。
-	ID3D11SamplerState* m_samplerState = nullptr;		//!<サンプラステート。z
+	ID3D11SamplerState* m_samplerState = nullptr;		//!<サンプラステート。
+	ID3D11ShaderResourceView* m_normalMapSRV = nullptr;		//法線マップのSRV
+	ID3D11ShaderResourceView* m_specularMapSRV = nullptr;	//スペキュラマップのSRV
 };
 

@@ -2,24 +2,25 @@
 #include "EnemyBall.h"
 #include "Game.h"
 
-const float ATTACK_WAIT_TIME = 40.0f;		//攻撃したときの待ち時間
-const float DEGREE_NUM = 80.0f;			//角度　単位：degree
-const float LENGTH = 60.0f;				//プレイヤーとの距離
-const float PLAYER_JUMP_LENGTH = 80.0f;		//プレイヤーがジャンプした時との距離
-const int ATTACK_MINUS_PLAYER_HP = -1;		//攻撃時プレイヤーHPマイナス
-const float PLAYER_NOCKBACK_SPEED = 2500.0f;	//プレイヤーのノックバックスピード
+const float ATTACK_WAIT_TIME = 40.0f;				//攻撃したときの待ち時間
+const float DEGREE_NUM = 80.0f;						//角度　単位：degree
+const float LENGTH = 60.0f;							//プレイヤーとの距離
+const float PLAYER_JUMP_LENGTH = 80.0f;				//プレイヤーがジャンプした時との距離
+const int ATTACK_MINUS_PLAYER_HP = -1;				//攻撃時プレイヤーHPマイナス
+const float PLAYER_NOCKBACK_SPEED = 2500.0f;		//プレイヤーのノックバックスピード
 const float ENEMY_GRAVITY = 800.0f;					//重力
 const float ENEMY_GRAVITY_ACCELERATION = 1.02f;		//重力加速度
-const int SCORE = 1;					//スコア
-const float KICKED_SPEED = -2000.0f;		//蹴られた時のスピード（蹴った方向に飛ばすためにマイナス）
-const float DELTA_TIME = 1.0f / 60.0f;		//経過時間　単位：秒
+const int SCORE = 1;								//スコア
+const float KICKED_SPEED = -2000.0f;				//蹴られた時のスピード（蹴った方向に飛ばすためにマイナス）
+const float DELTA_TIME = 1.0f / 60.0f;				//経過時間　単位：秒
 const float ROTATION_SPEED = 40.0f;					//回転速度
-const float DELETE_LENGTH = 100000.0f;			//削除距離
+const float DELETE_LENGTH = 100000.0f;				//削除距離
 
 EnemyBall::EnemyBall()
 {
 	m_skinModel.Init(L"Assets/modelData/turtleShell.cmo");
 	m_gravity = ENEMY_GRAVITY;
+	m_pokoSE.Init(L"Assets/sound/poko.wav");
 }
 
 void EnemyBall::Update()
@@ -114,7 +115,7 @@ void EnemyBall::Ball()
 		m_v.y = 0.0f;
 		//ノックバック
 		m_moveSpeed = m_v * KICKED_SPEED;
-		m_game->pokoSE();
+		m_pokoSE.Play(false);
 		m_isKicked = true;
 		m_isApproachAgain = true;
 	}		

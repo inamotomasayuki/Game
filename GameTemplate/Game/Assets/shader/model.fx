@@ -9,7 +9,10 @@
 //アルベドテクスチャ。
 Texture2D<float4> albedoTexture : register(t0);	
 Texture2D<float4> g_shadowMap : register(t1);		//todo シャドウマップ。
+Texture2D<float4> g_normalMap : register(t2);		//	法線マップ。
 Texture2D<float4> toonMap : register(t3);  //toonシェーダー用のテクスチャー
+Texture2D<float4> g_specularMap : register(t4);		//スペキュラマップ。
+
 //ボーン行列
 StructuredBuffer<float4x4> boneMatrix : register(t2);
 
@@ -32,6 +35,8 @@ cbuffer VSPSCb : register(b0){
 	float4x4 mLightView;	//ライトビュー行列。
 	float4x4 mLightProj;	//ライトプロジェクション行列。
 	int isShadowReciever;	//シャドウレシーバーフラグ。
+	int isHasNormalMap;		//法線マップある？
+	int isHasSpecularMap;	//スペキュラマップある？
 };
 static const int NUM_DIRECTION_LIG = 4;
 /*!
@@ -189,24 +194,53 @@ float4 PSMain( PSInput In ) : SV_Target0
 	
 	//albedoテクスチャからカラーをフェッチする。
 	float4 albedoColor = albedoTexture.Sample(Sampler, In.TexCoord);
+		//法線を計算する。
+	float3 normal = 0;
+	if(isHasNormalMap == 1){
+		//法線マップがある。
+		//法線と接ベクトルの外積を計算して、従ベクトルを計算する。
+		float3 biNormal = cross(In.Normal, In.Tangent);
+		normal = g_normalMap.Sample(Sampler, In.TexCoord);
+		//0.0～1.0の範囲になっているタンジェントスペース法線を
+		//-1.0～1.0の範囲に変換する。
+		normal =(normal * 2.0f)- 1.0f;
+		//法線をタンジェントスペースから、ワールドスペースに変換する。
+		normal = In.Tangent * normal.x + biNormal * normal.y + In.Normal * normal.z;
+	}else{
+		//ない。
+		normal = In.Normal;
+	}
+
 	//ディレクションライトの拡散反射光を計算する。
 	float3 lig = 0.0f;
 	for (int i = 0; i < NUM_DIRECTION_LIG; i++) {
-		//lig += max(0.0f, dot(In.Normal * -1.0f, dligDirection[i])) * dligColor[i];
+		//lig += max(0.0f, dot(normal * -1.0f, dligDirection[i])) * dligColor[i];
 		//ディレクションライトの鏡面反射光を計算する。
 		{
 			//実習　鏡面反射を計算しなさい。
 			//①　反射ベクトルRを求める。
 			float3 R = dligDirection[i]
-				+ 2 * dot(In.Normal, -dligDirection[i])
+				+ 2 * dot(In.Normal , -dligDirection[i])
 				* In.Normal;
 			//②　視点からライトを当てる物体に伸びるベクトルEを求める。
 			float3 E = normalize(In.worldPos - eyePos);
 			//①と②で求まったベクトルの内積を計算する。
 			//スペキュラ反射の強さを求める。
 			float specPower = max(0, dot(R, -E));
-			specPower = pow(specPower, specPow);
-			lig += dligColor[i] * specPower;
+			float spec;
+			if (isHasSpecularMap == 1) {
+				//スペキュラマップがある。
+				spec = g_specularMap.Sample(Sampler, In.TexCoord).r;
+
+				float3 specLig = pow(specPower, 2.0f) * dligColor[i] * spec *  7.0f;
+				//⑤ スペキュラ反射が求まったら、ligに加算する。
+				//鏡面反射を反射光に加算する。
+				lig += specLig;
+			}
+			else {
+				specPower = pow(specPower, specPow);
+				lig += dligColor[i] * specPower;
+			}
 		}
 	}		
 	lig += ambient;			//アンビエント
@@ -246,7 +280,7 @@ float4 PSMain( PSInput In ) : SV_Target0
 		float p[NUM_DIRECTION_LIG];
 		float4 Col[NUM_DIRECTION_LIG];
 		for (int i = 0; i < NUM_DIRECTION_LIG; i++) {
-			p[i] = dot(In.Normal * -1.0f, dligDirection[i].xyz);
+			p[i] = dot(normal * -1.0f, dligDirection[i].xyz);
 			p[i] = p[i] * 0.5f + 0.5f;
 			p[i] = p[i] * p[i];
 			//計算結果よりトゥーンシェーダー用のテクスチャから色をフェッチする

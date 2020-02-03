@@ -1,33 +1,36 @@
 #include "stdafx.h"
 #include "GameClear.h"
 
-const float VIEW_BOLUME_WIDTH = 1280.0f;		//ビューボリュームの幅
-const float VIEW_BOLUME_HIGHT = 720.0f;			//ビューボリュームの高さ
-const float F_NEAR = 0.1f;						//近平面
-const float F_FAR = 100.0f;						//遠平面
+const float VIEW_BOLUME_WIDTH = 1280.0f;			//ビューボリュームの幅
+const float VIEW_BOLUME_HIGHT = 720.0f;				//ビューボリュームの高さ
+const float F_NEAR = 0.1f;							//近平面
+const float F_FAR = 100.0f;							//遠平面
 
 const CVector3 CAMERA_POSITION = { 0, 0, -1 };		//カメラの位置
 const CVector3 CAMERA_TARGET = { 0, 0, 0 };			//カメラの注視点
 const CVector3 CAMERA_UP = { 0,1,0 };				//カメラの上方向
 
-const float ALPHA_PULS = 0.01f;				//alpha値加算
-const float ALPHA_MINUS = -0.01f;			//alpha値減算
-const float ALPHA_UPPER = 0.1f;				//alpha値上限
-const float ALPHA_LOWER = -0.1f;			//alpha値下限
+const float ALPHA_PULS = 0.01f;						//alpha値加算
+const float ALPHA_MINUS = -0.01f;					//alpha値減算
+const float ALPHA_UPPER = 0.1f;						//alpha値上限
+const float ALPHA_LOWER = -0.1f;					//alpha値下限
 
-const float SPRITE_GAMECLEAR_WIDTH = 80.0f;				//ゲームオーバー画像の幅
-const float SPRITE_GAMECLEAR_HIGHT = 45.0f;				//ゲームオーバー画像の高さ
-const float SPRITE_GAMECLEAR_SCALE = 16.0f;				//ゲームオーバー画像の倍率
-const CVector3 SPRITE_GAMECLEAR_POS = CVector3::Zero();	//ゲームオーバー画像の位置
+const float SPRITE_GAMECLEAR_WIDTH = 80.0f;					//ゲームオーバー画像の幅
+const float SPRITE_GAMECLEAR_HIGHT = 45.0f;					//ゲームオーバー画像の高さ
+const float SPRITE_GAMECLEAR_SCALE = 16.0f;					//ゲームオーバー画像の倍率
+const CVector3 SPRITE_GAMECLEAR_POS = CVector3::Zero();		//ゲームオーバー画像の位置
 
-const CVector3 SPRITE_SCALE = CVector3::One();			//画像のスケール
-const float SCALE_EXPANSION = 1.07f;			//スケール拡大
+const CVector3 SPRITE_SCALE = CVector3::One();		//画像のスケール
+const float SCALE_EXPANSION = 1.07f;				//スケール拡大
 
-const float SPRITE_BUTTON_WIDTH = 960.0f;				//ボタン画像の幅	
-const float SPRITE_BUTTON_HIGHT = 540.0f;				//ボタン画像の高さ
+const float SPRITE_BUTTON_WIDTH = 960.0f;					//ボタン画像の幅	
+const float SPRITE_BUTTON_HIGHT = 540.0f;					//ボタン画像の高さ
 const CVector3 SPRITE_BUTTON_POS = { 0.0f,-200.0f,0.0f };	//ボタン画像の位置
 const float SPRITE_BUTTON_DELTA_ALPHA = -1.0f;				//ボタン画像のアルファ減算
 
+const int SCALE_UP_DOWN_TIMER = 20;				//スケール拡大縮小タイマー
+const float EXPANSION = 1.01f;			//拡大
+const float REDUCTION = 0.9901f;			//縮小
 
 GameClear::GameClear()
 {
@@ -81,16 +84,16 @@ void GameClear::Update()
 		}
 		if (m_scaleState == enScaleState_up) {	
 			m_scaleTimer++;
-			m_scale[enSprite_clear] *= 1.01f;
-			if (m_scaleTimer == 20) {
+			m_scale[enSprite_clear] *= EXPANSION;
+			if (m_scaleTimer == SCALE_UP_DOWN_TIMER) {
 				m_scaleTimer = 0;
 				m_scaleState = enScaleState_down;
 			}
 		}
 		if (m_scaleState == enScaleState_down) {
 			m_scaleTimer++;
-			m_scale[enSprite_clear] *= 0.9901f;
-			if (m_scaleTimer == 20) {
+			m_scale[enSprite_clear] *= REDUCTION;
+			if (m_scaleTimer == SCALE_UP_DOWN_TIMER) {
 				m_scaleTimer = 0;
 				m_scaleState = enScaleState_up;
 			}

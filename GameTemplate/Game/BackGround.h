@@ -48,8 +48,8 @@ public:
 		return &m_physicsStaticObject;
 	}
 private:
-	SkinModel m_skinModel;							//スキンモデル
-	PhysicsStaticObject m_physicsStaticObject;		//静的物理オブジェクト
+	SkinModel m_skinModel;								//スキンモデル
+	PhysicsStaticObject m_physicsStaticObject;			//静的物理オブジェクト
 	CVector3 m_position = CVector3::Zero();				//座標
 	CQuaternion m_rotation = CQuaternion::Identity();	//回転
 	CVector3 m_scale = CVector3::One();					//拡大率

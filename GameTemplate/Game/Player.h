@@ -6,6 +6,7 @@
 #include "sound/SoundSource.h"
 #include "Box.h"
 #include "Item.h"
+
 class Warp00;
 class Warp01;
 class JumpFloor;
@@ -109,7 +110,7 @@ public:
 	/// <returns>スキンモデル</returns>
 	SkinModel* GetSkinModel()
 	{
-		return &m_skinModel;
+		return &m_skinModelCircle;
 	}
 	/// <summary>
 	/// 移動速度の取得
@@ -191,6 +192,10 @@ public:
 	{
 		return m_isItem;
 	}
+	bool GetIsHipDropBox()
+	{
+		return m_isHipDropBox;
+	}
 private:
 	/// <summary>
 	/// カメラを考慮したスティックでの移動
@@ -231,8 +236,10 @@ private:
 	void SoundPlay();
 private:
 	SkinModel m_skinModel;								//スキンモデル。
+	SkinModel m_skinModelCircle;
 	CharacterController m_charaCon;						//キャラクターコントローラー
 	CVector3 m_position = CVector3::Zero();				//位置
+	CVector3 m_circlePos = CVector3::Zero();
 	CQuaternion m_rotation = CQuaternion::Identity();	//回転
 	CVector3 m_scale = CVector3::One();					//拡大率
 	CVector3 m_moveSpeed = CVector3::Zero();			//移動速度
@@ -262,7 +269,6 @@ private:
 	AnimationClip m_animClips[enAnimationClip_Num];		//アニメーションクリップ。
 	Animation m_animation;								//アニメーション
 
-	CSoundEngine m_soundEngine;
 	enum EnSE {
 		enSE_jump,		//ジャンプ音
 		enSE_jumpFloor,	//ジャンプ床音
@@ -271,12 +277,10 @@ private:
 		enSE_warp0,		//ワープ前
 		enSE_warp1,		//ワープ後
 		enSE_damage,	//ダメージ音
-		enSE_kyodaika,	//大きくなる音
-		enSE_boxPoko,	//箱たたいた時の音
+		enSE_kyodaika,	//巨大化
 		enSE_Num		//SEの数
 	};
 	CSoundSource m_se[enSE_Num];			//効果音[SEの数分]
-
 	bool m_isAttacked = false;		//攻撃を受けてるかどうか
 	bool m_jumpFlag = false;		//ジャンプしてるかどうか
 	bool m_contactFloor = false;	//床と接触してるかどうか
@@ -287,11 +291,12 @@ private:
 	bool m_isLeave00 = false;				//離れたかどうか
 	bool m_isLeave01 = false;				//離れたかどうか
 	bool m_isHipDrop = false;				//ヒップドロップ中
+	bool m_isHipDropBox = false;				//箱ヒップドロップ
 	bool m_isDamageSE = false;			//ダメージ音ならしたか
 	bool m_hitBox = false;				//箱にぶつかったか
 	bool m_isItem = false;			//アイテム取ったか
-	bool m_isBoxItem = false;		//アイテムでてくる
-	bool m_isSetGravity = false;
+	bool m_isSetGravity = false;	//重力
+	bool m_isBigSE = false;			//巨大化SE
 	float m_jumpSpeed;				//ジャンプ速度
 	float m_rotSpeed = 0.0f;		//回転速度
 	int m_threeStep = 0;			//3段ジャンプカウント

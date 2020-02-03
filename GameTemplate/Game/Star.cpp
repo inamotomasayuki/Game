@@ -3,10 +3,11 @@
 #include "Player.h"
 #include "Game.h"
 
-const int CLEAR_TIME = 25;				//クリアまでの時間
+const int CLEAR_TIME = 25;							//クリアまでの時間
 const float ROTATION_SPEED = 5.0f;					//回転速度
 const float GET_STAR_POSITION_Y = 100.0f;			//星取った時のYの位置
-
+const float DLIG_COLOR = 30.0f;						//ディレクションライトの明るさ	
+const float POS_Y = 150.0f;							//星の高さ
 Star::Star()
 {
 	m_skinModel.Init(L"Assets/modelData/star.cmo");
@@ -32,7 +33,7 @@ void Star::Update()
 			m_timer++;
 			auto pos = m_player->GetPositon();
 			if (m_player->GetisItem()) {
-				pos.y += 150.0f;
+				pos.y += POS_Y;
 			}
 			else {
 				pos.y += GET_STAR_POSITION_Y;
@@ -56,8 +57,8 @@ void Star::Draw()
 		enRenderMode_Normal
 	);
 	m_skinModel.RimLightOff();
-	m_skinModel.SetDligColor(0, 30.0f);
-	m_skinModel.SetDligColor(1, 30.0f);
+	m_skinModel.SetDligColor(0, DLIG_COLOR);
+	m_skinModel.SetDligColor(1, DLIG_COLOR);
 
 }
 

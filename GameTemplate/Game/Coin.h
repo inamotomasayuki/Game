@@ -2,6 +2,7 @@
 #include "Player.h"
 #include "EnemyBall.h"
 #include "physics/PhysicsGhostObject.h"
+#include "sound/SoundSource.h"
 class Game;
 class Coin : public IGameObject
 {
@@ -51,12 +52,11 @@ public:
 		return m_position;
 	}
 	/// <summary>
-	/// コインを取得したかどうかでSEを鳴らす
+	/// コイン取った
 	/// </summary>
-	/// <returns></returns>
-	bool isGetCoin()
+	void SetCoinGet()
 	{
-		return m_isSE;
+		m_coinGetFlag = true;
 	}
 private:
 	/// <summary>
@@ -81,6 +81,6 @@ private:
 	EnemyBall* m_enemyBall = nullptr;		//敵玉
 	int m_timer = 0;						//タイマー
 	bool m_coinGetFlag = false;				//コイン取得フラグ
-	bool m_isSE = false;					//SEを鳴らすか
+	CSoundSource m_se;
 };
 

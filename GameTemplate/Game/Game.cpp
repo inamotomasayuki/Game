@@ -6,7 +6,7 @@ const float PLAYER_FALL_GAMEOVER_POS_Y = -1000.0f;		//プレイヤーのY位置
 const float CAMERA_ZOOM_SPEED = 0.97f;					//カメラのズーム速度
 const float CAMERA_CLEAR_START_LENGTH = 1000.0f;		//クリアした時のカメラの距離
 const float CAMERA_CLEAR_END_LENGTH = 300.0f;			//ズームした後のカメラの距離
-const int CLEAR_TIME = 25;				//クリアまでの時間
+const int CLEAR_TIME = 25;								//クリアまでの時間
 
 Game::Game()
 {
@@ -155,7 +155,7 @@ void Game::Update()
 	//シャドウキャスターを登録。
 	//g_shadowMap->RegistShadowCaster(m_backGround->GetSkinModel());
 	g_shadowMap->RegistShadowCaster(m_star->GetSkinModel());
-	//g_shadowMap->RegistShadowCaster(m_player->GetSkinModel());
+	g_shadowMap->RegistShadowCaster(m_player->GetSkinModel());
 	g_goMgr.FindGameObjects<Enemy01>("enemy01", [](Enemy01* enemy01)->bool {
 		g_shadowMap->RegistShadowCaster(enemy01->GetSkinModel());
 		return true;
@@ -242,26 +242,13 @@ void Game::Draw()
 
 void Game::InitSound()
 {
-	m_soundEngine.Init();
 	m_bgm.Init(L"Assets/sound/BGM.wav");
 	m_bgm.Play(true);
-	m_se[enSE_coin].Init(L"Assets/sound/coin.wav");
 	m_se[enSE_gameClear].Init(L"Assets/sound/gameClear.wav");
 	m_se[enSE_gameOver].Init(L"Assets/sound/gameOver.wav");
-	m_se[enSE_fumu].Init(L"Assets/sound/fumu.wav");
-	m_se[enSE_poko].Init(L"Assets/sound/poko.wav");
 }
 void Game::SoundPlay()
 {
-	m_soundEngine.Update();
-	//コイン音
-	g_goMgr.FindGameObjects<Coin>("coin", [this](Coin* coin)->bool {
-		if (coin->isGetCoin()) {
-			m_se[enSE_coin].Stop();
-			m_se[enSE_coin].Play(false);
-		}
-		return true;
-		});
 	//ゲームクリア音
 	if (m_gameClearFlag) {
 		if (!m_isGameClearSE) {

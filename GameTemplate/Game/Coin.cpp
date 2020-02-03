@@ -10,11 +10,13 @@ const int DELETE_TIME = 10;				//削除までの待ち時間
 const int COIN_SCORE = 1;				//コインのスコア
 const float FLAG_LENGTH = 70.0f;		//コイン取得フラグさせるプレイヤーとの距離
 const float ROTATION_SPEED = 5.0f;		//回転速度
+const float DLIG_COLOR = 30.0f;		    //ディレクションライトの明るさ
 
 Coin::Coin()
 {
 	m_skinModel.Init(L"Assets/modelData/coin.cmo");
 	m_ghostObject.CreateMesh(m_position, m_rotation, m_scale, m_skinModel);
+	m_se.Init(L"Assets/sound/coin.wav");
 }
 
 
@@ -47,8 +49,8 @@ void Coin::Draw()
 		enRenderMode_Normal
 	);
 	m_skinModel.RimLightOff();
-	m_skinModel.SetDligColor(0, 30.0f);
-	m_skinModel.SetDligColor(1, 30.0f);
+	m_skinModel.SetDligColor(0, DLIG_COLOR);
+	m_skinModel.SetDligColor(1, DLIG_COLOR);
 }
 void Coin::Rotation()
 {
@@ -82,6 +84,7 @@ void Coin::GetCoin()
 	//フラグが立ったら跳ねさせる
 	if (m_coinGetFlag == true) {
 		m_timer++;
+		m_se.Play(false);
 		if (m_timer < PYON_UP_TIME) {
 			m_moveSpeed.y = PYON_UP;
 			m_position += m_moveSpeed;
@@ -91,11 +94,10 @@ void Coin::GetCoin()
 			m_position += m_moveSpeed;
 		}
 		//削除
-		if (m_timer == DELETE_TIME) {
+		if (m_timer == DELETE_TIME) {	
 			m_timer = 0;
 			m_game->SetScore(COIN_SCORE);
 			g_goMgr.DeleteGameObject(this);
-			m_isSE = true;
 		}
 	}
 }

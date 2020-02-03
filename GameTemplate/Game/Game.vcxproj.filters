@@ -163,6 +163,7 @@
     <ClCompile Include="sound\SoundEngine.cpp" />
     <ClCompile Include="Box.cpp" />
     <ClCompile Include="Item.cpp" />
+    <ClCompile Include="FireBall.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Vector.h">
@@ -297,13 +298,9 @@
     <ClInclude Include="sound\SoundEngine.h" />
     <ClInclude Include="Box.h" />
     <ClInclude Include="Item.h" />
+    <ClInclude Include="FireBall.h" />
   </ItemGroup>
   <ItemGroup>
-    <MeshContentTask Include="Assets\modelData\warp.fbx">
-      <Filter>Assets\modelData</Filter>
-    </MeshContentTask>
-    <MeshContentTask Include="Assets\modelData\mikan.fbx" />
-    <MeshContentTask Include="Assets\modelData\Boxato.fbx" />
-    <MeshContentTask Include="Assets\modelData\Boxmae.fbx" />
+    <MeshContentTask Include="Assets\modelData\Circle.fbx" />
   </ItemGroup>
 </Project>

@@ -18,6 +18,14 @@ SkinModel::~SkinModel()
 		//サンプラステートを解放。
 		m_samplerState->Release();
 	}
+	//todo 法線マップを解放。
+	if (m_normalMapSRV != nullptr) {
+		m_normalMapSRV->Release();
+	}
+	if (m_specularMapSRV != nullptr) {
+		m_specularMapSRV->Release();
+	}
+
 }
 void SkinModel::Init(const wchar_t* filePath, EnFbxUpAxis enFbxUpAxis)
 {
@@ -41,19 +49,6 @@ void SkinModel::Init(const wchar_t* filePath, EnFbxUpAxis enFbxUpAxis)
 //ディレクションライトの初期化。
 void SkinModel::InitDirectionLight()
 {
-	//m_dirLight.direction[0] = { 1.0f, 0.0f, 0.0f, 0.0f };
-	//m_dirLight.color[0] = { 0.2f, 0.2f, 0.2f, 1.0f };
-
-	//m_dirLight.direction[1] = { -0.707f, -0.707f, 0.0f, 0.0f };
-	//m_dirLight.color[1] = { 0.2f, 0.2f, 0.2f, 1.0f };
-
-	//m_dirLight.direction[2] = { 0.0f, -0.707f, 0.707f, 0.0f };
-	//m_dirLight.color[2] = { 0.2f, 0.2f, 0.2f, 1.0f };
-
-	//m_dirLight.direction[3] = { 1.0f, 0.0f, -1.0f, 0.0f };
-	//m_dirLight.direction[3].Normalize();
-	//m_dirLight.color[3] = { 0.2f, 0.2f, 0.2f, 1.0f };
-
 	m_dirLight.direction[0] = { 1.0f, 0.0f, 0.0f, 0.0f };
 	m_dirLight.color[0] = { 0.5f, 0.5f, 0.5f, 1.0f };
 
@@ -66,7 +61,7 @@ void SkinModel::InitDirectionLight()
 	m_dirLight.direction[3] = { 1.0f, 0.0f, -1.0f, 0.0f };
 	m_dirLight.direction[3].Normalize();
 	m_dirLight.color[3] = { 0.5f, 0.5f, 0.5f, 1.0f };
-
+	
 	m_dirLight.specPow = 10.0f;
 	m_dirLight.ambient = { 10.0f,10.0f,10.0f,1.0f };
 }
@@ -164,6 +159,21 @@ void SkinModel::Draw(CMatrix viewMatrix, CMatrix projMatrix, EnRenderMode render
 	vsCb.mLightView = g_shadowMap->GetLighViewMatrix();	//ライトビュー行列。
 	vsCb.mLightProj = g_shadowMap->GetLightProjMatrix();	//ライトプロジェクション行列。
 	vsCb.isShadowReciever = 1;	//シャドウレシーバーフラグ。
+		//todo 法線マップを使用するかどうかのフラグを送る。
+	if (m_normalMapSRV != nullptr) {
+		vsCb.isHasNormalMap = true;
+	}
+	else {
+		vsCb.isHasNormalMap = false;
+	}
+	//スペキュラマップを使用するかどうかのフラグを送る。
+	if (m_specularMapSRV != nullptr) {
+		vsCb.isHasSpecuraMap = true;
+	}
+	else {
+		vsCb.isHasSpecuraMap = false;
+	}
+
 	d3dDeviceContext->UpdateSubresource(m_cb, 0, nullptr, &vsCb, 0, 0);
 	//視点を更新
 	//視点を設定。
@@ -189,6 +199,14 @@ void SkinModel::Draw(CMatrix viewMatrix, CMatrix projMatrix, EnRenderMode render
 		auto modelMaterial = reinterpret_cast<SkinModelEffect*>(material);
 		modelMaterial->SetRenderMode(renderMode);
 		});
+	if (m_normalMapSRV != nullptr) {
+		//法線マップが設定されていたらをレジスタt2に設定する。
+		d3dDeviceContext->PSSetShaderResources(2, 1, &m_normalMapSRV);
+	}
+	if (m_specularMapSRV != nullptr) {
+		//スペキュラマップが設定されていたらレジスタt4に設定する。
+		d3dDeviceContext->PSSetShaderResources(4, 1, &m_specularMapSRV);
+	}
 	//描画。
 	m_modelDx->Draw(
 		d3dDeviceContext,
@@ -197,4 +215,19 @@ void SkinModel::Draw(CMatrix viewMatrix, CMatrix projMatrix, EnRenderMode render
 		viewMatrix,
 		projMatrix
 	);
+}
+void SkinModel::LoadNormalMap(const wchar_t* filePath)
+{
+	HRESULT hr = DirectX::CreateDDSTextureFromFileEx(
+		g_graphicsEngine->GetD3DDevice(), filePath, 0,
+		D3D11_USAGE_DEFAULT, D3D11_BIND_SHADER_RESOURCE, 0, 0,
+		false, nullptr, &m_normalMapSRV);
+}
+
+void SkinModel::LoadSpecularMap(const wchar_t* filePath)
+{
+	DirectX::CreateDDSTextureFromFileEx(
+		g_graphicsEngine->GetD3DDevice(), filePath, 0,
+		D3D11_USAGE_DEFAULT, D3D11_BIND_SHADER_RESOURCE, 0, 0,
+		false, nullptr, &m_specularMapSRV);
 }

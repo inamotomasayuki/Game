@@ -2,26 +2,29 @@
 #include "Enemy02.h"
 #include "Game.h"
 
-const int ATTACK_WAIT_TIME = 40;		//攻撃したときの待ち時間
-const float ATTACKED_WAIT_TIME = 20.0f;		//攻撃されたときの待ち時間
-const float SCALE_DIVISION = 2.0f;		//スケールを割る数値
-const float DEGREE_NUM = 80.0f;			//角度　単位：degree
-const float LENGTH = 50.0f;				//プレイヤーとの距離
-const int ATTACK_MINUS_PLAYER_HP = -1;		//攻撃時プレイヤーHPマイナス
-const float PLAYER_NOCKBACK_SPEED = 2500.0f;	//プレイヤーのノックバックスピード
-const int SCORE = 1;						//スコア
-const float JUMP_SPEED_DECAY = 0.85f;			//ジャンプ速度減衰
-const float PYON_SPEED = 2000.0f;				//ぴょんスピード
-const int STOP_TIMER = 120.0f;			//往復タイマー　単位：秒
-const float MOVE_SPEED_X = 400.0f;			//X方向の移動速度
+const int ATTACK_WAIT_TIME = 40;					//攻撃したときの待ち時間
+const float ATTACKED_WAIT_TIME = 20.0f;				//攻撃されたときの待ち時間
+const float SCALE_DIVISION = 2.0f;					//スケールを割る数値
+const float DEGREE_NUM = 80.0f;						//角度　単位：degree
+const float LENGTH = 50.0f;							//プレイヤーとの距離
+const int ATTACK_MINUS_PLAYER_HP = -1;				//攻撃時プレイヤーHPマイナス
+const float PLAYER_NOCKBACK_SPEED = 2500.0f;		//プレイヤーのノックバックスピード
+const int SCORE = 1;								//スコア
+const float JUMP_SPEED_DECAY = 0.85f;				//ジャンプ速度減衰
+const float PYON_SPEED = 2000.0f;					//ぴょんスピード
+const int STOP_TIMER = 120.0f;						//往復タイマー　単位：秒
+const float MOVE_SPEED_X = 400.0f;					//X方向の移動速度
 const float JUMP_SPEED_ZERO_JUDGMENT = 200.0f;		//ジャンプ速度をゼロにする値
-const float DELTA_TIME = 1.0f / 60.0f;		//経過時間　単位：秒
+const float DELTA_TIME = 1.0f / 60.0f;				//経過時間　単位：秒
+const float RIGHT_ANGLE = 90.0f;					//直角
+
 
 Enemy02::Enemy02()
 {
 	//cmoファイルの読み込み。
 	m_skinModel.Init(L"Assets/modelData/wingKuribo.cmo");
 	m_state = enState_right;
+	m_fumuSE.Init(L"Assets/sound/fumu.wav");
 }
 
 void Enemy02::Update()
@@ -144,7 +147,7 @@ void Enemy02::Death(int score)
 			if (fabs(m_angle) <= CMath::DegToRad(DEGREE_NUM) && m_len < LENGTH) {
 				m_scale.z /= SCALE_DIVISION;
 				m_player->SetJumpFlag(true);	//ジャンプさせる
-				m_game->fumuSE();
+				m_fumuSE.Play(false);
 				m_isAttacked = true;		//攻撃された
 			}
 		}
@@ -160,9 +163,9 @@ void Enemy02::Death(int score)
 	else {
 		//攻撃されてなかったら
 		if (m_isAttacked == false) {
-			if (fabs(m_angle) <= CMath::DegToRad(90) && m_len < LENGTH) {
+			if (fabs(m_angle) <= CMath::DegToRad(RIGHT_ANGLE) && m_len < LENGTH) {
 				m_scale.z /= 10;
-				m_game->fumuSE();
+				m_fumuSE.Play(false);
 				m_isAttacked = true;		//攻撃された
 			}
 		}

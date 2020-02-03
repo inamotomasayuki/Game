@@ -215,6 +215,7 @@ void GraphicsEngine::GameDraw()
 			player->GetPositon()
 		);
 	}
+	
 
 	///////////////////////////////////////////////
 	//シャドウマップにレンダリング
@@ -232,20 +233,20 @@ void GraphicsEngine::GameDraw()
 	//unsigned int numViewport = 1;
 	D3D11_VIEWPORT oldViewports;
 	d3dDeviceContext->RSGetViewports(&numViewport, &oldViewports);
-
 	//シャドウマップにレンダリング
 	g_shadowMap->RenderToShadowMap();
-
 	//元に戻す。
 	d3dDeviceContext->OMSetRenderTargets(
 		1,
 		&oldRenderTargetView,
 		oldDepthStencilView
 	);
+	
 	d3dDeviceContext->RSSetViewports(numViewport, &oldViewports);
 	//レンダリングターゲットとデプスステンシルの参照カウンタを下す。
 	oldRenderTargetView->Release();
 	oldDepthStencilView->Release();
+
 
 	//レンダリングターゲットをメインに変更する。
 	//auto d3dDeviceContext = g_graphicsEngine->GetD3DDeviceContext();
@@ -267,7 +268,6 @@ void GraphicsEngine::GameDraw()
 		m_frameBufferDepthStencilView,
 		&m_frameBufferViewports
 	);
-
 	CMatrix mView;
 	CMatrix mProj;
 	mView.MakeLookAt(
