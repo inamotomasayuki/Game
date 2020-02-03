@@ -105,6 +105,7 @@
     <ClCompile Include="character\CharacterController.cpp" />
     <ClCompile Include="Coin.cpp" />
     <ClCompile Include="ConstantBufferGPU.cpp" />
+    <ClCompile Include="Effect.cpp" />
     <ClCompile Include="Enemy01.cpp" />
     <ClCompile Include="Enemy02.cpp" />
     <ClCompile Include="Enemy03.cpp" />
@@ -175,6 +176,7 @@
     <ClInclude Include="character\CharacterController.h" />
     <ClInclude Include="Coin.h" />
     <ClInclude Include="ConstantBufferGPU.h" />
+    <ClInclude Include="Effect.h" />
     <ClInclude Include="Enemy01.h" />
     <ClInclude Include="Enemy02.h" />
     <ClInclude Include="Enemy03.h" />

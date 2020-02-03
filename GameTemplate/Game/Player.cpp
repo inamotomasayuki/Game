@@ -65,6 +65,9 @@ Player::Player()
 
 	//サウンドの初期化
 	InitSound();
+	m_effect[0] = g_effect->GetAndCreateEffect(L"Assets/effect/test.efk");
+	m_effect[1] = g_effect->GetAndCreateEffect(L"Assets/effect/test.efk");
+
 }
 
 
@@ -74,6 +77,11 @@ Player::~Player()
 
 void Player::Update()
 {
+	m_playEffectHandle[0] = g_effect->GetAndEffectPlay(m_effect[0], m_position);
+	auto pospos = m_position;
+	pospos.y += +100.0f;
+	m_playEffectHandle[1] = g_effect->GetAndEffectPlay(m_effect[1], pospos);
+
 	m_circlePos = m_position;
 	m_circlePos.y += 18.0f;
 	//ワールド行列の更新。

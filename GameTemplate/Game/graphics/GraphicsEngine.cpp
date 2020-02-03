@@ -161,7 +161,14 @@ void GraphicsEngine::Init(HWND hWnd)
 	m_pd3dDeviceContext->RSSetViewports(1, &viewport);
 	m_pd3dDeviceContext->RSSetState(m_rasterizerState);
 
+	//ポストエフェクトの初期化。
 	m_postEffect.Init();
+	//Effekseerを初期化。
+	g_effect->InitEffekseer();
+	//メインとなるレンダリングターゲットを作成する。
+	CreateMainRenderTarget();
+	//半透明合成のブレンドステートを初期化する。
+	InitTranslucentBlendState();
 }
 void GraphicsEngine::ChangeRenderTarget(RenderTarget* renderTarget, D3D11_VIEWPORT* viewport)
 {
@@ -215,7 +222,6 @@ void GraphicsEngine::GameDraw()
 			player->GetPositon()
 		);
 	}
-	
 
 	///////////////////////////////////////////////
 	//シャドウマップにレンダリング
@@ -258,6 +264,8 @@ void GraphicsEngine::GameDraw()
 
 	//３Ⅾ描画
 	g_goMgr.Draw3D();
+
+	g_effect->Draw();
 
 	//ポストエフェクト
 	m_postEffect.Draw();

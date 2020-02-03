@@ -256,6 +256,9 @@ private:
 	Item* m_item = nullptr;							//アイテム
 	CVector3 m_floorSpeed = CVector3::Zero();		//床の速度
 
+	Effekseer::Effect* m_effect[2];				//エフェクト
+	Effekseer::Handle m_playEffectHandle[2];		//ハンドル
+	
 	enum EnAnimationClip {
 		enAnimationClip_idle,	//待機アニメーション。
 		enAnimationClip_run,	//走りアニメーション

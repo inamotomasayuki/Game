@@ -164,6 +164,7 @@
     <ClCompile Include="Box.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="FireBall.cpp" />
+    <ClCompile Include="Effect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Vector.h">
@@ -299,6 +300,7 @@
     <ClInclude Include="Box.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="FireBall.h" />
+    <ClInclude Include="Effect.h" />
   </ItemGroup>
   <ItemGroup>
     <MeshContentTask Include="Assets\modelData\Circle.fbx" />

@@ -4,6 +4,7 @@
 #include "gameObject/GameObjectManager.h"
 #include "Title.h"
 #include "sound/SoundEngine.h"
+
 void GameUpdate()
 {
 	//ゲームパッドの更新。	
@@ -13,6 +14,8 @@ void GameUpdate()
 	//物理エンジンの更新。
 	g_physics.Update();
 	g_soundEngine->Update();
+	//Effekseer更新
+	g_effect->Update();
 	//ゲームオブジェクトマネージャーの更新
 	g_goMgr.Update();
 }	
@@ -21,7 +24,8 @@ void GameUpdate()
 // ウィンドウプログラムのメイン関数。
 ///////////////////////////////////////////////////////////////////
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow)
-{
+{	
+	g_effect = new Effect;
 	//ゲームの初期化。
 	InitGame(hInstance, hPrevInstance, lpCmdLine, nCmdShow, "Game");
 
@@ -31,12 +35,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	g_soundEngine = new CSoundEngine;
 	g_soundEngine->Init();
 	g_goMgr.NewGameObject<Title>(0);
-	
-	//メインとなるレンダリングターゲットを作成する。
-	g_graphicsEngine->CreateMainRenderTarget();
-
-	//半透明合成のブレンドステートを初期化する。
-	g_graphicsEngine->InitTranslucentBlendState();
 
 
 	//ゲームループ。
