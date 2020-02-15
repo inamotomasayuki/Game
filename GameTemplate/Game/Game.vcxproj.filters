@@ -165,6 +165,7 @@
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="FireBall.cpp" />
     <ClCompile Include="Effect.cpp" />
+    <ClCompile Include="StageSelect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Vector.h">
@@ -301,8 +302,17 @@
     <ClInclude Include="Item.h" />
     <ClInclude Include="FireBall.h" />
     <ClInclude Include="Effect.h" />
+    <ClInclude Include="StageSelect.h" />
   </ItemGroup>
   <ItemGroup>
     <MeshContentTask Include="Assets\modelData\Circle.fbx" />
+    <MeshContentTask Include="Assets\modelData\gameStage03.fbx" />
+    <MeshContentTask Include="Assets\modelData\moveFloor01.fbx" />
+    <MeshContentTask Include="Assets\modelData\FireBall.fbx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\sprite\kari.png" />
+    <Image Include="Assets\sprite\start.png" />
+    <Image Include="Assets\sprite\TitleMoji.png" />
   </ItemGroup>
 </Project>

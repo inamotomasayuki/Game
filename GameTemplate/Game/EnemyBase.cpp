@@ -53,3 +53,34 @@ void EnemyBase::DeathEnemyBallContact(int score)
 		}
 	}
 }
+
+void EnemyBase::DeathFireBall(int score)
+{
+	g_goMgr.FindGameObjects<FireBall>("fireBall", [this](FireBall* fireBall)->bool {
+		auto vector = fireBall->GetPosition() - m_position;
+		auto len = vector.Length();
+		if (len < LENGTH) {
+			m_charaCon.RemoveRigidBoby();
+			m_isDeath = true;
+		}
+		return true;
+		});
+
+	//ƒtƒ‰ƒO‚ª—§‚Á‚½‚ç’µ‚Ë‚³‚¹‚é
+	if (m_isDeath) {
+		m_timer++;
+		if (m_timer < PYON_UP_TIME) {
+			m_moveSpeed.y = PYON_UP;
+		}
+		if (m_timer >= PYON_UP_TIME && m_timer < PYON_DOWN_TIME) {
+			m_moveSpeed.y = PYON_DOWN;
+		}
+		//íœ
+		if (m_timer == DELETE_TIME) {
+			m_timer = 0;
+			m_fumuSE.Play(false);
+			m_game->SetScore(score);
+			g_goMgr.DeleteGameObject(this);
+		}
+	}
+}

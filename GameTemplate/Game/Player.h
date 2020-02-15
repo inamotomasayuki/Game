@@ -13,7 +13,7 @@ class JumpFloor;
 class Game;
 const float GRAVITY = 400.0f;					//重力
 const float PLAYER_COLLIDER_HIGHT = 100.0f;		//カプセルコライダーの高さ
-const float PLAYER_COLLIDER_RADIUS = 20.0f;		//カプセルコライダーの半径
+const float PLAYER_COLLIDER_RADIUS = 10.0f;		//カプセルコライダーの半径
 
 class Player : public IGameObject
 {
@@ -30,6 +30,14 @@ public:
 	CVector3 GetPositon()
 	{
 		return m_position;
+	}
+	/// <summary>
+	/// 回転の取得
+	/// </summary>
+	/// <returns></returns>
+	CQuaternion GetRotation()
+	{
+		return m_rotation;
 	}
 	/// <summary>
 	/// 座標の設定
@@ -256,8 +264,8 @@ private:
 	Item* m_item = nullptr;							//アイテム
 	CVector3 m_floorSpeed = CVector3::Zero();		//床の速度
 
-	Effekseer::Effect* m_effect[2];				//エフェクト
-	Effekseer::Handle m_playEffectHandle[2];		//ハンドル
+	Effekseer::Effect* m_effect = nullptr;				//エフェクト
+	Effekseer::Handle m_playEffectHandle = -1;		//ハンドル
 	
 	enum EnAnimationClip {
 		enAnimationClip_idle,	//待機アニメーション。

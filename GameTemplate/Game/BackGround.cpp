@@ -1,10 +1,15 @@
 #include "stdafx.h"
 #include "BackGround.h"
-
+#include "GameData.h"
 
 BackGround::BackGround()
 {
-	m_skinModel.Init(L"Assets/modelData/gameStage02.cmo");
+	if (g_gameData.GetStageNo() == 0) {
+		m_skinModel.Init(L"Assets/modelData/gameStage02.cmo");
+	}
+	if (g_gameData.GetStageNo() == 1) {	
+		m_skinModel.Init(L"Assets/modelData/gameStage03.cmo");
+	}
 	m_physicsStaticObject.CreateMeshObject(m_skinModel, m_position, m_rotation, m_scale);
 }
 

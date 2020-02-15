@@ -145,6 +145,8 @@ private:
 	int m_score = 0;				//スコア
 	int m_hp = 5;					//HP
 	int m_clearTimer = 0;			//クリアまでのタイマー
+	int m_fireBallTimer = 0;		//ファイアボール生成タイマー
+	bool m_isFireBall = false;				//ファイアボール生成中？
 	bool m_gameOverFlag = false;	//ゲームオーバーフラグ
 	bool m_gameClearFlag = false;	//ゲームクリアフラグ
 	bool m_getStar = false;			//星を取ったかどうか

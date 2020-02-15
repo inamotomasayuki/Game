@@ -2,7 +2,7 @@
 #include "Player.h"
 #include "ShadowMap.h"
 #include "sound/SoundSource.h"
-
+#include "FireBall.h"
 class EnemyBall;
 class Game;
 
@@ -95,6 +95,11 @@ protected:
 	/// 玉に当たって死ぬ
 	/// </summary>
 	void DeathEnemyBallContact(int score);
+	/// <summary>
+	/// ファイアーボールで死ぬ
+	/// </summary>
+	/// <param name="score">スコア</param>
+	void DeathFireBall(int score);
 	SkinModel m_skinModel;								//スキンモデル。		
 	CharacterController m_charaCon;						//キャラクターコントローラー
 	CVector3 m_position = CVector3::Zero();				//座標
@@ -107,8 +112,8 @@ protected:
 
 	Player* m_player = nullptr;				//プレイヤー
 	Game* m_game = nullptr;					//ゲーム
-	EnemyBall* m_enemyBall = nullptr;
-	
+	EnemyBall* m_enemyBall = nullptr;		//甲羅
+	FireBall* m_fireBall = nullptr;			//ファイアーボール
 	float m_len = 0.0f;				//距離
 	float m_naiseki = 0.0f;			//内積を求める
 	float m_angle = 0.0f;			//角度

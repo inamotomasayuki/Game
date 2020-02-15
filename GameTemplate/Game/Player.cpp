@@ -56,7 +56,7 @@ Player::Player()
 	m_skinModelCircle.Init(L"Assets/modelData/Circle.cmo");
 	m_skinModel.LoadNormalMap(L"Assets/modelData/utc_nomal.dds");
 	m_skinModel.LoadSpecularMap(L"Assets/modelData/utc_spec.dds");
-
+	m_skinModel.LoadAoMap(L"Assets/modelData/utc_ao.dds");
 	//アニメーションクリップの
 	//ロードとループフラグ設定
 	InitAnimationClip();
@@ -65,22 +65,24 @@ Player::Player()
 
 	//サウンドの初期化
 	InitSound();
-	m_effect[0] = g_effect->GetAndCreateEffect(L"Assets/effect/test.efk");
-	m_effect[1] = g_effect->GetAndCreateEffect(L"Assets/effect/test.efk");
+	//エフェクトをロードする。
+	m_effect = Effekseer::Effect::Create(g_effect->GetEffekseerManager(), (const EFK_CHAR*)L"Assets/effect/test.efk");
 
 }
 
 
 Player::~Player()
 {
+	//エフェクトを破棄。
+	if (m_effect != nullptr) {
+		m_effect->Release();
+	}
 }
 
 void Player::Update()
 {
-	m_playEffectHandle[0] = g_effect->GetAndEffectPlay(m_effect[0], m_position);
-	auto pospos = m_position;
-	pospos.y += +100.0f;
-	m_playEffectHandle[1] = g_effect->GetAndEffectPlay(m_effect[1], pospos);
+	//エフェクトを再生する。
+	m_playEffectHandle = g_effect->GetEffekseerManager()->Play(m_effect, m_position.x, m_position.y, m_position.z);
 
 	m_circlePos = m_position;
 	m_circlePos.y += 18.0f;

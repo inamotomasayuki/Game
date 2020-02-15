@@ -76,6 +76,6 @@ private:
 		enState_right,		//行ったり
 		enState_left		//来たり
 	};
-	EnState m_state;		//ステート
+	EnState m_state = enState_right;		//ステート
 };
 

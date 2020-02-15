@@ -18,12 +18,7 @@ Effect::~Effect()
 	if (m_effekseerRenderer != nullptr) {
 		m_effekseerRenderer->Destroy();
 	}
-	////エフェクトを破棄。
-	//if (m_effect != nullptr) {
-	//	m_effect->Release();
-	//}
 }
-
 void Effect::Update()
 {
 	//Effekseerカメラ行列を設定。

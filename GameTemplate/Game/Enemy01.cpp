@@ -56,6 +56,7 @@ void Enemy01::Update()
 		//Ž€–S
 		Death(SCORE);
 		DeathEnemyBallContact(SCORE);
+		DeathFireBall(SCORE);
 	}
 }
 void Enemy01::Search()

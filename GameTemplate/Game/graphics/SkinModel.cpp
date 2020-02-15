@@ -25,6 +25,9 @@ SkinModel::~SkinModel()
 	if (m_specularMapSRV != nullptr) {
 		m_specularMapSRV->Release();
 	}
+	if (m_aoMapSRV != nullptr) {
+		m_aoMapSRV->Release();
+	}
 
 }
 void SkinModel::Init(const wchar_t* filePath, EnFbxUpAxis enFbxUpAxis)
@@ -173,6 +176,13 @@ void SkinModel::Draw(CMatrix viewMatrix, CMatrix projMatrix, EnRenderMode render
 	else {
 		vsCb.isHasSpecuraMap = false;
 	}
+	//AOマップを使用するかどうかのフラグを送る。
+	if (m_aoMapSRV != nullptr) {
+		vsCb.isHasAoMap = true;
+	}
+	else {
+		vsCb.isHasAoMap = false;
+	}
 
 	d3dDeviceContext->UpdateSubresource(m_cb, 0, nullptr, &vsCb, 0, 0);
 	//視点を更新
@@ -207,6 +217,10 @@ void SkinModel::Draw(CMatrix viewMatrix, CMatrix projMatrix, EnRenderMode render
 		//スペキュラマップが設定されていたらレジスタt4に設定する。
 		d3dDeviceContext->PSSetShaderResources(4, 1, &m_specularMapSRV);
 	}
+	if (m_aoMapSRV != nullptr) {
+		//AOマップが設定されていたらレジスタt4に設定する。
+		d3dDeviceContext->PSSetShaderResources(5, 1, &m_aoMapSRV);
+	}
 	//描画。
 	m_modelDx->Draw(
 		d3dDeviceContext,
@@ -230,4 +244,12 @@ void SkinModel::LoadSpecularMap(const wchar_t* filePath)
 		g_graphicsEngine->GetD3DDevice(), filePath, 0,
 		D3D11_USAGE_DEFAULT, D3D11_BIND_SHADER_RESOURCE, 0, 0,
 		false, nullptr, &m_specularMapSRV);
+}
+
+void SkinModel::LoadAoMap(const wchar_t* filePath)
+{
+	DirectX::CreateDDSTextureFromFileEx(
+		g_graphicsEngine->GetD3DDevice(), filePath, 0,
+		D3D11_USAGE_DEFAULT, D3D11_BIND_SHADER_RESOURCE, 0, 0,
+		false, nullptr, &m_aoMapSRV);
 }

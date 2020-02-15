@@ -54,6 +54,18 @@ public:
 			m_alpha = 0.0f;
 		}
 	}
+	void SetAlpha(float alpha)
+	{
+		m_alpha = alpha;
+		//数値の境界チェック。
+		if (m_alpha > 1.0f) {
+			m_alpha = 1.0f;
+		}
+		else if (m_alpha < 0.0f) {
+			m_alpha = 0.0f;
+		}
+
+	}
 private:
 	/// <summary>
 	/// シェーダーをロード。

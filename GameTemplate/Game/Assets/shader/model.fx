@@ -12,6 +12,8 @@ Texture2D<float4> g_shadowMap : register(t1);		//todo シャドウマップ。
 Texture2D<float4> g_normalMap : register(t2);		//	法線マップ。
 Texture2D<float4> toonMap : register(t3);  //toonシェーダー用のテクスチャー
 Texture2D<float4> g_specularMap : register(t4);		//スペキュラマップ。
+Texture2D<float4> g_aoMap : register(t5);			//AOマップ。
+
 
 //ボーン行列
 StructuredBuffer<float4x4> boneMatrix : register(t2);
@@ -37,6 +39,7 @@ cbuffer VSPSCb : register(b0){
 	int isShadowReciever;	//シャドウレシーバーフラグ。
 	int isHasNormalMap;		//法線マップある？
 	int isHasSpecularMap;	//スペキュラマップある？
+	int isHasAoMap;			//AOマップある？
 };
 static const int NUM_DIRECTION_LIG = 4;
 /*!
@@ -243,7 +246,15 @@ float4 PSMain( PSInput In ) : SV_Target0
 			}
 		}
 	}		
-	lig += ambient;			//アンビエント
+	//アンビエント
+	{
+		float3 ao = 1.0f;
+		if (isHasAoMap == 1) {
+			ao = g_aoMap.Sample(Sampler, In.TexCoord).xyz;
+		}
+		lig += ambient * ao;
+	}
+	//lig += ambient;
 	if (isShadowReciever == 1) {	//シャドウレシーバー。
 	//LVP空間から見た時の最も手前の深度値をシャドウマップから取得する。
 		float2 shadowMapUV = In.posInLVP.xy / In.posInLVP.w;

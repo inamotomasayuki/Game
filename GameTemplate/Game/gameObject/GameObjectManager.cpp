@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "GameObjectManager.h"
+
 //GameObjectManagerクラスのインスタンス。
 GameObjectManager g_goMgr;
 

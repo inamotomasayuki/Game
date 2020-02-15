@@ -153,6 +153,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PostEffect.cpp" />
     <ClCompile Include="RenderTarget.cpp" />
+    <ClCompile Include="StageSelect.cpp" />
     <ClCompile Include="ShadowMap.cpp" />
     <ClCompile Include="sound\SoundEngine.cpp" />
     <ClCompile Include="sound\SoundSource.cpp" />
@@ -226,6 +227,7 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="PostEffect.h" />
     <ClInclude Include="RenderTarget.h" />
+    <ClInclude Include="StageSelect.h" />
     <ClInclude Include="ShadowMap.h" />
     <ClInclude Include="sound\SoundEngine.h" />
     <ClInclude Include="sound\SoundSource.h" />
@@ -241,6 +243,14 @@
   </ItemGroup>
   <ItemGroup>
     <MeshContentTask Include="Assets\modelData\Circle.fbx" />
+    <MeshContentTask Include="Assets\modelData\FireBall.fbx" />
+    <MeshContentTask Include="Assets\modelData\gameStage03.fbx" />
+    <MeshContentTask Include="Assets\modelData\moveFloor01.fbx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\sprite\kari.png" />
+    <Image Include="Assets\sprite\start.png" />
+    <Image Include="Assets\sprite\TitleMoji.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

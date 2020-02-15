@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "MoveFloor.h"
 #include "Player.h"
+#include "GameData.h"
 
 const float MOVE_X_SPEED = 1000.0f;		//X方向の移動速度
 const float RETURN_TIME = 220.0f;		//ステート切り替えし時間
@@ -9,10 +10,14 @@ const float ZERO = 0.0f;				//ゼロ
 
 MoveFloor::MoveFloor()
 {
-	m_skinModel.Init(L"Assets/modelData/moveFloor.cmo");
+	if (g_gameData.GetStageNo() == 0) {
+		m_skinModel.Init(L"Assets/modelData/moveFloor.cmo");
+	}
+	if (g_gameData.GetStageNo() == 1) {
+		m_skinModel.Init(L"Assets/modelData/moveFloor01.cmo");
+	}
 	m_ghostObject.CreateMesh(m_position, m_rotation, m_scale, m_skinModel);
 	m_staticObject.CreateMeshObject(m_skinModel, m_position, m_rotation, m_scale);
-	m_state = enState_right;
 }
 
 

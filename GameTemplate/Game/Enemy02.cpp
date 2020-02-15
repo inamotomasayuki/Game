@@ -52,6 +52,8 @@ void Enemy02::Update()
 		//死亡*スコア値
 		Death(SCORE);
 		DeathEnemyBallContact(SCORE);
+		DeathFireBall(SCORE);
+
 	}
 }
 

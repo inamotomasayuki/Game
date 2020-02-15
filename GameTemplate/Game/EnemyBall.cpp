@@ -44,7 +44,7 @@ void EnemyBall::Update()
 		Rotation();
 		//死亡*スコア値
 		Death(SCORE);
-
+		DeathFireBall(SCORE);
 		m_position = m_charaCon.Execute(DELTA_TIME, m_moveSpeed);
 	}
 

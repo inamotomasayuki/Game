@@ -26,16 +26,15 @@ void GameUpdate()
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow)
 {	
 	g_effect = new Effect;
+	g_soundEngine = new CSoundEngine;
+	g_soundEngine->Init();
+
 	//ゲームの初期化。
 	InitGame(hInstance, hPrevInstance, lpCmdLine, nCmdShow, "Game");
 
-	//g_shadowMap = new ShadowMap;	
-	g_shadowMap = g_goMgr.NewGameObject<ShadowMap>(0);
+	g_shadowMap = new ShadowMap;	
 
-	g_soundEngine = new CSoundEngine;
-	g_soundEngine->Init();
 	g_goMgr.NewGameObject<Title>(0);
-
 
 	//ゲームループ。
 	while (DispatchWindowMessage() == true)

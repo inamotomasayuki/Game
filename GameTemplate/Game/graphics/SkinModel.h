@@ -138,6 +138,11 @@ public:
 	*@param[in]	filePath		ロードするddsファイルのファイルパス。
 	*/
 	void LoadSpecularMap(const wchar_t* filePath);
+	/*!
+	*@brief	AOマップのロード
+	*@param[in]	filePath		ロードするddsファイルのファイルパス。
+	*/
+	void LoadAoMap(const wchar_t* filePath);
 private:
 	/*!
 	*@brief	サンプラステートの初期化。
@@ -165,6 +170,7 @@ private:
 		int isShadowReciever;	//シャドウレシーバーフラグ。
 		int isHasNormalMap;		//法線マップを保持している？
 		int isHasSpecuraMap;	//スペキュラマップを保持している？
+		int isHasAoMap;			//AOマップを保持している？
 	};
 	bool m_isRim = false;					//リムライトするか
 	EnFbxUpAxis			m_enFbxUpAxis = enFbxUpAxisZ;	//!<FBXの上方向。
@@ -177,5 +183,6 @@ private:
 	ID3D11SamplerState* m_samplerState = nullptr;		//!<サンプラステート。
 	ID3D11ShaderResourceView* m_normalMapSRV = nullptr;		//法線マップのSRV
 	ID3D11ShaderResourceView* m_specularMapSRV = nullptr;	//スペキュラマップのSRV
+	ID3D11ShaderResourceView* m_aoMapSRV = nullptr;	//AOマップのSRV
 };
 

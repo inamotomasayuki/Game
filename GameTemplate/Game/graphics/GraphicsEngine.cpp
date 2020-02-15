@@ -2,6 +2,7 @@
 #include "GraphicsEngine.h"
 #include "../ShadowMap.h"
 #include "../Player.h"
+
 GraphicsEngine::GraphicsEngine()
 {
 }
@@ -169,6 +170,7 @@ void GraphicsEngine::Init(HWND hWnd)
 	CreateMainRenderTarget();
 	//半透明合成のブレンドステートを初期化する。
 	InitTranslucentBlendState();
+
 }
 void GraphicsEngine::ChangeRenderTarget(RenderTarget* renderTarget, D3D11_VIEWPORT* viewport)
 {
@@ -261,7 +263,7 @@ void GraphicsEngine::GameDraw()
 	//メインレンダリングターゲットをクリアする。
 	float clearColor[] = { 0.0f, 0.0f, 0.0f, 1.0f };
 	m_mainRenderTarget.ClearRenderTarget(clearColor);
-
+	
 	//３Ⅾ描画
 	g_goMgr.Draw3D();
 
@@ -295,7 +297,6 @@ void GraphicsEngine::GameDraw()
 
 	//2Dを描画
 	g_goMgr.Draw2D();
-
 
 	//描画終了。
 	EndRender();

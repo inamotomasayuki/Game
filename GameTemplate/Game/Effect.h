@@ -1,9 +1,9 @@
 #pragma once
 #include "EffekseerRuntime130/src/Effekseer/Effekseer.h"
 #include "EffekseerRuntime130/src/EffekseerRendererCommon/EffekseerRenderer.Renderer.h"
+#include "gameObject/IGameObject.h"
 
-
-class Effect
+class Effect : public IGameObject
 {
 public:
 	Effect();

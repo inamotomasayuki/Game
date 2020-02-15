@@ -2,6 +2,8 @@
 #include "Game.h"
 #include "GameData.h"
 #include "Title.h"
+#include "FireBall.h"
+#include "StageSelect.h"
 const float PLAYER_FALL_GAMEOVER_POS_Y = -1000.0f;		//プレイヤーのY位置
 const float CAMERA_ZOOM_SPEED = 0.97f;					//カメラのズーム速度
 const float CAMERA_CLEAR_START_LENGTH = 1000.0f;		//クリアした時のカメラの距離
@@ -101,8 +103,104 @@ Game::Game()
 			});
 		m_spriteUI = g_goMgr.NewGameObject<SpriteUI>(0);
 		m_gameCamera = g_goMgr.NewGameObject<GameCamera>("gameCamera");
+
 		InitSound();
 	}
+	if (g_gameData.GetStageNo() == 1) {
+		m_level.Init(L"Assets/level/stage_06.tkl", [&](LevelObjectData& objData) {
+			if (objData.EqualObjectName(L"unityChan")) {
+				m_player = g_goMgr.NewGameObject<Player>("player");
+				m_player->SetPosition(objData.position);
+				m_player->SetRotation(objData.rotation);
+				m_player->SetScale(objData.scale);
+				return true;
+			}
+			if (objData.EqualObjectName(L"coin")) {
+				m_coin = g_goMgr.NewGameObject<Coin>("coin");
+				m_coin->SetPosition(objData.position);
+				m_coin->SetRotation(objData.rotation);
+				m_coin->SetScale(objData.scale);
+				return true;
+			}
+			if (objData.EqualObjectName(L"kuribo")) {
+				m_enemy01 = g_goMgr.NewGameObject<Enemy01>("enemy01");
+				m_enemy01->SetPosition(objData.position);
+				m_enemy01->SetRotation(objData.rotation);
+				m_enemy01->SetScale(objData.scale);
+				return true;
+			}
+			if (objData.EqualObjectName(L"wingKuribo")) {
+				m_enemy02 = g_goMgr.NewGameObject<Enemy02>("enemy02");
+				m_enemy02->SetPosition(objData.position);
+				m_enemy02->SetRotation(objData.rotation);
+				m_enemy02->SetScale(objData.scale);
+				return true;
+			}
+			if (objData.EqualObjectName(L"turtle")) {
+
+				m_enemy03 = g_goMgr.NewGameObject<Enemy03>("enemy03");
+				m_enemy03->SetPosition(objData.position);
+				m_enemy03->SetRotation(objData.rotation);
+				m_enemy03->SetScale(objData.scale);
+				return true;
+			}
+			if (objData.EqualObjectName(L"gameStage02")) {
+				m_backGround = g_goMgr.NewGameObject<BackGround>("backGround");
+				m_backGround->SetPosition(objData.position);
+				m_backGround->SetRotation(objData.rotation);
+				m_backGround->SetScale(objData.scale);
+				return true;
+			}
+			if (objData.EqualObjectName(L"moveFloor")) {
+				m_moveFloor = g_goMgr.NewGameObject<MoveFloor>("moveFloor");
+				m_moveFloor->SetPosition(objData.position);
+				m_moveFloor->SetRotation(objData.rotation);
+				m_moveFloor->SetScale(objData.scale);
+				return true;
+			}
+			//if (objData.EqualObjectName(L"jumpFloor")) {
+			//	m_jumpFloor = g_goMgr.NewGameObject<JumpFloor>("jumpFloor");
+			//	m_jumpFloor->SetPosition(objData.position);
+			//	m_jumpFloor->SetRotation(objData.rotation);
+			//	m_jumpFloor->SetScale(objData.scale);
+			//	return true;
+			//}
+			if (objData.EqualObjectName(L"warp01")) {
+				m_warp00 = g_goMgr.NewGameObject<Warp00>("warp00");
+				m_warp00->SetPosition(objData.position);
+				m_warp00->SetRotation(objData.rotation);
+				m_warp00->SetScale(objData.scale);
+				return true;
+			}
+			if (objData.EqualObjectName(L"warp02")) {
+				m_warp01 = g_goMgr.NewGameObject<Warp01>("warp01");
+				m_warp01->SetPosition(objData.position);
+				m_warp01->SetRotation(objData.rotation);
+				m_warp01->SetScale(objData.scale);
+				return true;
+			}
+			if (objData.EqualObjectName(L"star")) {
+				m_star = g_goMgr.NewGameObject<Star>("star");
+				m_star->SetPosition(objData.position);
+				m_star->SetRotation(objData.rotation);
+				m_star->SetScale(objData.scale);
+				return true;
+			}
+			if (objData.EqualObjectName(L"Boxmae")) {
+				m_box = g_goMgr.NewGameObject<Box>("box");
+				m_box->SetPosition(objData.position);
+				m_box->SetRotation(objData.rotation);
+				m_box->SetScale(objData.scale);
+				return true;
+			}
+			return false;
+			});
+		m_spriteUI = g_goMgr.NewGameObject<SpriteUI>(0);
+		m_gameCamera = g_goMgr.NewGameObject<GameCamera>("gameCamera");
+
+		InitSound();
+	}
+
 }
 
 
@@ -136,6 +234,10 @@ Game::~Game()
 		g_goMgr.DeleteGameObject(item);
 		return true;
 		});
+	g_goMgr.FindGameObjects<FireBall>("fireBall", [](FireBall* fireBall)->bool {
+		g_goMgr.DeleteGameObject(fireBall);
+		return true;
+		});
 	g_goMgr.DeleteGameObject(m_warp00);
 	g_goMgr.DeleteGameObject(m_warp01);
 	g_goMgr.DeleteGameObject(m_moveFloor);
@@ -151,6 +253,20 @@ Game::~Game()
 
 void Game::Update()
 {
+	//ファイアボール
+	if (!m_isFireBall) {
+		if (g_pad[0].IsTrigger(enButtonRB1)) {
+			g_goMgr.NewGameObject<FireBall>("fireBall");
+			m_isFireBall = true;
+		}
+	}
+	if (m_isFireBall) {
+		m_fireBallTimer++;
+	}
+	if (m_fireBallTimer == 10) {
+		m_fireBallTimer = 0;
+		m_isFireBall = false;
+	}
 	SoundPlay();
 	//シャドウキャスターを登録。
 	//g_shadowMap->RegistShadowCaster(m_backGround->GetSkinModel());
@@ -193,7 +309,7 @@ void Game::Update()
 	else {
 		if (g_pad[0].IsTrigger(enButtonA)
 			&& m_gameOver->GetButtonFlag()) {
-			g_goMgr.NewGameObject<Title>(0);
+			g_goMgr.NewGameObject<StageSelect>(0);
 			g_goMgr.DeleteGameObject(this);
 		}
 	}
@@ -216,7 +332,7 @@ void Game::Update()
 		//遷移
 		if (m_clearTimer >= CLEAR_TIME) {
 			if (g_pad[0].IsTrigger(enButtonA)) {
-				g_goMgr.NewGameObject<Title>(0);
+				g_goMgr.NewGameObject<StageSelect>(0);
 				g_goMgr.DeleteGameObject(this);
 			}
 		}

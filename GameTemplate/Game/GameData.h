@@ -28,6 +28,10 @@ public:
 		}
 		return true;
 	}
+	void SetStageNo(int no)
+	{
+		stageNo = no;
+	}
 private:
 	int stageNo = 0;	//現在のステージの番号。
 };

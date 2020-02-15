@@ -24,14 +24,21 @@ const float COIN_SPRITE_HIGHT = 50.0f;			//コインの縦幅
 const float KAKERU_SPRITE_WIDTH = 50.0f;		//×の横幅
 const float KAKERU_SPRITE_HIGHT = 50.0f;		//×の縦幅
 
+const CVector3 UNITYCHAN_POS = { -380.0f,250.0f,0.0f };		//ユニティちゃん位置
+const CVector3 KAKERU_POS = { -550.0f,310.0f,0.0f };		//×位置
+const CVector3 COIN_POS = {470.0f,320.0f,0.0f};				//コイン位置
+const CVector3 SCORE_ONE_POS = { 580.0f,320.0f,0.0f };		//スコア1桁目
+const CVector3 SCORE_TWO_POS = { 550.0f,320.0f,0.0f };		//スコア２桁目
+const CVector3 SCORE_THREE_POS = { 520.0f,320.0f,0.0f };	//スコア3桁目
+const CVector3 HP_POS = { -520.0f,315.0f,0.0f };			//HP位置
 SpriteUI::SpriteUI()
 {
 	m_spriteUI[enSpriteUI_unityChan].Init(L"Assets/sprite/unityChan.dds", UNITY_SPRITE_WIDTH, UNITY_SPRITE_HIGHT);
-	m_positionUI[enSpriteUI_unityChan] = { -380.0f,250.0f,0.0f };
+	m_positionUI[enSpriteUI_unityChan] = UNITYCHAN_POS;
 	m_spriteUI[enSpriteUI_kakeru].Init(L"Assets/sprite/kakeru.dds", KAKERU_SPRITE_WIDTH, KAKERU_SPRITE_HIGHT);
-	m_positionUI[enSpriteUI_kakeru] = { -550.0f,310.0f,0.0f };
+	m_positionUI[enSpriteUI_kakeru] = KAKERU_POS;
 	m_spriteUI[enSpriteUI_coin].Init(L"Assets/sprite/coin.dds", COIN_SPRITE_WIDTH, COIN_SPRITE_HIGHT);
-	m_positionUI[enSpriteUI_coin] = { 470.0f,320.0f,0.0f };
+	m_positionUI[enSpriteUI_coin] = COIN_POS;
 
 	//一桁目の数字の画像初期化
 	m_spriteScoreUI[enSpriteScore_zero].Init(L"Assets/sprite/zero.dds", NUM_SPRITE_WIDTH, NUM_SPRITE_HIGHT);
@@ -74,10 +81,10 @@ SpriteUI::SpriteUI()
 	m_spriteHP[enSpriteHP_four].Init(L"Assets/sprite/four_blue.dds", NUM_SPRITE_WIDTH, NUM_SPRITE_HIGHT);
 	m_spriteHP[enSpriteHP_five].Init(L"Assets/sprite/five_blue.dds", NUM_SPRITE_WIDTH, NUM_SPRITE_HIGHT);
 
-	m_positionScoreUI = { 580.0f,320.0f,0.0f };		//一桁目の数字の位置
-	m_positionScoreUI2 = { 550.0f,320.0f,0.0f };	//二桁目の数字の位置
-	m_positionScoreUI3 = { 520.0f,320.0f,0.0f };	//三桁目の数字の位置
-	m_positionHP = { -520.0f,315.0f,0.0f };		//HPの数字の位置
+	m_positionScoreUI = SCORE_ONE_POS;		//一桁目の数字の位置
+	m_positionScoreUI2 = SCORE_TWO_POS;		//二桁目の数字の位置
+	m_positionScoreUI3 = SCORE_THREE_POS;	//三桁目の数字の位置
+	m_positionHP = HP_POS;					//HPの数字の位置
 }
 SpriteUI::~SpriteUI()
 {
