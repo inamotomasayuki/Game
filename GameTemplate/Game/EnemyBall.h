@@ -30,6 +30,14 @@ public:
 	{
 		return m_position;
 	}
+	/// <summary>
+	/// R‚ç‚ê‚Ä‚é‚©‚Ç‚¤‚©
+	/// </summary>
+	/// <returns>R‚ç‚ê‚½‚©</returns>
+	bool GetIsKicked()
+	{
+		return m_isKicked;
+	}
 private:
 	/// <summary>
 	/// UŒ‚

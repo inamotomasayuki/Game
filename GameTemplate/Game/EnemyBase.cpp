@@ -28,7 +28,8 @@ void EnemyBase::DeathEnemyBallContact(int score)
 	g_goMgr.FindGameObjects<EnemyBall>("enemyBall", [this](EnemyBall* enemyBall)->bool {
 		auto vector = enemyBall->GetPositon() - m_position;
 		auto len = vector.Length();
-		if (len < LENGTH) {
+		if (len < LENGTH 
+			&& enemyBall->GetIsKicked() == true) {
 			m_charaCon.RemoveRigidBoby();
 			m_isDeath = true;
 		}
