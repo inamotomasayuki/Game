@@ -20,6 +20,7 @@ void EnemyBase::Draw()
 		enRenderMode_Normal
 	);
 	m_skinModel.RimLightOff();
+	m_skinModel.ShadowReciverOff();
 }
 
 void EnemyBase::DeathEnemyBallContact(int score)

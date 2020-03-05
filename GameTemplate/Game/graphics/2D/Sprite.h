@@ -98,7 +98,7 @@ private:
 	void InitCommon(float w, float h);
 
 private:
-
+	ID3D11DepthStencilState* m_depthStencilState = nullptr;
 	Shader	m_vs;											//頂点シェーダー。
 	Shader	m_ps;											//ピクセルシェーダー。
 	ID3D11Buffer*	m_vertexBuffer = nullptr;	//VRAM上の頂点バッファにアクセスするためのインターフェース。

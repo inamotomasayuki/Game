@@ -37,6 +37,10 @@ public:
 		m_dirLight.isRimLight = 0;
 		m_isRim = true;
 	}
+	void ShadowReciverOff()
+	{
+		m_isShadowReciver = true;
+	}
 	/// <summary>
 	/// ディレクションライトの番号と方向の設定
 	/// </summary>
@@ -173,6 +177,7 @@ private:
 		int isHasAoMap;			//AOマップを保持している？
 	};
 	bool m_isRim = false;					//リムライトするか
+	bool m_isShadowReciver = false;			//シャドウレシーバーにするか
 	EnFbxUpAxis			m_enFbxUpAxis = enFbxUpAxisZ;	//!<FBXの上方向。
 	ID3D11Buffer*		m_cb = nullptr;					//!<定数バッファ。
 	ID3D11Buffer*		m_lightCb = nullptr;				//!<ライト用の定数バッファ。

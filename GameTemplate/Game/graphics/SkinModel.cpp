@@ -161,8 +161,13 @@ void SkinModel::Draw(CMatrix viewMatrix, CMatrix projMatrix, EnRenderMode render
 	vsCb.mView = viewMatrix;
 	vsCb.mLightView = g_shadowMap->GetLighViewMatrix();	//ライトビュー行列。
 	vsCb.mLightProj = g_shadowMap->GetLightProjMatrix();	//ライトプロジェクション行列。
-	vsCb.isShadowReciever = 1;	//シャドウレシーバーフラグ。
-		//todo 法線マップを使用するかどうかのフラグを送る。
+	if (!m_isShadowReciver) {
+		vsCb.isShadowReciever = 1;	//シャドウレシーバーフラグ。
+	}
+	else {
+		vsCb.isShadowReciever = 0;
+	}
+	//todo 法線マップを使用するかどうかのフラグを送る。
 	if (m_normalMapSRV != nullptr) {
 		vsCb.isHasNormalMap = true;
 	}

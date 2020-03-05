@@ -38,10 +38,14 @@ Sprite::~Sprite()
 	if (m_samplerState != nullptr) {
 		m_samplerState->Release();
 	}
+	if (m_depthStencilState != nullptr) {
+		m_depthStencilState->Release();
+	}
 }
 
 void Sprite::Init(const wchar_t* textureFilePath, float w, float h)
 {
+	InitCommon(w, h);
 	//シェーダーをロード。
 	LoadShader();
 	//頂点バッファを作成。
@@ -69,6 +73,25 @@ void Sprite::InitCommon(float w, float h)
 	m_vs.Load("Assets/shader/sprite.fx", "VSMain", Shader::EnType::VS);
 	m_ps.Load("Assets/shader/sprite.fx", "PSMain", Shader::EnType::PS);
 
+	D3D11_DEPTH_STENCIL_DESC desc;
+	ZeroMemory(&desc, sizeof(desc));
+	ID3D11Device* pd3d = g_graphicsEngine->GetD3DDevice();
+	desc.StencilEnable = false;
+	desc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	desc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+	desc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	desc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+
+	desc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	desc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+	desc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	desc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+	desc.DepthEnable = false;
+
+
+	desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+	pd3d->CreateDepthStencilState(&desc, &m_depthStencilState);
+	
 	//定数バッファを初期化。
 	CreateConstantBuffer();
 
@@ -217,6 +240,7 @@ void Sprite::Draw(CMatrix mView, CMatrix mProj)
 	cb.mWVP.Mul(m_world, mView);
 	cb.mWVP.Mul(cb.mWVP, mProj);
 	cb.alpha = m_alpha;
+	deviceContext->OMSetDepthStencilState(m_depthStencilState, 0);
 	//定数バッファの内容をメインメモリからVRAMにコピー。
 	deviceContext->UpdateSubresource(m_cbGPU, 0, nullptr, &cb, 0, 0);
 	//定数バッファをレジスタb0にバインドする。

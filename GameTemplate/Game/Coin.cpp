@@ -49,6 +49,7 @@ void Coin::Draw()
 		enRenderMode_Normal
 	);
 	m_skinModel.RimLightOff();
+	m_skinModel.ShadowReciverOff();
 	m_skinModel.SetDligColor(0, DLIG_COLOR);
 	m_skinModel.SetDligColor(1, DLIG_COLOR);
 }
