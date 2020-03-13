@@ -4,9 +4,10 @@
 #include "Player.h"
 
 const float DELTA_TIME = 1.0f / 60.0f;			//経過時間　単位：秒
-const float ITEM_GRAVITY = 20.0f;					//重力	
+const float ITEM_GRAVITY = 20.0f;				//重力	
 const float MOVE_UP_SPEED = 2.0f;				//上がる速度
 const float ITEM_END_POS_Y = 80.0f;				//アイテム最終位置
+const float ROTATION_SPEED = 3.0f;				//回転速度
 const float DLIG_COLOR = 30.0f;					//ディレクションライトの明るさ
 Item::Item()
 {
@@ -61,8 +62,18 @@ void Item::Update()
 		}
 		g_goMgr.DeleteGameObject(this);
 	}
+	Rotation();
 }
+void Item::Rotation()
+{
+	//一定速度で回転させる
+	float rotSpeed = 0.0f;;
+	rotSpeed += ROTATION_SPEED;
+	CQuaternion addRot;
+	addRot.SetRotationDeg(CVector3::AxisY(), rotSpeed);
+	m_rotation.Multiply(addRot);
 
+}
 void Item::Draw()
 {
 	m_skinModel.Draw(

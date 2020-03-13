@@ -6,6 +6,7 @@
 #include "sound/SoundSource.h"
 #include "Box.h"
 #include "Item.h"
+#include "BackGround.h"
 
 class Warp00;
 class Warp01;
@@ -256,6 +257,7 @@ private:
 	CVector3 m_posXZ;								//XZベクトル
 	JumpFloor* m_jumpFloor = nullptr;				//ジャンプ床
 	MoveFloor* m_moveFloor = nullptr;				//動く床
+	BackGround* m_backGround = nullptr;				//背景
 	Game* m_game = nullptr;							//ゲーム
 	Star* m_star = nullptr;							//星
 	Warp00* m_warp00 = nullptr;						//ワープ０

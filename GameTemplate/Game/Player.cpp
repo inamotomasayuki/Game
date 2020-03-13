@@ -97,6 +97,7 @@ void Player::Update()
 	m_warp01 = g_goMgr.FindGameObject<Warp01>("warp01");
 	m_box = g_goMgr.FindGameObject<Box>("box");
 	m_item = g_goMgr.FindGameObject<Item>("item");
+	m_backGround = g_goMgr.FindGameObject<BackGround>("backGround");
 	//デバッグショートカット
 	if (g_pad[0].IsTrigger(enButtonX)) {
 		m_charaCon.SetPosition(m_jumpFloor->GetPosition());
@@ -220,6 +221,12 @@ void Player::GhostContact()
 			m_jumpSpeed = JUMP_FLOOR_SPEED;
 			m_se[enSE_jumpFloor].Play(false);
 			m_contactJumpFloor = true;
+		}
+		if (m_backGround->GetGhost()->IsSelf(contactObject) == true) {
+			m_jumpSpeed = 0.0f;
+			m_moveSpeed.y = 0.0f;
+			m_moveSpeed.y -= m_gravity;
+
 		}
 		g_goMgr.FindGameObjects<Box>("box", [&](Box* box)->bool {
 

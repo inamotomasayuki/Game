@@ -106,11 +106,11 @@
     <ClCompile Include="Coin.cpp" />
     <ClCompile Include="ConstantBufferGPU.cpp" />
     <ClCompile Include="Effect.cpp" />
-    <ClCompile Include="Enemy01.cpp" />
-    <ClCompile Include="Enemy02.cpp" />
-    <ClCompile Include="Enemy03.cpp" />
-    <ClCompile Include="EnemyBall.cpp" />
-    <ClCompile Include="EnemyBase.cpp" />
+    <ClCompile Include="enemy\Enemy01.cpp" />
+    <ClCompile Include="enemy\Enemy02.cpp" />
+    <ClCompile Include="enemy\Enemy03.cpp" />
+    <ClCompile Include="enemy\EnemyBall.cpp" />
+    <ClCompile Include="enemy\EnemyBase.cpp" />
     <ClCompile Include="FireBall.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameCamera.cpp" />
@@ -153,6 +153,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PostEffect.cpp" />
     <ClCompile Include="RenderTarget.cpp" />
+    <ClCompile Include="Sky.cpp" />
     <ClCompile Include="StageSelect.cpp" />
     <ClCompile Include="ShadowMap.cpp" />
     <ClCompile Include="sound\SoundEngine.cpp" />
@@ -178,11 +179,11 @@
     <ClInclude Include="Coin.h" />
     <ClInclude Include="ConstantBufferGPU.h" />
     <ClInclude Include="Effect.h" />
-    <ClInclude Include="Enemy01.h" />
-    <ClInclude Include="Enemy02.h" />
-    <ClInclude Include="Enemy03.h" />
-    <ClInclude Include="EnemyBall.h" />
-    <ClInclude Include="EnemyBase.h" />
+    <ClInclude Include="enemy\Enemy01.h" />
+    <ClInclude Include="enemy\Enemy02.h" />
+    <ClInclude Include="enemy\Enemy03.h" />
+    <ClInclude Include="enemy\EnemyBall.h" />
+    <ClInclude Include="enemy\EnemyBase.h" />
     <ClInclude Include="FireBall.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameCamera.h" />
@@ -227,6 +228,7 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="PostEffect.h" />
     <ClInclude Include="RenderTarget.h" />
+    <ClInclude Include="Sky.h" />
     <ClInclude Include="StageSelect.h" />
     <ClInclude Include="ShadowMap.h" />
     <ClInclude Include="sound\SoundEngine.h" />
@@ -242,10 +244,27 @@
     <ClInclude Include="Warp01.h" />
   </ItemGroup>
   <ItemGroup>
+    <MeshContentTask Include="Assets\modelData\Boxato.fbx" />
+    <MeshContentTask Include="Assets\modelData\Boxmae.fbx" />
     <MeshContentTask Include="Assets\modelData\Circle.fbx" />
+    <MeshContentTask Include="Assets\modelData\coin.fbx" />
     <MeshContentTask Include="Assets\modelData\FireBall.fbx" />
+    <MeshContentTask Include="Assets\modelData\gameStage01.FBX" />
+    <MeshContentTask Include="Assets\modelData\gameStage01_1.fbx" />
+    <MeshContentTask Include="Assets\modelData\gameStage02.fbx" />
     <MeshContentTask Include="Assets\modelData\gameStage03.fbx" />
+    <MeshContentTask Include="Assets\modelData\jumpFloor.FBX" />
+    <MeshContentTask Include="Assets\modelData\kuribo.FBX" />
+    <MeshContentTask Include="Assets\modelData\mikan.fbx" />
+    <MeshContentTask Include="Assets\modelData\moveFloor.FBX" />
     <MeshContentTask Include="Assets\modelData\moveFloor01.fbx" />
+    <MeshContentTask Include="Assets\modelData\skybox.fbx" />
+    <MeshContentTask Include="Assets\modelData\star.fbx" />
+    <MeshContentTask Include="Assets\modelData\turtle.fbx" />
+    <MeshContentTask Include="Assets\modelData\turtleShell.fbx" />
+    <MeshContentTask Include="Assets\modelData\unityChan.fbx" />
+    <MeshContentTask Include="Assets\modelData\warp.fbx" />
+    <MeshContentTask Include="Assets\modelData\wingKuribo.fbx" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\sprite\kari.png" />

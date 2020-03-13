@@ -14,12 +14,16 @@ protected:
 	Shader* m_pPSSilhouette = nullptr;		//シルエット描画用のピクセルシェーダー。
 	Shader* m_pVSShadowMap = nullptr;
 	Shader* m_pPSShadowMap = nullptr;
+	Shader* m_pVSSky = nullptr;
+	Shader* m_pPSSky = nullptr;
 
 	Shader m_vsShader;
 	Shader m_psShader;
 	Shader m_psSilhouette;
 	Shader m_vsShadowMap;
 	Shader m_psShadowMap;
+	Shader m_vsSky;
+	Shader m_psSky;
 
 	bool isSkining;
 	ID3D11ShaderResourceView* m_albedoTex = nullptr;
@@ -42,10 +46,11 @@ public:
 		//todo シャドウマップ用のシェーダーをロード。
 		m_psShadowMap.Load("Assets/shader/model.fx", "PSMain_ShadowMap", Shader::EnType::PS);
 
-		m_pVSShader = &m_vsShader;
+		//m_pVSShader = &m_vsShader;
 		m_pPSShader = &m_psShader;
 		m_pPSSilhouette = &m_psSilhouette;
 		m_pPSShadowMap = &m_psShadowMap;
+		m_pPSSky = &m_psSky;
 		//デプスステンシルの初期化。
 		InitSilhouettoDepthStepsilState();
 		InitToonMap();
@@ -99,6 +104,7 @@ public:
 		m_vsShadowMap.Load("Assets/shader/model.fx", "VSMain_ShadowMap", Shader::EnType::VS);
 		m_pVSShadowMap = &m_vsShadowMap;
 		m_pVSShader = &m_vsShader;
+		m_pVSSky = &m_vsSky;
 		isSkining = false;
 	}
 };

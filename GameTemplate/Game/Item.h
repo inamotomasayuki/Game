@@ -15,9 +15,9 @@ public:
 	void Update();
 	void Draw();
 	/// <summary>
-/// 座標の設定
-/// </summary>
-/// <param name="pos">座標</param>
+	/// 座標の設定
+	/// </summary>
+	/// <param name="pos">座標</param>
 	void SetPosition(CVector3 pos)
 	{
 		m_position = pos;
@@ -60,6 +60,11 @@ public:
 		m_isGet = true;
 	}
 private:
+	/// <summary>
+	/// 回転
+	/// </summary>
+	void Rotation();
+private:
 	SkinModel m_skinModel;							//スキンモデル
 	PhysicsGhostObject m_ghostObject;				//ゴースト
 	CharacterController m_charaCon;					//キャラコン
@@ -67,11 +72,11 @@ private:
 	CVector3 m_position = CVector3::Zero();				//座標
 	CQuaternion m_rotation = CQuaternion::Identity();	//回転
 	CVector3 m_scale = CVector3::One();					//拡大率
-	bool m_isGet = false;			//取得されたか
-	CSoundSource m_se;
-	Player* m_player = nullptr;
-	CVector3 m_boxPos;
-	float m_posUp = 0.0f;
-	bool m_isHipDrop = false;
-};
+	bool m_isGet = false;								//取得されたか
+	CSoundSource m_se;									//効果音
+	Player* m_player = nullptr;							//プレイヤー
+	CVector3 m_boxPos;									//箱の位置
+	float m_posUp = 0.0f;								//上がる位置
+	bool m_isHipDrop = false;							//ヒップドロップ中か
+};	
 

@@ -3,10 +3,10 @@
 #include "GameCamera.h"
 #include "Coin.h"
 #include "Player.h"
-#include "Enemy01.h"
-#include "Enemy02.h"
-#include "Enemy03.h"
-#include "EnemyBall.h"
+#include "enemy/Enemy01.h"
+#include "enemy/Enemy02.h"
+#include "enemy/Enemy03.h"
+#include "enemy/EnemyBall.h"
 #include "BackGround.h"
 #include "MoveFloor.h"
 #include "JumpFloor.h"
@@ -19,6 +19,7 @@
 #include "Warp01.h"
 #include "Box.h"
 #include "Item.h"
+#include "Sky.h"
 #include "sound/SoundEngine.h"
 #include "sound/SoundSource.h"
 
@@ -131,6 +132,7 @@ private:
 	GameClear* m_gameClear = nullptr;		//ゲームクリア
 	Star* m_star = nullptr;					//星
 	Box* m_box = nullptr;					//箱
+	Sky* m_sky = nullptr;					//空
 	Item* m_item = nullptr;					//アイテム
 	CSoundSource m_bgm;						//BGM	
 	enum EnSE{

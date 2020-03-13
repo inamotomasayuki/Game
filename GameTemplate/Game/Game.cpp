@@ -57,6 +57,13 @@ Game::Game()
 				m_backGround->SetScale(objData.scale);
 				return true;
 			}
+			if (objData.EqualObjectName(L"skybox")) {
+				m_sky = g_goMgr.NewGameObject<Sky>("sky");
+				m_sky->SetPosition(objData.position);
+				m_sky->SetRotation(objData.rotation);
+				m_sky->SetScale(objData.scale);
+				return true;
+			}
 			if (objData.EqualObjectName(L"moveFloor")) {
 				m_moveFloor = g_goMgr.NewGameObject<MoveFloor>("moveFloor");
 				m_moveFloor->SetPosition(objData.position);
@@ -254,10 +261,12 @@ Game::~Game()
 void Game::Update()
 {
 	//ファイアボール
-	if (!m_isFireBall) {
-		if (g_pad[0].IsTrigger(enButtonRB1)) {
-			g_goMgr.NewGameObject<FireBall>("fireBall");
-			m_isFireBall = true;
+	if (m_player->GetisItem()) {
+		if (!m_isFireBall) {
+			if (g_pad[0].IsTrigger(enButtonRB1)) {
+				g_goMgr.NewGameObject<FireBall>("fireBall");
+				m_isFireBall = true;
+			}
 		}
 	}
 	if (m_isFireBall) {

@@ -9,7 +9,7 @@ void __cdecl ModelEffect::Apply(ID3D11DeviceContext* deviceContext)
 	switch (m_renderMode) {
 	case enRenderMode_Normal:{
 		//通常描画。
-		deviceContext->VSSetShader((ID3D11VertexShader*)m_vsShader.GetBody(), NULL, 0);
+		//deviceContext->VSSetShader((ID3D11VertexShader*)m_vsShader.GetBody(), NULL, 0);
 		deviceContext->PSSetShader((ID3D11PixelShader*)m_psShader.GetBody(), NULL, 0);
 		//todo シェーダーリソースビューを一気に設定する。
 		ID3D11ShaderResourceView* srvArray[] = {
@@ -30,8 +30,12 @@ void __cdecl ModelEffect::Apply(ID3D11DeviceContext* deviceContext)
 		break;
 	case enRenderMode_CreateShadowMap:
 		//シャドウマップ生成。
-		deviceContext->VSSetShader((ID3D11VertexShader*)m_pVSShader->GetBody(), NULL, 0);
+		deviceContext->VSSetShader((ID3D11VertexShader*)m_pVSShadowMap->GetBody(), NULL, 0);
 		deviceContext->PSSetShader((ID3D11PixelShader*)m_psShadowMap.GetBody(), NULL, 0);
+		break;
+	case enRenderMode_Sky:
+		deviceContext->VSSetShader((ID3D11VertexShader*)m_vsSky.GetBody(), NULL, 0);
+		deviceContext->PSSetShader((ID3D11PixelShader*)m_psSky.GetBody(), NULL, 0);
 		break;
 	}
 }

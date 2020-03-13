@@ -1,6 +1,6 @@
 #pragma once
 #include "Player.h"
-#include "EnemyBall.h"
+#include "enemy/EnemyBall.h"
 #include "physics/PhysicsGhostObject.h"
 #include "sound/SoundSource.h"
 class Game;

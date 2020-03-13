@@ -12,6 +12,7 @@ enum EnRenderMode {
 	enRenderMode_CreateShadowMap,	//シャドウマップ生成。
 	enRenderMode_Normal,			//通常レンダリング。
 	enRenderMode_Silhouette,		//シルエット描画。
+	enRenderMode_Sky,
 	enRenderMode_Num,				//レンダリングモードの数。
 };
 
