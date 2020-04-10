@@ -49,7 +49,7 @@ void EnemyBase::DeathEnemyBallContact(int score)
 		//íœ
 		if (m_timer == DELETE_TIME) {
 			m_timer = 0;
-			m_fumuSE.Play(false);
+			m_fumuSE->Play(false);
 			m_game->SetScore(score);
 			g_goMgr.DeleteGameObject(this);
 		}
@@ -80,7 +80,7 @@ void EnemyBase::DeathFireBall(int score)
 		//íœ
 		if (m_timer == DELETE_TIME) {
 			m_timer = 0;
-			m_fumuSE.Play(false);
+			m_fumuSE->Play(false);
 			m_game->SetScore(score);
 			g_goMgr.DeleteGameObject(this);
 		}

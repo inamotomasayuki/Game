@@ -273,7 +273,7 @@ const CVector3& CharacterController::Execute(float deltaTime, CVector3& moveSpee
 		callback.me = m_rigidBody.GetBody();
 		callback.startPos.Set(start.getOrigin());
 		//è’ìÀåüèoÅB
-		if (fabsf(endPos.y - callback.startPos.y) > FLT_EPSILON) {
+		if (fabsf(endPos.y - callback.startPos.y) > 0.001f) {
 			g_physics.ConvexSweepTest((const btConvexShape*)m_collider.GetBody(), start, end, callback);
 			if (callback.isHit) {
 				//ìñÇΩÇ¡ÇΩÅB

@@ -22,6 +22,21 @@ void GameObjectManager::Draw2D()
 		go->Draw2D();
 	}
 }
+
+void GameObjectManager::DrawFade()
+{
+	for (auto go : m_goList) {
+		go->DrawFade();
+	}
+}
+
+void GameObjectManager::DrawEffect()
+{
+	for (auto go : m_goList) {
+		go->DrawEffect();
+	}
+}
+
 void GameObjectManager::Update()
 {
 	//登録されているゲームオブジェクトの更新処理を呼ぶ。

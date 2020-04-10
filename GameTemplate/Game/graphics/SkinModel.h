@@ -19,6 +19,7 @@ struct SDirectionLight {
 	CVector4 color[NUM_DIRECTION_LIG];			//ライトのカラー。
 	CVector3			eyePos;				//視点の座標。
 	float				specPow;			//鏡面反射の絞り。
+	float				brightnessPow;	//空の明るさ
 	CVector4			ambient;
 	CVector3			eyeDir;
 	int isRimLight;
@@ -66,6 +67,14 @@ public:
 	void SetDligSpecPow(float specPow)
 	{
 		m_dirLight.specPow = specPow;
+	}
+	/// <summary>
+	/// 空の明るさの設定
+	/// </summary>
+	/// <param name="brightPow">明るさの強さ</param>
+	void SetBrightnessPow(float brightPow)
+	{
+		m_dirLight.brightnessPow = brightPow;
 	}
 	//メッシュが見つかったときのコールバック関数。
 	using OnFindMesh = std::function<void(const std::unique_ptr<DirectX::ModelMeshPart>&)>;

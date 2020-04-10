@@ -50,6 +50,7 @@ cbuffer LightCb : register(b1) {
 	float4 dligColor[NUM_DIRECTION_LIG];
 	float3 eyePos;		//カメラの視点	
 	float specPow;		//スペキュラライトの絞り
+	float brightnessPow;	//空の明るさ
 	float3 ambient;		//アンビエントライト
 	float3 eyeDir;		//カメラの前方向
 	int isRimLight;
@@ -333,4 +334,9 @@ float4 PSMain_ShadowMap(PSInput_ShadowMap In) : SV_Target0
 {
 	//射影空間でのZ値を返す。
 	return In.Position.z / In.Position.w;
+}
+
+float4 PSMain_Sky(PSInput In) : SV_Target0
+{
+	return albedoTexture.Sample(Sampler, In.TexCoord) * brightnessPow;
 }

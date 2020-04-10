@@ -28,8 +28,10 @@ void MoveFloor::Update()
 {
 	//ワールド行列の更新。
 	m_skinModel.UpdateWorldMatrix(m_position, m_rotation, m_scale);
-	//往復
-	RoundTrip();
+	if (g_gameData.GetStageNo() == 0) {
+		//往復
+		RoundTrip();
+	}
 	m_ghostObject.SetPosition(m_position);
 	m_staticObject.SetPositionAndRotation(m_position, m_rotation);
 }

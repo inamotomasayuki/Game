@@ -12,7 +12,8 @@ Box::Box()
 	m_ghostObject.CreateBox(m_ghostPos, m_rotation, m_ghostScale);
 	m_ghostMesh.CreateMesh(m_ghostMeshPos, m_rotation, m_ghostScale, m_skinModel);
 	m_staticObject.CreateMeshObject(m_skinModel, m_position, m_rotation, m_scale);
-	m_se.Init(L"Assets/sound/boxPoko.wav");		//箱アイテム
+	m_se = g_goMgr.NewGameObject<CSoundSource>(0);
+	m_se->Init(L"Assets/sound/boxPoko.wav");		//箱アイテム
 }
 
 
@@ -32,7 +33,7 @@ void Box::Update()
 			m_skinModel.Init(L"Assets/modelData/Boxato.cmo");
 			m_isInitModel = true;
 			if (m_itemState == enItem_mikan) {
-				m_se.Play(false);
+				m_se->Play(false);
 				m_item = g_goMgr.NewGameObject<Item>("item");
 				CVector3 itemPos = m_position;
 				itemPos.y -= ITEM_UNDER_POS;

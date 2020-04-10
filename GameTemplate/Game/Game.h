@@ -20,6 +20,7 @@
 #include "Box.h"
 #include "Item.h"
 #include "Sky.h"
+#include "Fade.h"
 #include "sound/SoundEngine.h"
 #include "sound/SoundSource.h"
 
@@ -31,6 +32,7 @@ public:
 	~Game();
 	void Update();
 	void Draw();
+
 public:
 	/// <summary>
 	/// スコアの設定
@@ -133,15 +135,15 @@ private:
 	Star* m_star = nullptr;					//星
 	Box* m_box = nullptr;					//箱
 	Sky* m_sky = nullptr;					//空
+	Fade* m_fade = nullptr;					//フェード
 	Item* m_item = nullptr;					//アイテム
-	CSoundSource m_bgm;						//BGM	
+	CSoundSource* m_bgm = nullptr;						//BGM	
 	enum EnSE{
-		enSE_coin,			//コインゲット音
 		enSE_gameClear,		//ゲームクリア音
 		enSE_gameOver,		//ゲームオーバー音
 		enSE_Num			//効果音の数
 	};				
-	CSoundSource m_se[enSE_Num];			//効果音
+	CSoundSource* m_se[enSE_Num];			//効果音
 
 private:
 	int m_score = 0;				//スコア
@@ -154,6 +156,9 @@ private:
 	bool m_getStar = false;			//星を取ったかどうか
 	bool m_isGameClearSE = false;	//SE鳴らしたか
 	bool m_isGameOverSE = false;	//SE鳴らしたか
+	bool m_isFade = false;			//フェード
 	CVector3 m_cameraPos;			//カメラの位置
 	CVector3 m_nextCameraPos;		//次のカメラの位置
+	bool m_isGo = false;					//行けるかどうか
+
 };

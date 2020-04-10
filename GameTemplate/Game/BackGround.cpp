@@ -5,10 +5,11 @@
 BackGround::BackGround()
 {
 	if (g_gameData.GetStageNo() == 0) {
-		m_skinModel.Init(L"Assets/modelData/gameStage02.cmo");
+		m_skinModel.Init(L"Assets/modelData/gameStage01_final.cmo");
 	}
 	if (g_gameData.GetStageNo() == 1) {	
-		m_skinModel.Init(L"Assets/modelData/gameStage03.cmo");
+		//m_skinModel.Init(L"Assets/modelData/gameStage03.cmo");
+		m_skinModel.Init(L"Assets/modelData/gameStage_02_01.cmo");
 	}
 	m_physicsStaticObject.CreateMeshObject(m_skinModel, m_position, m_rotation, m_scale);
 	m_ghostObject.CreateMesh(m_ghostPos, m_rotation, m_scale, m_skinModel);

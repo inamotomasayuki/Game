@@ -66,6 +66,14 @@ public:
 		}
 
 	}
+	/// <summary>
+	/// アルファ値取得
+	/// </summary>
+	/// <returns></returns>
+	float GetAlpha()
+	{
+		return m_alpha;
+	}
 private:
 	/// <summary>
 	/// シェーダーをロード。

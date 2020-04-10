@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Enemy03.h"
 #include "Game.h"
+#include "../GameData.h"
 
 const int ATTACK_WAIT_TIME = 40;				//攻撃したときの待ち時間
 const float ATTACKED_WAIT_TIME = 20.0f;			//攻撃されたときの待ち時間
@@ -25,7 +26,8 @@ Enemy03::Enemy03()
 	//cmoファイルの読み込み。
 	m_skinModel.Init(L"Assets/modelData/turtle.cmo");
 	m_gravity = ENEMY_GRAVITY;
-	m_fumuSE.Init(L"Assets/sound/fumu.wav");
+	m_fumuSE = g_goMgr.NewGameObject<CSoundSource>(0);
+	m_fumuSE->Init(L"Assets/sound/fumu.wav");
 }
 
 void Enemy03::Update()
@@ -47,8 +49,10 @@ void Enemy03::Update()
 		Attack();
 		//回転
 		Rotation();
-		//パス移動
-		PassMove();
+		if (g_gameData.GetStageNo() == 0) {
+			//パス移動
+			PassMove();
+		}
 		//死亡*スコア値
 		Death(SCORE);
 		DeathEnemyBallContact(SCORE);
@@ -132,7 +136,7 @@ void Enemy03::Death(int score)
 		if (m_isAttacked == false) {
 			if (fabs(m_angle) <= CMath::DegToRad(DEGREE_NUM) && m_len < LENGTH) {
 				m_player->SetJumpFlag(true);	//ジャンプさせる	
-				m_fumuSE.Play(false);
+				m_fumuSE->Play(false);
 				m_game->SetScore(score);		//スコア
 				m_isAttacked = true;		//攻撃された
 			}
@@ -150,7 +154,7 @@ void Enemy03::Death(int score)
 		if (m_isAttacked == false) {
 			if (fabs(m_angle) <= CMath::DegToRad(ANGLE) && m_len < LENGTH) {
 				m_scale.z /= PETTANKO_SCALE;
-				m_fumuSE.Play(false);
+				m_fumuSE->Play(false);
 				m_isHipDrop = true;
 				m_isAttacked = true;		//攻撃された
 			}

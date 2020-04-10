@@ -22,8 +22,8 @@ public:
 	bool ProgressNextStageNo()
 	{
 		stageNo++;
-		if (stageNo == 2) {
-			stageNo = 0;
+		if (stageNo == enStage_Num) {
+			stageNo = enStage_Zero;
 			return false;
 		}
 		return true;
@@ -32,6 +32,12 @@ public:
 	{
 		stageNo = no;
 	}
+	enum Stage
+	{
+		enStage_Zero,
+		enStage_One,
+		enStage_Num
+	};
 private:
 	int stageNo = 0;	//現在のステージの番号。
 };

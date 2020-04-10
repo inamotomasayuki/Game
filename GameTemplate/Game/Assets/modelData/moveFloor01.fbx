@@ -7,12 +7,12 @@ FBXHeaderExtension:  {
 	CreationTimeStamp:  {
 		Version: 1000
 		Year: 2020
-		Month: 2
-		Day: 12
-		Hour: 11
-		Minute: 53
-		Second: 37
-		Millisecond: 877
+		Month: 3
+		Day: 26
+		Hour: 10
+		Minute: 56
+		Second: 14
+		Millisecond: 911
 	}
 	Creator: "FBX SDK/FBX Plugins version 2018.1"
 	SceneInfo: "SceneInfo::GlobalInfo", "UserData" {
@@ -34,15 +34,14 @@ FBXHeaderExtension:  {
 			P: "Original|ApplicationVendor", "KString", "", "", "Autodesk"
 			P: "Original|ApplicationName", "KString", "", "", "3ds Max"
 			P: "Original|ApplicationVersion", "KString", "", "", "2018"
-			P: "Original|DateTime_GMT", "DateTime", "", "", "12/02/2020 02:53:37.876"
+			P: "Original|DateTime_GMT", "DateTime", "", "", "26/03/2020 01:56:14.908"
 			P: "Original|FileName", "KString", "", "", "C:\Users\GC1803\Desktop\Game\GameTemplate\Game\Assets\modelData\moveFloor01.fbx"
 			P: "LastSaved", "Compound", "", ""
 			P: "LastSaved|ApplicationVendor", "KString", "", "", "Autodesk"
 			P: "LastSaved|ApplicationName", "KString", "", "", "3ds Max"
 			P: "LastSaved|ApplicationVersion", "KString", "", "", "2018"
-			P: "LastSaved|DateTime_GMT", "DateTime", "", "", "12/02/2020 02:53:37.876"
+			P: "LastSaved|DateTime_GMT", "DateTime", "", "", "26/03/2020 01:56:14.908"
 			P: "Original|ApplicationActiveProject", "KString", "", "", "C:\Users\GC1803\Documents\3dsmax"
-			P: "Original|ApplicationNativeFile", "KString", "", "", "C:\Users\GC1803\Documents\3dsmax\scenes\moveFloor.max"
 		}
 	}
 }
@@ -60,7 +59,7 @@ GlobalSettings:  {
 		P: "UnitScaleFactor", "double", "Number", "",2.54
 		P: "OriginalUnitScaleFactor", "double", "Number", "",2.54
 		P: "AmbientColor", "ColorRGB", "Color", "",0,0,0
-		P: "DefaultCamera", "KString", "", "", "Producer Top"
+		P: "DefaultCamera", "KString", "", "", "Producer Perspective"
 		P: "TimeMode", "enum", "", "",6
 		P: "TimeProtocol", "enum", "", "",2
 		P: "SnapOnFrameMode", "enum", "", "",0
@@ -77,7 +76,7 @@ GlobalSettings:  {
 
 Documents:  {
 	Count: 1
-	Document: 2535598347648, "", "Scene" {
+	Document: 2394084546112, "", "Scene" {
 		Properties70:  {
 			P: "SourceObject", "object", "", ""
 			P: "ActiveAnimStackName", "KString", "", "", ""
@@ -316,15 +315,15 @@ Definitions:  {
 ;------------------------------------------------------------------
 
 Objects:  {
-	Geometry: 2535074961328, "Geometry::", "Mesh" {
+	Geometry: 2393767898144, "Geometry::", "Mesh" {
 		Properties70:  {
-			P: "Color", "ColorRGB", "Color", "",0.423529411764706,0.0313725490196078,0.533333333333333
+			P: "Color", "ColorRGB", "Color", "",0.898039215686275,0.650980392156863,0.843137254901961
 		}
 		Vertices: *24 {
-			a: -50.539306640625,-56.8567199707031,0,50.539306640625,-56.8567199707031,0,-50.539306640625,56.8567199707031,0,50.539306640625,56.8567199707031,0,-50.539306640625,-56.8567199707031,-6.31741333007813,50.539306640625,-56.8567199707031,-6.31741333007813,-50.539306640625,56.8567199707031,-6.31741333007813,50.539306640625,56.8567199707031,-6.31741333007813
+			a: -153.918670654297,-287.189697265625,0,153.918670654297,-287.189697265625,0,-153.918670654297,287.189697265625,0,153.918670654297,287.189697265625,0,-153.918670654297,-287.189697265625,-22.5246734619141,153.918670654297,-287.189697265625,-22.5246734619141,-153.918670654297,287.189697265625,-22.5246734619141,153.918670654297,287.189697265625,-22.5246734619141
 		} 
 		PolygonVertexIndex: *36 {
-			a: 3,2,-1,3,0,-2,5,4,-8,4,6,-8,4,5,-1,1,0,-6,5,7,-2,3,1,-8,7,6,-4,2,3,-7,6,4,-3,0,2,-5
+			a: 2,0,-4,3,0,-2,7,5,-5,4,6,-8,4,5,-1,1,0,-6,5,7,-2,3,1,-8,7,6,-4,2,3,-7,6,4,-3,0,2,-5
 		} 
 		Edges: *18 {
 			a: 0,1,2,4,5,6,7,8,9,10,13,14,17,19,23,25,29,31
@@ -376,7 +375,7 @@ Objects:  {
 				a: 1,0,0,0,1,1,0,1,0,0,1,0,0,1,1,1,0,0,1,0,0,1,1,1,0,0,1,0,0,1,1,1,0,0,1,0,0,1,1,1,0,0,1,0,0,1,1,1
 			} 
 			UVIndex: *36 {
-				a: 3,2,0,3,0,1,5,4,7,4,6,7,10,11,8,9,8,11,14,15,12,13,12,15,18,19,16,17,16,19,22,23,20,21,20,23
+				a: 2,0,3,3,0,1,7,5,4,4,6,7,10,11,8,9,8,11,14,15,12,13,12,15,18,19,16,17,16,19,22,23,20,21,20,23
 			} 
 		}
 		LayerElementMaterial: 0 {
@@ -412,18 +411,18 @@ Objects:  {
 			}
 		}
 	}
-	Model: 2536061388864, "Model::Box001", "Mesh" {
+	Model: 2393658840416, "Model::Box001", "Mesh" {
 		Version: 232
 		Properties70:  {
 			P: "InheritType", "enum", "", "",1
 			P: "ScalingMax", "Vector3D", "Vector", "",0,0,0
 			P: "DefaultAttributeIndex", "int", "Integer", "",0
-			P: "MaxHandle", "int", "Integer", "UH",18
+			P: "MaxHandle", "int", "Integer", "UH",162
 		}
 		Shading: T
 		Culling: "CullingOff"
 	}
-	Material: 2535938971552, "Material::Material #619", "" {
+	Material: 2393665979136, "Material::Material #2182", "" {
 		Version: 102
 		ShadingModel: "phong"
 		MultiLayer: 0
@@ -445,7 +444,7 @@ Objects:  {
 			P: "Reflectivity", "double", "Number", "",0
 		}
 	}
-	Video: 2535938964352, "Video::マップ #66", "Clip" {
+	Video: 2393665980096, "Video::マップ #82", "Clip" {
 		Type: "Clip"
 		Properties70:  {
 			P: "Path", "KString", "XRefUrl", "", "C:\Users\GC1803\Desktop\Game\GameTemplate\Game\Assets\modelData\Blue.png"
@@ -455,15 +454,15 @@ Objects:  {
 		Filename: "C:\Users\GC1803\Desktop\Game\GameTemplate\Game\Assets\modelData\Blue.png"
 		RelativeFilename: "Blue.png"
 	}
-	Texture: 2535938961472, "Texture::マップ #66", "" {
+	Texture: 2393665969056, "Texture::マップ #82", "" {
 		Type: "TextureVideoClip"
 		Version: 202
-		TextureName: "Texture::マップ #66"
+		TextureName: "Texture::マップ #82"
 		Properties70:  {
 			P: "UVSet", "KString", "", "", "UVChannel_1"
 			P: "UseMaterial", "bool", "", "",1
 		}
-		Media: "Video::マップ #66"
+		Media: "Video::マップ #82"
 		FileName: "C:\Users\GC1803\Desktop\Game\GameTemplate\Game\Assets\modelData\Blue.png"
 		RelativeFilename: "Blue.png"
 		ModelUVTranslation: 0,0
@@ -471,25 +470,25 @@ Objects:  {
 		Texture_Alpha_Source: "Alpha_Black"
 		Cropping: 0,0,0,0
 	}
-	AnimationStack: 2535555801504, "AnimStack::Take 001", "" {
+	AnimationStack: 2393653311712, "AnimStack::Take 001", "" {
 		Properties70:  {
 			P: "LocalStop", "KTime", "Time", "",153953860000
 			P: "ReferenceStop", "KTime", "Time", "",153953860000
 		}
 	}
-	AnimationLayer: 2535583345248, "AnimLayer::BaseLayer", "" {
+	AnimationLayer: 2393425625920, "AnimLayer::BaseLayer", "" {
 	}
-	CollectionExclusive: 2535382895376, "DisplayLayer::bone", "DisplayLayer" {
+	CollectionExclusive: 2394087648752, "DisplayLayer::bone", "DisplayLayer" {
 		Properties70:  {
 			P: "Color", "ColorRGB", "Color", "",0.607843137254902,0,0.149019607843137
 		}
 	}
-	CollectionExclusive: 2535382896528, "DisplayLayer::bone_null", "DisplayLayer" {
+	CollectionExclusive: 2394087655664, "DisplayLayer::bone_null", "DisplayLayer" {
 		Properties70:  {
 			P: "Color", "ColorRGB", "Color", "",0,0.00784313725490196,0.364705882352941
 		}
 	}
-	CollectionExclusive: 2535382894800, "DisplayLayer::bone_a", "DisplayLayer" {
+	CollectionExclusive: 2394087654320, "DisplayLayer::bone_a", "DisplayLayer" {
 		Properties70:  {
 			P: "Color", "ColorRGB", "Color", "",0,0,1
 		}
@@ -502,22 +501,22 @@ Objects:  {
 Connections:  {
 	
 	;Model::Box001, Model::RootNode
-	C: "OO",2536061388864,0
+	C: "OO",2393658840416,0
 	
 	;AnimLayer::BaseLayer, AnimStack::Take 001
-	C: "OO",2535583345248,2535555801504
+	C: "OO",2393425625920,2393653311712
 	
-	;Material::Material #619, Model::Box001
-	C: "OO",2535938971552,2536061388864
+	;Material::Material #2182, Model::Box001
+	C: "OO",2393665979136,2393658840416
 	
 	;Geometry::, Model::Box001
-	C: "OO",2535074961328,2536061388864
+	C: "OO",2393767898144,2393658840416
 	
-	;Texture::マップ #66, Material::Material #619
-	C: "OP",2535938961472,2535938971552, "DiffuseColor"
+	;Texture::マップ #82, Material::Material #2182
+	C: "OP",2393665969056,2393665979136, "DiffuseColor"
 	
-	;Video::マップ #66, Texture::マップ #66
-	C: "OO",2535938964352,2535938961472
+	;Video::マップ #82, Texture::マップ #82
+	C: "OO",2393665980096,2393665969056
 }
 ;Takes section
 ;----------------------------------------------------

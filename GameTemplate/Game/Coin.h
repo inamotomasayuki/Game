@@ -81,6 +81,6 @@ private:
 	EnemyBall* m_enemyBall = nullptr;		//敵玉
 	int m_timer = 0;						//タイマー
 	bool m_coinGetFlag = false;				//コイン取得フラグ
-	CSoundSource m_se;
+	CSoundSource* m_se = nullptr;
 };
 

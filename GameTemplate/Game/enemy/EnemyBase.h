@@ -119,6 +119,6 @@ protected:
 	float m_angle = 0.0f;			//角度
 	int m_timer = 0;				//死亡タイマー　単位：秒
 	bool m_isDeath = false;			//死んだ
-	CSoundSource m_fumuSE;
+	CSoundSource* m_fumuSE = nullptr;
 };
 

@@ -14,6 +14,12 @@ public:
 	virtual void Draw2D() 
 	{
 	}
+	virtual void DrawFade()
+	{
+	}
+	virtual void DrawEffect()
+	{
+	}
 	/// <summary>
 	/// 削除リクエストを行う
 	/// </summary>

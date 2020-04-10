@@ -4,14 +4,19 @@
 const float ROTATION_SPEED = 2.0f;				//回転速度
 const float LENGTH_NEAR = 50.0f;				//近い	
 const float LENGTH_LEAVE = 100.0f;				//離れた
+const float EFFECT_SCALE = 10.0f;				//エフェクトの大きさ
 Warp00::Warp00()
 {
 	m_skinModel.Init(L"Assets/modelData/warp.cmo");
+	m_effect = g_goMgr.NewGameObject<Effect>(0);
+	//エフェクトをロードする。
+	m_effect->SetFilePath(L"Assets/effect/uzu.efk");
 }
 
 
 Warp00::~Warp00()
 {
+	g_goMgr.DeleteGameObject(m_effect);
 }
 
 void Warp00::Update()
@@ -32,6 +37,9 @@ void Warp00::Update()
 			m_player->SetIsLeave00(false);
 		}
 	}
+	//エフェクトを再生する。
+	m_effect->PlayAndSetPos(m_position);
+	m_effect->SetScale(m_scale * EFFECT_SCALE);
 
 }
 void Warp00::Draw()

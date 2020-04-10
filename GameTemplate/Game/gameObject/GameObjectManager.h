@@ -36,6 +36,14 @@ public:
 	/// </summary>
 	void Draw2D();
 	/// <summary>
+	/// フェードを描画
+	/// </summary>
+	void DrawFade();
+	/// <summary>
+	/// エフェクトの描画
+	/// </summary>
+	void DrawEffect();
+	/// <summary>
 	/// ゲームオブジェクトを追加。
 	/// </summary>
 	/// <param name="objectName">オブジェクト名</param>
@@ -112,7 +120,7 @@ public:
 	void Delete();
 private:
 
-	std::vector< IGameObject* > m_goList;		//ゲームオブジェクトのリスト。
+	std::list< IGameObject* > m_goList;		//ゲームオブジェクトのリスト。
 };
 //外部からアクセスするので、extern宣言も必要。
 extern GameObjectManager g_goMgr;

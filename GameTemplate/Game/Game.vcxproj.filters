@@ -167,6 +167,8 @@
     <ClCompile Include="enemy\Enemy03.cpp" />
     <ClCompile Include="enemy\EnemyBall.cpp" />
     <ClCompile Include="enemy\EnemyBase.cpp" />
+    <ClCompile Include="Fade.cpp" />
+    <ClCompile Include="EffectEngine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Vector.h">
@@ -305,6 +307,8 @@
     <ClInclude Include="enemy\Enemy03.h" />
     <ClInclude Include="enemy\EnemyBall.h" />
     <ClInclude Include="enemy\EnemyBase.h" />
+    <ClInclude Include="Fade.h" />
+    <ClInclude Include="EffectEngine.h" />
   </ItemGroup>
   <ItemGroup>
     <MeshContentTask Include="Assets\modelData\Circle.fbx" />
@@ -328,6 +332,8 @@
     <MeshContentTask Include="Assets\modelData\coin.fbx" />
     <MeshContentTask Include="Assets\modelData\Boxmae.fbx" />
     <MeshContentTask Include="Assets\modelData\Boxato.fbx" />
+    <MeshContentTask Include="Assets\modelData\gameStage_02_01.fbx" />
+    <MeshContentTask Include="Assets\modelData\gameStage01_final.fbx" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\sprite\kari.png" />

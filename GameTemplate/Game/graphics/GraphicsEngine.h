@@ -2,7 +2,7 @@
 #include "../RenderTarget.h"
 #include "../graphics/2D/Sprite.h"
 #include "../PostEffect.h"
-#include "../Effect.h"
+#include "../EffectEngine.h"
 
 /// <summary>
 /// レンダリングモード。

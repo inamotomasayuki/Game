@@ -1,4 +1,5 @@
 #pragma once
+#include "Fade.h"
 
 class StageSelect : public IGameObject
 {
@@ -10,6 +11,10 @@ public:
 	void Draw2D();
 
 private:
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	void Init();
 	enum EnSprite	{
 		enSprite_back,		//背景
 		enSprite_select,	//セレクト	
@@ -39,6 +44,10 @@ private:
 	CVector3 m_stagePos[enStage_Num];					//位置
 	CQuaternion m_rotation = CQuaternion::Identity();	//回転
 	CVector3 m_scale = CVector3::One();					//スケール
-	int m_selectNo = 1;									//セレクトの数
-};
+	int m_selectNo = 0;									//セレクトの数
+	Fade* m_fade = nullptr;							//フェード
+	bool m_isGame = false;								//ゲームにいくか
+	bool m_isTitle = false;								//タイトルにいくか
+	bool m_isGo = false;					//行けるかどうか
 
+};

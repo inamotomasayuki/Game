@@ -9,11 +9,12 @@ const float CAMERA_ZOOM_SPEED = 0.97f;					//カメラのズーム速度
 const float CAMERA_CLEAR_START_LENGTH = 1000.0f;		//クリアした時のカメラの距離
 const float CAMERA_CLEAR_END_LENGTH = 300.0f;			//ズームした後のカメラの距離
 const int CLEAR_TIME = 25;								//クリアまでの時間
+const float DELETE_THIS_ALPHA = 0.95f;			//フェードがこのアルファ値で削除する
 
 Game::Game()
 {
 	if (g_gameData.GetStageNo() == 0) {
-		m_level.Init(L"Assets/level/stage_00.tkl", [&](LevelObjectData& objData) {
+		m_level.Init(L"Assets/level/stage_01_final.tkl", [&](LevelObjectData& objData) {
 			if (objData.EqualObjectName(L"unityChan")) {
 				m_player = g_goMgr.NewGameObject<Player>("player");
 				m_player->SetPosition(objData.position);
@@ -50,7 +51,7 @@ Game::Game()
 				m_enemy03->SetScale(objData.scale);
 				return true;
 			}
-			if (objData.EqualObjectName(L"gameStage02")) {
+			if (objData.EqualObjectName(L"gameStage01_final")) {
 				m_backGround = g_goMgr.NewGameObject<BackGround>("backGround");
 				m_backGround->SetPosition(objData.position);
 				m_backGround->SetRotation(objData.rotation);
@@ -104,17 +105,25 @@ Game::Game()
 				m_box->SetPosition(objData.position);
 				m_box->SetRotation(objData.rotation);
 				m_box->SetScale(objData.scale);
+				m_box->SetItem(Box::enItem_mikan);
+				return true;
+			}
+			if (objData.EqualObjectName(L"Boxcoin")) {
+				m_box = g_goMgr.NewGameObject<Box>("box");
+				m_box->SetPosition(objData.position);
+				m_box->SetRotation(objData.rotation);
+				m_box->SetScale(objData.scale);
+				m_box->SetItem(m_box->enItem_coin);
 				return true;
 			}
 			return false;
 			});
 		m_spriteUI = g_goMgr.NewGameObject<SpriteUI>(0);
 		m_gameCamera = g_goMgr.NewGameObject<GameCamera>("gameCamera");
-
 		InitSound();
 	}
 	if (g_gameData.GetStageNo() == 1) {
-		m_level.Init(L"Assets/level/stage_06.tkl", [&](LevelObjectData& objData) {
+		m_level.Init(L"Assets/level/stage_02_01.tkl", [&](LevelObjectData& objData) {
 			if (objData.EqualObjectName(L"unityChan")) {
 				m_player = g_goMgr.NewGameObject<Player>("player");
 				m_player->SetPosition(objData.position);
@@ -151,7 +160,7 @@ Game::Game()
 				m_enemy03->SetScale(objData.scale);
 				return true;
 			}
-			if (objData.EqualObjectName(L"gameStage02")) {
+			if (objData.EqualObjectName(L"gameStage_02_01")) {
 				m_backGround = g_goMgr.NewGameObject<BackGround>("backGround");
 				m_backGround->SetPosition(objData.position);
 				m_backGround->SetRotation(objData.rotation);
@@ -165,13 +174,6 @@ Game::Game()
 				m_moveFloor->SetScale(objData.scale);
 				return true;
 			}
-			//if (objData.EqualObjectName(L"jumpFloor")) {
-			//	m_jumpFloor = g_goMgr.NewGameObject<JumpFloor>("jumpFloor");
-			//	m_jumpFloor->SetPosition(objData.position);
-			//	m_jumpFloor->SetRotation(objData.rotation);
-			//	m_jumpFloor->SetScale(objData.scale);
-			//	return true;
-			//}
 			if (objData.EqualObjectName(L"warp01")) {
 				m_warp00 = g_goMgr.NewGameObject<Warp00>("warp00");
 				m_warp00->SetPosition(objData.position);
@@ -198,16 +200,22 @@ Game::Game()
 				m_box->SetPosition(objData.position);
 				m_box->SetRotation(objData.rotation);
 				m_box->SetScale(objData.scale);
+				m_box->SetItem(m_box->enItem_coin);
+				return true;
+			}
+			if (objData.EqualObjectName(L"skybox")) {
+				m_sky = g_goMgr.NewGameObject<Sky>("sky");
+				m_sky->SetPosition(objData.position);
+				m_sky->SetRotation(objData.rotation);
+				m_sky->SetScale(objData.scale);
 				return true;
 			}
 			return false;
 			});
 		m_spriteUI = g_goMgr.NewGameObject<SpriteUI>(0);
 		m_gameCamera = g_goMgr.NewGameObject<GameCamera>("gameCamera");
-
 		InitSound();
 	}
-
 }
 
 
@@ -256,6 +264,8 @@ Game::~Game()
 	g_goMgr.DeleteGameObject(m_gameOver);
 	g_goMgr.DeleteGameObject(m_gameCamera);
 	g_goMgr.DeleteGameObject(m_gameClear);
+	g_goMgr.DeleteGameObject(m_sky);
+	g_goMgr.DeleteGameObject(m_bgm);
 }
 
 void Game::Update()
@@ -316,13 +326,16 @@ void Game::Update()
 	}
 	//遷移
 	else {
-		if (g_pad[0].IsTrigger(enButtonA)
-			&& m_gameOver->GetButtonFlag()) {
-			g_goMgr.NewGameObject<StageSelect>(0);
-			g_goMgr.DeleteGameObject(this);
+		if (!m_isFade) {
+			if (g_pad[0].IsTrigger(enButtonA)
+				&& m_gameOver->GetButtonFlag()) {
+				if (m_fade == nullptr) {
+					m_fade = g_goMgr.NewGameObject<Fade>("fade");
+					m_isFade = true;
+				}
+			}
 		}
 	}
-
 	//ゲームクリア
 	if (m_star->GetStarFlag()) {
 		m_clearTimer++;
@@ -353,10 +366,15 @@ void Game::Update()
 		}
 		m_gameCamera->SetCameraPos(m_cameraPos);
 	}
+	if (m_isFade) {
+		if (m_fade->GetAlpha() >= DELETE_THIS_ALPHA) {
+			g_goMgr.NewGameObject<StageSelect>(0);
+			g_goMgr.DeleteGameObject(this);
+		}
+	}
 	if (g_pad[0].IsTrigger(enButtonStart)) {
 		g_goMgr.NewGameObject<Title>(0);
 		g_goMgr.DeleteGameObject(this);
-
 	}
 }
 
@@ -365,26 +383,31 @@ void Game::Draw()
 
 }
 
+
 void Game::InitSound()
 {
-	m_bgm.Init(L"Assets/sound/BGM.wav");
-	m_bgm.Play(true);
-	m_se[enSE_gameClear].Init(L"Assets/sound/gameClear.wav");
-	m_se[enSE_gameOver].Init(L"Assets/sound/gameOver.wav");
+	m_bgm = g_goMgr.NewGameObject<CSoundSource>(0);
+	m_bgm->Init(L"Assets/sound/BGM.wav");
+	m_bgm->Play(true);
+	for (int i = 0; i < enSE_Num; i++) {
+		m_se[i] = g_goMgr.NewGameObject<CSoundSource>(0);
+	}
+	m_se[enSE_gameClear]->Init(L"Assets/sound/gameClear.wav");
+	m_se[enSE_gameOver]->Init(L"Assets/sound/gameOver.wav");
 }
 void Game::SoundPlay()
 {
 	//ゲームクリア音
 	if (m_gameClearFlag) {
 		if (!m_isGameClearSE) {
-			m_se[enSE_gameClear].Play(false);
+			m_se[enSE_gameClear]->Play(false);
 			m_isGameClearSE = true;
 		}
 	}
 	//ゲームオーバー音
 	if (m_gameOverFlag) {
 		if (!m_isGameOverSE) {
-			m_se[enSE_gameOver].Play(false);
+			m_se[enSE_gameOver]->Play(false);
 			m_isGameOverSE = true;
 		}
 	}

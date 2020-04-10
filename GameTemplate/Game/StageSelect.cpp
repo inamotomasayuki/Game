@@ -36,6 +36,7 @@ const float UP_TRIANGLE_WIDTH = 100.0f;			//上三角の幅
 const float UP_TRIANGLE_HIGHT = 100.0f;			//上三角の高さ
 const float DOWN_TRIANGLE_WIDTH = 100.0f;		//下三角の幅
 const float DOWN_TRIANGLE_HIGHT = 100.0f;		//下三角の高さ
+const float DELETE_THIS_ALPHA = 0.95f;			//フェードがこのアルファ値で削除する
 
 const CVector3 SELECT_POS = { 0.0f,200.0f,0.0f };			//セレクトの位置
 const CVector3 OK_POS = { 15.0f,-210.0f,0.0f };				//OKの位置
@@ -48,24 +49,7 @@ const CVector3 DOWN_TRIANGLE_POS = { 0.0f,-150.0f,0.0f };	//下三角の位置
 
 StageSelect::StageSelect()
 {
-	m_sprite[enSprite_back].Init(L"Assets/sprite/back.dds", BACK_WIDTH, BACK_HIGHT);
-	m_position[enSprite_back] = CVector3::Zero();
-	m_sprite[enSprite_select].Init(L"Assets/sprite/select.dds", SELECT_WIDTH, SELECT_HIGHT);
-	m_sprite[enSprite_ok].Init(L"Assets/sprite/ok.dds", OK_WIDTH, OK_HIGHT);
-	m_sprite[enSprite_leftTriangle].Init(L"Assets/sprite/left_triangle.dds", LEFT_TRIANGLE_WIDTH, LEFT_TRIANGLE_HIGHT);
-	m_position[enSprite_leftTriangle] = LEFT_TRIANGLE_POS;
-	m_sprite[enSprite_rightTriangle].Init(L"Assets/sprite/right_triangle.dds", RIGHT_TRIANGLE_WIDTH, RIGHT_TRIANGLE_HIGHT);
-	m_position[enSprite_rightTriangle] = RIGHT_TRIANGLE_POS;
-	m_sprite[enSprite_upTriangle].Init(L"Assets/sprite/up_triangle.dds", UP_TRIANGLE_WIDTH, UP_TRIANGLE_HIGHT);
-	m_position[enSprite_upTriangle] = UP_TRIANGLE_POS;
-	m_sprite[enSprite_downTriangle].Init(L"Assets/sprite/down_triangle.dds", DOWN_TRIANGLE_WIDTH, DOWN_TRIANGLE_HIGHT);
-	m_position[enSprite_downTriangle] = DOWN_TRIANGLE_POS;
-	m_stageSprite[enStage_One].Init(L"Assets/sprite/white_one.dds", STAGE_ZERO_WIDTH, STAGE_ZERO_HIGHT);
-	m_stageSprite[enStage_Two].Init(L"Assets/sprite/white_two.dds", STAGE_ONE_WIDTH, STAGE_ONE_HIGHT);
-	m_position[enSprite_select] = SELECT_POS;
-	m_position[enSprite_ok] = OK_POS;
-	m_stagePos[enStage_One] = STAGE_ZERO_POS;
-	m_stagePos[enStage_Two] = STAGE_ONE_POS;
+	Init();
 }
 
 
@@ -75,6 +59,7 @@ StageSelect::~StageSelect()
 
 void StageSelect::Update()
 {
+
 	g_gameData.SetStageNo(stageNo);
 	//セレクトかOKかを選択する処理
 	if (g_pad[0].IsTrigger(enButtonUp)) {
@@ -103,6 +88,7 @@ void StageSelect::Update()
 			stageNo--;
 		}
 	}
+
 	//OK中にAボタンでゲームに遷移
 	if (m_selectNo == enSelect_ok) {
 		m_sprite[enSprite_leftTriangle].SetAlpha(TOUMEI_ALPHA);
@@ -110,15 +96,23 @@ void StageSelect::Update()
 		m_sprite[enSprite_downTriangle].SetAlpha(ALPHA_PLUS);
 		m_sprite[enSprite_upTriangle].SetAlpha(TOUMEI_ALPHA);
 		m_sprite[enSprite_ok].SetAlpha(ALPHA_PLUS);
-		if (g_pad[0].IsTrigger(enButtonA)) {
-			g_goMgr.NewGameObject<Game>("game");
-			g_goMgr.DeleteGameObject(this);
+		if (!m_isGame) {
+			if (g_pad[0].IsTrigger(enButtonA)) {
+				if (m_fade == nullptr) {
+					m_fade = g_goMgr.NewGameObject<Fade>("fade");
+					m_isGame = true;
+				}
+			}
 		}
 	}
 	//Bボタンでタイトルに戻る
-	if (g_pad[0].IsTrigger(enButtonB)) {
-		g_goMgr.NewGameObject<Title>(0);
-		g_goMgr.DeleteGameObject(this);
+	if (!m_isTitle) {
+		if (g_pad[0].IsTrigger(enButtonB)) {
+			if (m_fade == nullptr) {
+				m_fade = g_goMgr.NewGameObject<Fade>("fade");
+				m_isTitle = true;
+			}
+		}
 	}
 	//選択されてなかったら半透明にする処理
 	for (int i = 0; i < enStage_Num; i++) {
@@ -134,6 +128,19 @@ void StageSelect::Update()
 	}
 	if (stageNo > STAGE_NUM) {
 		stageNo = 0;
+	}
+
+	if (m_isGame) {
+		if (m_fade->GetAlpha() >= DELETE_THIS_ALPHA) {
+			g_goMgr.NewGameObject<Game>("game");
+			g_goMgr.DeleteGameObject(this);
+		}
+	}
+	if (m_isTitle) {
+		if (m_fade->GetAlpha() >= DELETE_THIS_ALPHA) {
+			g_goMgr.NewGameObject<Title>(0);
+			g_goMgr.DeleteGameObject(this);
+		}
 	}
 	//更新
 	for (int i = 0; i < enSprite_Num; i++) {
@@ -159,4 +166,25 @@ void StageSelect::Draw2D()
 	for (int i = 0; i < enStage_Num; i++) {
 		m_stageSprite[i].Draw(mView, mProj);
 	}
+}
+void StageSelect::Init()
+{
+	m_sprite[enSprite_back].Init(L"Assets/sprite/back.dds", BACK_WIDTH, BACK_HIGHT);
+	m_position[enSprite_back] = CVector3::Zero();
+	m_sprite[enSprite_select].Init(L"Assets/sprite/select.dds", SELECT_WIDTH, SELECT_HIGHT);
+	m_sprite[enSprite_ok].Init(L"Assets/sprite/ok.dds", OK_WIDTH, OK_HIGHT);
+	m_sprite[enSprite_leftTriangle].Init(L"Assets/sprite/left_triangle.dds", LEFT_TRIANGLE_WIDTH, LEFT_TRIANGLE_HIGHT);
+	m_position[enSprite_leftTriangle] = LEFT_TRIANGLE_POS;
+	m_sprite[enSprite_rightTriangle].Init(L"Assets/sprite/right_triangle.dds", RIGHT_TRIANGLE_WIDTH, RIGHT_TRIANGLE_HIGHT);
+	m_position[enSprite_rightTriangle] = RIGHT_TRIANGLE_POS;
+	m_sprite[enSprite_upTriangle].Init(L"Assets/sprite/up_triangle.dds", UP_TRIANGLE_WIDTH, UP_TRIANGLE_HIGHT);
+	m_position[enSprite_upTriangle] = UP_TRIANGLE_POS;
+	m_sprite[enSprite_downTriangle].Init(L"Assets/sprite/down_triangle.dds", DOWN_TRIANGLE_WIDTH, DOWN_TRIANGLE_HIGHT);
+	m_position[enSprite_downTriangle] = DOWN_TRIANGLE_POS;
+	m_stageSprite[enStage_One].Init(L"Assets/sprite/white_one.dds", STAGE_ZERO_WIDTH, STAGE_ZERO_HIGHT);
+	m_stageSprite[enStage_Two].Init(L"Assets/sprite/white_two.dds", STAGE_ONE_WIDTH, STAGE_ONE_HIGHT);
+	m_position[enSprite_select] = SELECT_POS;
+	m_position[enSprite_ok] = OK_POS;
+	m_stagePos[enStage_One] = STAGE_ZERO_POS;
+	m_stagePos[enStage_Two] = STAGE_ONE_POS;
 }

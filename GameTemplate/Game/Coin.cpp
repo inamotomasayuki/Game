@@ -16,7 +16,8 @@ Coin::Coin()
 {
 	m_skinModel.Init(L"Assets/modelData/coin.cmo");
 	m_ghostObject.CreateMesh(m_position, m_rotation, m_scale, m_skinModel);
-	m_se.Init(L"Assets/sound/coin.wav");
+	m_se = g_goMgr.NewGameObject<CSoundSource>(0);
+	m_se->Init(L"Assets/sound/coin.wav");
 }
 
 
@@ -85,7 +86,7 @@ void Coin::GetCoin()
 	//ƒtƒ‰ƒO‚ª—§‚Á‚½‚ç’µ‚Ë‚³‚¹‚é
 	if (m_coinGetFlag == true) {
 		m_timer++;
-		m_se.Play(false);
+		m_se->Play(false);
 		if (m_timer < PYON_UP_TIME) {
 			m_moveSpeed.y = PYON_UP;
 			m_position += m_moveSpeed;

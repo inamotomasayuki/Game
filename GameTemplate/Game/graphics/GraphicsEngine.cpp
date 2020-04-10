@@ -165,7 +165,7 @@ void GraphicsEngine::Init(HWND hWnd)
 	//ポストエフェクトの初期化。
 	m_postEffect.Init();
 	//Effekseerを初期化。
-	g_effect->InitEffekseer();
+	g_effectEngine.InitEffekseer();
 	//メインとなるレンダリングターゲットを作成する。
 	CreateMainRenderTarget();
 	//半透明合成のブレンドステートを初期化する。
@@ -194,6 +194,7 @@ void GraphicsEngine::ChangeRenderTarget(ID3D11RenderTargetView* renderTarget, ID
 }
 void GraphicsEngine::GameDraw()
 {
+
 	//描画開始。
 	BegineRender();
 
@@ -267,7 +268,8 @@ void GraphicsEngine::GameDraw()
 	//３Ⅾ描画
 	g_goMgr.Draw3D();
 
-	g_effect->Draw();
+	//エフェクトの描画
+	g_goMgr.DrawEffect();
 
 	//ポストエフェクト
 	m_postEffect.Draw();
@@ -297,7 +299,8 @@ void GraphicsEngine::GameDraw()
 
 	//2Dを描画
 	g_goMgr.Draw2D();
-
+	//フェードを描画
+	g_goMgr.DrawFade();
 	//描画終了。
 	EndRender();
 

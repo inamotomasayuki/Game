@@ -123,8 +123,8 @@ private:
 	bool m_isInitModel = false;							//モデルチェンジしたか
 	bool m_isHipDrop = false;							//ヒップドロップ中？
 	Item* m_item = nullptr;								//アイテム
-	CSoundSource m_se;									//効果音
-	EnItem m_itemState = enItem_Num;					//アイテムどれ
+	CSoundSource* m_se = nullptr;						//効果音
+	EnItem m_itemState;									//アイテムどれ
 	Coin* m_coin = nullptr;								//コイン
 };
 

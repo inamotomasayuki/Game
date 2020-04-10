@@ -168,6 +168,7 @@ void CSoundSource::UpdateStreaming()
 					if (state.BuffersQueued == 0) {
 						//çƒê∂èIóπÅB
 						m_isPlaying = false;
+						g_goMgr.DeleteGameObject(this);
 					}
 				}
 			}

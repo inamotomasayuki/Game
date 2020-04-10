@@ -13,7 +13,8 @@ Item::Item()
 {
 	m_skinModel.Init(L"Assets/modelData/mikan.cmo");
 	m_ghostObject.CreateMesh(m_position, m_rotation, m_scale, m_skinModel);
-	m_se.Init(L"Assets/sound/kyodaika.wav");		//‹‘å‰»
+	m_se = g_goMgr.NewGameObject<CSoundSource>(0);
+	m_se->Init(L"Assets/sound/kyodaika.wav");		//‹‘å‰»
 	g_goMgr.FindGameObjects<Box>("box", [&](Box* box)->bool {
 		m_boxPos = box->GetPosition();
 		m_posUp = m_boxPos.y + ITEM_END_POS_Y;
@@ -56,7 +57,7 @@ void Item::Update()
 		if (m_player != nullptr) {
 			if (!m_player->GetisItem()) {
 				{
-					m_se.Play(false);
+					m_se->Play(false);
 				}
 			}
 		}

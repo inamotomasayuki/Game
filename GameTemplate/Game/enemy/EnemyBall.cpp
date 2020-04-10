@@ -20,7 +20,8 @@ EnemyBall::EnemyBall()
 {
 	m_skinModel.Init(L"Assets/modelData/turtleShell.cmo");
 	m_gravity = ENEMY_GRAVITY;
-	m_pokoSE.Init(L"Assets/sound/poko.wav");
+	m_pokoSE = g_goMgr.NewGameObject<CSoundSource>(0);
+	m_pokoSE->Init(L"Assets/sound/poko.wav");
 }
 
 void EnemyBall::Update()
@@ -115,7 +116,7 @@ void EnemyBall::Ball()
 		m_v.y = 0.0f;
 		//ノックバック
 		m_moveSpeed = m_v * KICKED_SPEED;
-		m_pokoSE.Play(false);
+		m_pokoSE->Play(false);
 		m_isKicked = true;
 		m_isApproachAgain = true;
 	}		

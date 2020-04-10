@@ -2,6 +2,7 @@
 #include "GameCamera.h"
 #include "Player.h"
 #include "Game.h"
+#include "GameData.h"
 
 const float CAMERA_POS_Y_UNDER = -0.2f;						//カメラ位置低さ
 const float CAMERA_POS_Y_UPPER = 0.8f;						//カメラ位置高さ
@@ -9,12 +10,20 @@ const float CAMERA_TARGET_Y = 100.0f;						//カメラターゲットY位置
 const CVector3 CAMERA_POS = { 0.0f, 100.0f, -500.0f };		//カメラ位置
 const CVector3 CAMERA_TARGET = { 0.0f, 100.0f, 0.0f };		//カメラターゲット
 const float CAMERA_FAR = 100000.0f;							//カメラ遠平面
+const CVector3 CAMERA_POS_STAGE_ONE = { 500.0f, 200.0f, -50.0f };	//ステージ１のカメラ位置
 
 GameCamera::GameCamera()
 {
-	g_camera3D.SetPosition(CAMERA_POS);
-	g_camera3D.SetTarget(CAMERA_TARGET);
-	g_camera3D.SetFar(CAMERA_FAR);
+	if (g_gameData.GetStageNo() == g_gameData.enStage_Zero) {
+		g_camera3D.SetPosition(CAMERA_POS);
+		g_camera3D.SetTarget(CAMERA_TARGET);
+		g_camera3D.SetFar(CAMERA_FAR);
+	}
+	if (g_gameData.GetStageNo() == g_gameData.enStage_One) {
+		g_camera3D.SetPosition(CAMERA_POS_STAGE_ONE);
+		g_camera3D.SetTarget(CAMERA_TARGET);
+		g_camera3D.SetFar(CAMERA_FAR);
+	}
 }
 
 

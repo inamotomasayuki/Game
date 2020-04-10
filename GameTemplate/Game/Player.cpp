@@ -49,6 +49,8 @@ const float SE_RATIO = 1.5f;								//周波数
 const float RUN_ANIMATION_SPEED = 3.0f;						//走りアニメーション速度
 const float WALK_ANIMATION_SPEED = 2.0f;					//歩きアニメーション速度
 
+const float EFFECT_SCALE = 10.0f;				//エフェクトの大きさ
+
 Player::Player()
 {
 	//cmoファイルの読み込み。
@@ -65,24 +67,18 @@ Player::Player()
 
 	//サウンドの初期化
 	InitSound();
-	//エフェクトをロードする。
-	m_effect = Effekseer::Effect::Create(g_effect->GetEffekseerManager(), (const EFK_CHAR*)L"Assets/effect/test.efk");
-
 }
 
 
 Player::~Player()
 {
-	//エフェクトを破棄。
-	if (m_effect != nullptr) {
-		m_effect->Release();
+	for (int i = 0; i < enSE_Num; i++) {
+		g_goMgr.DeleteGameObject(m_se[i]);
 	}
 }
 
 void Player::Update()
 {
-	//エフェクトを再生する。
-	m_playEffectHandle = g_effect->GetEffekseerManager()->Play(m_effect, m_position.x, m_position.y, m_position.z);
 
 	m_circlePos = m_position;
 	m_circlePos.y += 18.0f;
@@ -139,12 +135,6 @@ void Player::Draw()
 		g_camera3D.GetProjectionMatrix(),
 		enRenderMode_Normal
 	);
-	//auto v = g_camera3D.GetTarget() - g_camera3D.GetPosition();
-	//v.Normalize();
-	//v *= 0.82f;
-	//for(int i = 0; i < 4; i++) {
-	//	m_skinModel.SetDligDir(i, v.x, v.y, v.z);
-	//}
 }
 void Player::Warp_0()
 {
@@ -219,7 +209,7 @@ void Player::GhostContact()
 		//ジャンプ床とぶつかった
 		if (m_jumpFloor->GetGhost()->IsSelf(contactObject) == true) {
 			m_jumpSpeed = JUMP_FLOOR_SPEED;
-			m_se[enSE_jumpFloor].Play(false);
+			m_se[enSE_jumpFloor]->Play(false);
 			m_contactJumpFloor = true;
 		}
 		if (m_backGround->GetGhost()->IsSelf(contactObject) == true) {
@@ -234,7 +224,6 @@ void Player::GhostContact()
 			if (box->GetGhost()->IsSelf(contactObject) == true) {
 				m_isHipDropBox = false;
 				box->SetIsContact(true);
-				box->SetItem(Box::enItem_mikan);
 				if (!m_hitBox) {
 					m_jumpSpeed = 0.0f;
 					m_moveSpeed.y = 0.0f;
@@ -247,7 +236,6 @@ void Player::GhostContact()
 					m_isHipDropBox = true;
 					box->SetIsHipDrop();
 					box->SetIsContact(true);
-					box->SetItem(Box::enItem_mikan);
 					if (!m_hitBox) {
 						m_hitBox = true;
 					}
@@ -383,7 +371,7 @@ void Player::PadMove()
 				m_jumpFlag = false;
 				if (g_pad[0].IsTrigger(enButtonA)) {
 					//ジャンプ音
-					m_se[enSE_jump].Play(false);
+					m_se[enSE_jump]->Play(false);
 					//移動しながらジャンプしてたら段を進める
 					if (m_moveSpeed.x || m_moveSpeed.z != 0) {
 						m_threeStep++;
@@ -587,15 +575,18 @@ void Player::InitAnimationClip()
 
 void Player::InitSound()
 {
+	for (int i = 0; i < enSE_Num; i++) {
+		m_se[i] = g_goMgr.NewGameObject<CSoundSource>(0);
+	}
 	//サウンドの初期化
-	m_se[enSE_jump].Init(L"Assets/sound/jump.wav");				//ジャンプ
-	m_se[enSE_walk].Init(L"Assets/sound/walk.wav");				//歩き
-	m_se[enSE_dash].Init(L"Assets/sound/dash.wav");				//走り
-	m_se[enSE_warp0].Init(L"Assets/sound/warp0.wav");			//ワープ前
-	m_se[enSE_warp1].Init(L"Assets/sound/warp1.wav");			//ワープ後
-	m_se[enSE_jumpFloor].Init(L"Assets/sound/jumpFloor.wav");	//ジャンプ床
-	m_se[enSE_damage].Init(L"Assets/sound/damage.wav");			//ダメージ
-	m_se[enSE_kyodaika].Init(L"Assets/sound/kyodaika.wav");					//巨大化
+	m_se[enSE_jump]->Init(L"Assets/sound/jump.wav");				//ジャンプ
+	m_se[enSE_walk]->Init(L"Assets/sound/walk.wav");				//歩き
+	m_se[enSE_dash]->Init(L"Assets/sound/dash.wav");				//走り
+	m_se[enSE_warp0]->Init(L"Assets/sound/warp0.wav");			//ワープ前
+	m_se[enSE_warp1]->Init(L"Assets/sound/warp1.wav");			//ワープ後
+	m_se[enSE_jumpFloor]->Init(L"Assets/sound/jumpFloor.wav");	//ジャンプ床
+	m_se[enSE_damage]->Init(L"Assets/sound/damage.wav");			//ダメージ
+	m_se[enSE_kyodaika]->Init(L"Assets/sound/kyodaika.wav");					//巨大化
 }
 
 void Player::SoundPlay()
@@ -604,59 +595,59 @@ void Player::SoundPlay()
 		//ダッシュ中
 		if (m_moveSpeed.LengthSq() >= INPUT_AMOUNT_DASH_LENGTH) {
 			//ダッシュ音
-			m_se[enSE_dash].SetVolume(1.0f);
-			m_se[enSE_dash].Play(false);
-			m_se[enSE_walk].Stop();
+			m_se[enSE_dash]->SetVolume(1.0f);
+			m_se[enSE_dash]->Play(false);
+			m_se[enSE_walk]->Stop();
 		}
 		//通常移動中
 		else if (m_moveSpeed.LengthSq() >= INPUT_AMOUNT_WALK_LENGTH) {
 			//歩き音
-			m_se[enSE_walk].SetVolume(SE_VOLUME);
-			m_se[enSE_walk].SetFrequencyRatio(SE_RATIO);
-			m_se[enSE_walk].Play(false);
-			m_se[enSE_dash].Stop();
+			m_se[enSE_walk]->SetVolume(SE_VOLUME);
+			m_se[enSE_walk]->SetFrequencyRatio(SE_RATIO);
+			m_se[enSE_walk]->Play(false);
+			m_se[enSE_dash]->Stop();
 		}
 		//何も操作されてない
 		else {
-			m_se[enSE_walk].Stop();
+			m_se[enSE_walk]->Stop();
 		}
 	}
 	if (!m_charaCon.IsOnGround()) {
-		m_se[enSE_walk].Pause();
-		m_se[enSE_dash].Pause();
+		m_se[enSE_walk]->Pause();
+		m_se[enSE_dash]->Pause();
 	}
 	//ワープ音
 	if (m_isWarp00 || m_isWarp01) {
-		m_se[enSE_walk].Stop();
-		m_se[enSE_dash].Stop();
-		m_se[enSE_warp0].Play(false);
+		m_se[enSE_walk]->Stop();
+		m_se[enSE_dash]->Stop();
+		m_se[enSE_warp0]->Play(false);
 	}
 	if (m_isWarp) {
-		m_se[enSE_warp0].Stop();
-		m_se[enSE_warp1].SetVolume(SE_VOLUME);
-		m_se[enSE_warp1].Play(false);
+		m_se[enSE_warp0]->Stop();
+		m_se[enSE_warp1]->SetVolume(SE_VOLUME);
+		m_se[enSE_warp1]->Play(false);
 	}
 	else {
-		m_se[enSE_warp1].Stop();
+		m_se[enSE_warp1]->Stop();
 	}
 	//ダメージ音
 	if (m_isDamageSE) {
-		m_se[enSE_damage].Stop();
+		m_se[enSE_damage]->Play(false);
 		m_isDamageSE = false;
 	}
-	if (m_isAttacked) {
-		m_se[enSE_damage].Play(false);
-	}
+	//if (m_isAttacked) {
+	//	m_se[enSE_damage]->Play(false);
+	//}
 	if (m_game != nullptr) {
 		if (m_game->GetGameClearFlag()
 			|| m_game->GetGameOverFlag()) {
-			m_se[enSE_walk].Stop();
-			m_se[enSE_dash].Stop();
+			m_se[enSE_walk]->Stop();
+			m_se[enSE_dash]->Stop();
 		}
 	}
 	if (m_isItem) {
 		if (!m_isBigSE) {
-			m_se[enSE_kyodaika].Play(false);
+			m_se[enSE_kyodaika]->Play(false);
 			m_isBigSE = true;
 		}
 	}

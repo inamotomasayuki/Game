@@ -23,7 +23,7 @@
 /// 
 /// このクラスのインスタンス化を行うと、そのインスタンスはサウンドエンジンクラスに登録されます。
 /// </remarks>
-class CSoundSource {
+class CSoundSource : public IGameObject {
 public:
 	/// <summary>
 	/// コンストラクタ。
@@ -33,6 +33,7 @@ public:
 	/// デストラクタ。
 	/// </summary>
 	~CSoundSource();
+	void Draw() {};
 	/// <summary>
 	/// 初期化(オンメモリ再生)
 	/// </summary>

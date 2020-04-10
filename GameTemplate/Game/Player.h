@@ -7,6 +7,7 @@
 #include "Box.h"
 #include "Item.h"
 #include "BackGround.h"
+#include "Effect.h"
 
 class Warp00;
 class Warp01;
@@ -103,7 +104,7 @@ public:
 		m_jumpFlag = jumpFlag;
 		m_jumpSpeed = 4000.0f;
 		m_gravity = GRAVITY;
-		m_se[enSE_jump].Play(false);
+		m_se[enSE_jump]->Play(false);
 	}
 	/// <summary>
 	/// 動く床の速度の設定
@@ -265,9 +266,6 @@ private:
 	Box* m_box = nullptr;							//箱
 	Item* m_item = nullptr;							//アイテム
 	CVector3 m_floorSpeed = CVector3::Zero();		//床の速度
-
-	Effekseer::Effect* m_effect = nullptr;				//エフェクト
-	Effekseer::Handle m_playEffectHandle = -1;		//ハンドル
 	
 	enum EnAnimationClip {
 		enAnimationClip_idle,	//待機アニメーション。
@@ -293,7 +291,7 @@ private:
 		enSE_kyodaika,	//巨大化
 		enSE_Num		//SEの数
 	};
-	CSoundSource m_se[enSE_Num];			//効果音[SEの数分]
+	CSoundSource* m_se[enSE_Num];			//効果音[SEの数分]
 	bool m_isAttacked = false;		//攻撃を受けてるかどうか
 	bool m_jumpFlag = false;		//ジャンプしてるかどうか
 	bool m_contactFloor = false;	//床と接触してるかどうか

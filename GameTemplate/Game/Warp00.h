@@ -1,5 +1,6 @@
 #pragma once
 #include "Player.h"
+#include "Effect.h"
 class Warp00 : public IGameObject
 {
 public:
@@ -51,6 +52,7 @@ private:
 	CQuaternion m_rotation;		//回転
 	CVector3 m_scale;			//スケール
 	Player* m_player = nullptr;		//プレイヤー
-	bool m_isWarp = false;			//ワープしたか		
+	bool m_isWarp = false;			//ワープしたか	
+	Effect* m_effect = nullptr;		//エフェクト
 };
 

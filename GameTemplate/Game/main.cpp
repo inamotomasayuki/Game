@@ -14,8 +14,6 @@ void GameUpdate()
 	//物理エンジンの更新。
 	g_physics.Update();
 	g_soundEngine->Update();
-	//Effekseer更新
-	g_effect->Update();
 	//ゲームオブジェクトマネージャーの更新
 	g_goMgr.Update();
 }	
@@ -25,7 +23,6 @@ void GameUpdate()
 ///////////////////////////////////////////////////////////////////
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow)
 {	
-	g_effect = new Effect;
 	g_soundEngine = new CSoundEngine;
 	g_soundEngine->Init();
 

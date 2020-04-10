@@ -31,6 +31,7 @@ const float ALPHA_PLUS = 1.0f;							//アルファ値プラス
 const float DELTA_ALPHA = 0.1f;							//徐々にアルファ
 const float BACK_ROT_SPEED = -0.2f;						//背景回転速度
 const float KARI_SCALE_REDUCTION = 0.93f;				//仮縮小スピード
+const float DELETE_THIS_ALPHA = 0.95f;			//フェードがこのアルファ値で削除する
 
 Title::Title()
 {
@@ -43,13 +44,15 @@ Title::Title()
 	m_kariSprite.Init(L"Assets/sprite/kari.dds", KARI_WIDTH, KARI_HIGHT);
 	m_kariPos = CVector3::Zero();
 	m_kariScale = KARI_SCALE;
-	m_bgm.Init(L"Assets/sound/TitleBGM.wav");
-	m_bgm.Play(true);
+	m_bgm = g_goMgr.NewGameObject<CSoundSource>(0);
+	m_bgm->Init(L"Assets/sound/TitleBGM.wav");
+	m_bgm->Play(true);
 }
 
 
 Title::~Title()
 {
+	g_goMgr.DeleteGameObject(m_bgm);
 }
 
 void Title::Update()
@@ -82,6 +85,14 @@ void Title::Update()
 		m_sprite[enSprite_start].DeltaAlpha(DELTA_ALPHA);
 		//遷移
 		if (g_pad[0].IsTrigger(enButtonA)) {
+			if (m_fade == nullptr) {
+				m_fade = g_goMgr.NewGameObject<Fade>("fade");
+				m_isSelect = true;
+			}
+		}
+	}
+	if (m_isSelect) {
+		if (m_fade->GetAlpha() >= DELETE_THIS_ALPHA) {
 			g_goMgr.NewGameObject<StageSelect>(0);
 			g_goMgr.DeleteGameObject(this);
 		}

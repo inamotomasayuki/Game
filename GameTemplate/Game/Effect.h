@@ -2,6 +2,7 @@
 #include "EffekseerRuntime130/src/Effekseer/Effekseer.h"
 #include "EffekseerRuntime130/src/EffekseerRendererCommon/EffekseerRenderer.Renderer.h"
 #include "gameObject/IGameObject.h"
+#include "EffectEngine.h"
 
 class Effect : public IGameObject
 {
@@ -9,34 +10,26 @@ public:
 	Effect();
 	~Effect();
 	void Update();
-	void Draw();
+	void Draw() {};
+	void DrawEffect();
 	/// <summary>
-	/// Effekseerの初期化。
+	/// エフェクトのファイルパス設定
 	/// </summary>
-	void InitEffekseer();	
-	/// <summary>
-	/// EffekseerManagerの取得
-	/// </summary>
-	/// <returns>EffekseerManager</returns>
-	Effekseer::Manager* GetEffekseerManager()
+	/// <param name="filePath">ファイルパス</param>
+	virtual void SetFilePath(const wchar_t* filePath)
 	{
-		return m_effekseerManager;
+		m_effekseer = Effekseer::Effect::Create(g_effectEngine.GetEffekseerManager(), (const EFK_CHAR*)filePath);
 	}
-	/*!
-	 *@brief　エフェクトのロードと取得
-	*@param[in] filePath ファイルパス
-	*/
-	Effekseer::Effect* GetAndCreateEffect( const wchar_t* filePath);
-	/*!
-	 *@brief　エフェクトの再生とハンドルの取得
-	*@param[in] effect エフェクト
-	*@param[in] pos エフェクトの位置
-	*/
-	Effekseer::Handle GetAndEffectPlay( Effekseer::Effect* effect, CVector3 pos);
-private:
-	//Effekseerマネージャ管理。
-	Effekseer::Manager*	m_effekseerManager = nullptr;
-	EffekseerRenderer::Renderer*	m_effekseerRenderer = nullptr;
-};
 
-extern Effect* g_effect;
+	void SetScale(CVector3 scale)
+	{
+		g_effectEngine.GetEffekseerManager()->SetScale(m_playEffectHandle, scale.x, scale.y, scale.z);
+	}
+	void PlayAndSetPos(CVector3 pos)
+	{
+		m_playEffectHandle = g_effectEngine.GetEffekseerManager()->Play(m_effekseer, pos.x, pos.y, pos.z);
+	}
+private:
+	Effekseer::Effect* m_effekseer = nullptr;				//エフェクト
+	Effekseer::Handle m_playEffectHandle = -1;		//ハンドル
+};

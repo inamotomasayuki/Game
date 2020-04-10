@@ -24,7 +24,8 @@ Enemy02::Enemy02()
 	//cmoファイルの読み込み。
 	m_skinModel.Init(L"Assets/modelData/wingKuribo.cmo");
 	m_state = enState_right;
-	m_fumuSE.Init(L"Assets/sound/fumu.wav");
+	m_fumuSE = g_goMgr.NewGameObject<CSoundSource>(0);
+	m_fumuSE->Init(L"Assets/sound/fumu.wav");
 }
 
 void Enemy02::Update()
@@ -149,7 +150,7 @@ void Enemy02::Death(int score)
 			if (fabs(m_angle) <= CMath::DegToRad(DEGREE_NUM) && m_len < LENGTH) {
 				m_scale.z /= SCALE_DIVISION;
 				m_player->SetJumpFlag(true);	//ジャンプさせる
-				m_fumuSE.Play(false);
+				m_fumuSE->Play(false);
 				m_isAttacked = true;		//攻撃された
 			}
 		}
@@ -167,7 +168,7 @@ void Enemy02::Death(int score)
 		if (m_isAttacked == false) {
 			if (fabs(m_angle) <= CMath::DegToRad(RIGHT_ANGLE) && m_len < LENGTH) {
 				m_scale.z /= 10;
-				m_fumuSE.Play(false);
+				m_fumuSE->Play(false);
 				m_isAttacked = true;		//攻撃された
 			}
 		}

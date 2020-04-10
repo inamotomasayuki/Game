@@ -73,7 +73,7 @@ private:
 	CQuaternion m_rotation = CQuaternion::Identity();	//回転
 	CVector3 m_scale = CVector3::One();					//拡大率
 	bool m_isGet = false;								//取得されたか
-	CSoundSource m_se;									//効果音
+	CSoundSource* m_se = nullptr;									//効果音
 	Player* m_player = nullptr;							//プレイヤー
 	CVector3 m_boxPos;									//箱の位置
 	float m_posUp = 0.0f;								//上がる位置

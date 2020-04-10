@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Sky.h"
 
+const float SKY_BRIGHTNESS_POW = 1.5f;
 
 Sky::Sky()
 {
@@ -24,8 +25,9 @@ void Sky::Draw()
 	m_skinModel.Draw(
 		g_camera3D.GetViewMatrix(),
 		g_camera3D.GetProjectionMatrix(),
-		enRenderMode_Normal
+		enRenderMode_Sky
 	);
+	m_skinModel.SetBrightnessPow(SKY_BRIGHTNESS_POW);
 	m_skinModel.RimLightOff();
-
+	m_skinModel.ShadowReciverOff();
 }

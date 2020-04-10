@@ -22,6 +22,14 @@ void __cdecl ModelEffect::Apply(ID3D11DeviceContext* deviceContext)
 		deviceContext->PSSetShaderResources(enSkinModelSRVReg_AlbedoTexture, 2, srvArray);
 		deviceContext->PSSetShaderResources(3, 1, srvarray);
 	}break;
+	case enRenderMode_Sky: {
+		deviceContext->PSSetShader((ID3D11PixelShader*)m_psSky.GetBody(), NULL, 0);
+		//todo シェーダーリソースビューを一気に設定する。
+		ID3D11ShaderResourceView* srvArray[] = {
+			m_albedoTex,							//アルベドテクスチャ
+		};
+		deviceContext->PSSetShaderResources(enSkinModelSRVReg_AlbedoTexture, 1, srvArray);
+	}break;
 	case enRenderMode_Silhouette:
 		//シルエット描画。
 		deviceContext->PSSetShader((ID3D11PixelShader*)m_psSilhouette.GetBody(), NULL, 0);
@@ -32,10 +40,6 @@ void __cdecl ModelEffect::Apply(ID3D11DeviceContext* deviceContext)
 		//シャドウマップ生成。
 		deviceContext->VSSetShader((ID3D11VertexShader*)m_pVSShadowMap->GetBody(), NULL, 0);
 		deviceContext->PSSetShader((ID3D11PixelShader*)m_psShadowMap.GetBody(), NULL, 0);
-		break;
-	case enRenderMode_Sky:
-		deviceContext->VSSetShader((ID3D11VertexShader*)m_vsSky.GetBody(), NULL, 0);
-		deviceContext->PSSetShader((ID3D11PixelShader*)m_psSky.GetBody(), NULL, 0);
 		break;
 	}
 }
