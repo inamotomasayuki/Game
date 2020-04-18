@@ -23,7 +23,9 @@
 #include "Fade.h"
 #include "sound/SoundEngine.h"
 #include "sound/SoundSource.h"
-
+#include "GameTime.h"
+#include "FontUI.h"
+#include "Font.h"
 const int HP_UPPER = 5;
 class Game : public IGameObject
 {
@@ -32,7 +34,7 @@ public:
 	~Game();
 	void Update();
 	void Draw();
-
+	void DrawFade();
 public:
 	/// <summary>
 	/// スコアの設定
@@ -137,6 +139,8 @@ private:
 	Sky* m_sky = nullptr;					//空
 	Fade* m_fade = nullptr;					//フェード
 	Item* m_item = nullptr;					//アイテム
+	FontUI* m_fontUI = nullptr;
+	Font m_font;
 	CSoundSource* m_bgm = nullptr;						//BGM	
 	enum EnSE{
 		enSE_gameClear,		//ゲームクリア音
@@ -146,6 +150,7 @@ private:
 	CSoundSource* m_se[enSE_Num];			//効果音
 
 private:
+	float m_timer = 0.0f;			//タイマー
 	int m_score = 0;				//スコア
 	int m_hp = 5;					//HP
 	int m_clearTimer = 0;			//クリアまでのタイマー
@@ -160,5 +165,4 @@ private:
 	CVector3 m_cameraPos;			//カメラの位置
 	CVector3 m_nextCameraPos;		//次のカメラの位置
 	bool m_isGo = false;					//行けるかどうか
-
 };

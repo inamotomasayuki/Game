@@ -169,6 +169,10 @@
     <ClCompile Include="enemy\EnemyBase.cpp" />
     <ClCompile Include="Fade.cpp" />
     <ClCompile Include="EffectEngine.cpp" />
+    <ClCompile Include="Font.cpp" />
+    <ClCompile Include="GameTime.cpp" />
+    <ClCompile Include="Stopwatch.cpp" />
+    <ClCompile Include="FontUI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Vector.h">
@@ -309,6 +313,10 @@
     <ClInclude Include="enemy\EnemyBase.h" />
     <ClInclude Include="Fade.h" />
     <ClInclude Include="EffectEngine.h" />
+    <ClInclude Include="Font.h" />
+    <ClInclude Include="GameTime.h" />
+    <ClInclude Include="Stopwatch.h" />
+    <ClInclude Include="FontUI.h" />
   </ItemGroup>
   <ItemGroup>
     <MeshContentTask Include="Assets\modelData\Circle.fbx" />

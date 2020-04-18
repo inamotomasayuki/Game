@@ -76,6 +76,19 @@ public:
 			}
 		}
 	}
+	bool Find(IGameObject* go)
+	{
+		//リストから検索して、見つかったら削除する。
+		for (auto it = m_goList.begin();
+			it != m_goList.end();
+			it++
+			) {
+			if ((*it) == go) {
+				return true;
+			}
+		}
+		return false;
+	}
 	/// <summary>
 	/// ゲームオブジェクトの検索
 	/// </summary>

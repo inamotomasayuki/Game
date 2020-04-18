@@ -114,6 +114,8 @@
     <ClCompile Include="enemy\EnemyBase.cpp" />
     <ClCompile Include="Fade.cpp" />
     <ClCompile Include="FireBall.cpp" />
+    <ClCompile Include="Font.cpp" />
+    <ClCompile Include="FontUI.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameCamera.cpp" />
     <ClCompile Include="GameClear.cpp" />
@@ -121,6 +123,7 @@
     <ClCompile Include="gameObject\GameObjectManager.cpp" />
     <ClCompile Include="gameObject\IGameObject.cpp" />
     <ClCompile Include="GameOver.cpp" />
+    <ClCompile Include="GameTime.cpp" />
     <ClCompile Include="GaussianBlur.cpp" />
     <ClCompile Include="graphics\2D\Sprite.cpp" />
     <ClCompile Include="graphics\animation\Animation.cpp" />
@@ -168,6 +171,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Stopwatch.cpp" />
     <ClCompile Include="system\system.cpp" />
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="Warp00.cpp" />
@@ -189,6 +193,8 @@
     <ClInclude Include="enemy\EnemyBase.h" />
     <ClInclude Include="Fade.h" />
     <ClInclude Include="FireBall.h" />
+    <ClInclude Include="Font.h" />
+    <ClInclude Include="FontUI.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameCamera.h" />
     <ClInclude Include="GameClear.h" />
@@ -196,6 +202,7 @@
     <ClInclude Include="gameObject\GameObjectManager.h" />
     <ClInclude Include="gameObject\IGameObject.h" />
     <ClInclude Include="GameOver.h" />
+    <ClInclude Include="GameTime.h" />
     <ClInclude Include="GaussianBlur.h" />
     <ClInclude Include="graphics\2D\Sprite.h" />
     <ClInclude Include="graphics\animation\Animation.h" />
@@ -242,6 +249,7 @@
     <ClInclude Include="SpriteUI.h" />
     <ClInclude Include="Star.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Stopwatch.h" />
     <ClInclude Include="system\system.h" />
     <ClInclude Include="Title.h" />
     <ClInclude Include="Warp00.h" />

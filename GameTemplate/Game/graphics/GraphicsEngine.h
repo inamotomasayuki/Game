@@ -88,6 +88,14 @@ public:
 	/// 半透明合成のブレンドステートを設定
 	/// </summary>
 	void SetBlendState();
+	DirectX::SpriteBatch* GetSpriteBatch()
+	{
+		return m_spriteBatch.get();
+	}
+	DirectX::SpriteFont* GetSpriteFont()
+	{
+		return m_spriteFont.get();
+	}
 private:
 	D3D_FEATURE_LEVEL		m_featureLevel;				//Direct3D デバイスのターゲットとなる機能セット。
 	ID3D11Device*			m_pd3dDevice = NULL;		//D3D11デバイス。
@@ -105,6 +113,10 @@ private:
 	ID3D11RenderTargetView* m_frameBufferRenderTargetView = nullptr;	//フレームバッファのレンダリングターゲットビュー。
 	ID3D11DepthStencilView* m_frameBufferDepthStencilView = nullptr;	//フレームバッファのデプスステンシルビュー。
 	ID3D11BlendState* m_translucentBlendState = nullptr;	//半透明合成用のブレンドステート。
+
+	//定義。
+	std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;     //これが肝
+	std::unique_ptr<DirectX::SpriteFont> m_spriteFont;		//これも肝
 };
 
 extern GraphicsEngine* g_graphicsEngine;			//グラフィックスエンジン

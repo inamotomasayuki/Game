@@ -16,6 +16,7 @@ public:
 	{
 		return m_sprite.GetAlpha();
 	}
+
 private:
 	Sprite m_sprite;			//スプライト
 	CVector3 m_spritePos = CVector3::Zero();			//スプライトの位置

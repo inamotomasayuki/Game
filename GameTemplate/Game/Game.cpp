@@ -13,13 +13,15 @@ const float DELETE_THIS_ALPHA = 0.95f;			//フェードがこのアルファ値で削除する
 
 Game::Game()
 {
+	CVector3 playerPos;
+	CQuaternion playerRot;
+	CVector3 playerScale;
 	if (g_gameData.GetStageNo() == 0) {
 		m_level.Init(L"Assets/level/stage_01_final.tkl", [&](LevelObjectData& objData) {
 			if (objData.EqualObjectName(L"unityChan")) {
-				m_player = g_goMgr.NewGameObject<Player>("player");
-				m_player->SetPosition(objData.position);
-				m_player->SetRotation(objData.rotation);
-				m_player->SetScale(objData.scale);
+				playerPos = objData.position;
+				playerRot = objData.rotation;
+				playerScale = objData.scale;
 				return true;
 			}
 			if (objData.EqualObjectName(L"coin")) {
@@ -118,17 +120,21 @@ Game::Game()
 			}
 			return false;
 			});
+		m_player = g_goMgr.NewGameObject<Player>("player");
+		m_player->SetPosition(playerPos);
+		m_player->SetRotation(playerRot);
+		m_player->SetScale(playerScale);
 		m_spriteUI = g_goMgr.NewGameObject<SpriteUI>(0);
+		//m_fontUI = g_goMgr.NewGameObject<FontUI>(0);
 		m_gameCamera = g_goMgr.NewGameObject<GameCamera>("gameCamera");
 		InitSound();
 	}
 	if (g_gameData.GetStageNo() == 1) {
 		m_level.Init(L"Assets/level/stage_02_01.tkl", [&](LevelObjectData& objData) {
 			if (objData.EqualObjectName(L"unityChan")) {
-				m_player = g_goMgr.NewGameObject<Player>("player");
-				m_player->SetPosition(objData.position);
-				m_player->SetRotation(objData.rotation);
-				m_player->SetScale(objData.scale);
+				playerPos = objData.position;
+				playerRot = objData.rotation;
+				playerScale = objData.scale;
 				return true;
 			}
 			if (objData.EqualObjectName(L"coin")) {
@@ -212,7 +218,12 @@ Game::Game()
 			}
 			return false;
 			});
+		m_player = g_goMgr.NewGameObject<Player>("player");
+		m_player->SetPosition(playerPos);
+		m_player->SetRotation(playerRot);
+		m_player->SetScale(playerScale);
 		m_spriteUI = g_goMgr.NewGameObject<SpriteUI>(0);
+		//m_fontUI = g_goMgr.NewGameObject<FontUI>(0);
 		m_gameCamera = g_goMgr.NewGameObject<GameCamera>("gameCamera");
 		InitSound();
 	}
@@ -266,6 +277,7 @@ Game::~Game()
 	g_goMgr.DeleteGameObject(m_gameClear);
 	g_goMgr.DeleteGameObject(m_sky);
 	g_goMgr.DeleteGameObject(m_bgm);
+	g_goMgr.DeleteGameObject(m_fontUI);
 }
 
 void Game::Update()
@@ -380,9 +392,27 @@ void Game::Update()
 
 void Game::Draw()
 {
-
 }
 
+void Game::DrawFade()
+{
+	//m_timer = max(0.0f, m_timer - GameTime().GetFrameDeltaTime());
+	m_timer += GameTime().GetFrameDeltaTime() * 2.0f;
+	wchar_t text[256];
+	int minute = (int)m_timer / 60;
+	int sec = (int)m_timer % 60;
+	swprintf_s(text, L"%02d:%02d", minute, sec);
+	m_font.DrawScreenPos(
+		text,
+		{ 670.0f,0.0f },
+		{ 0.0f,1.0f,0.0f,1.0f }
+	);
+	m_font.DrawScreenPos(
+		L"プレイ時間",
+		{ 380.0f, 0.0f },
+		{ 0.0f,1.0f,0.0f,1.0f }
+	);
+}
 
 void Game::InitSound()
 {

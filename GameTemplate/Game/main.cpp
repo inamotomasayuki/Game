@@ -4,7 +4,8 @@
 #include "gameObject/GameObjectManager.h"
 #include "Title.h"
 #include "sound/SoundEngine.h"
-
+#include "Stopwatch.h"
+#include "GameTime.h"
 void GameUpdate()
 {
 	//ゲームパッドの更新。	
@@ -33,11 +34,16 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	g_goMgr.NewGameObject<Title>(0);
 
+	CStopwatch sw;
+
 	//ゲームループ。
 	while (DispatchWindowMessage() == true)
 	{
+		sw.Start();
 		GameUpdate();
 		g_graphicsEngine->GameDraw();
 		g_goMgr.Delete();
+		sw.Stop();
+		GameTime().PushFrameDeltaTime((float)sw.GetElapsed());
 	}
 }

@@ -134,7 +134,7 @@ void Player::Draw()
 		g_camera3D.GetViewMatrix(),
 		g_camera3D.GetProjectionMatrix(),
 		enRenderMode_Normal
-	);
+	);	
 }
 void Player::Warp_0()
 {

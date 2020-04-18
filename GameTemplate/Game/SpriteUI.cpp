@@ -153,11 +153,11 @@ void SpriteUI::Update()
 	for (int i = 0; i < enSpriteHP_Num; i++) {
 		m_spriteHP[i].UpdateWorldMatrix(m_positionHP, m_rotation, m_scale);
 	}
-
 }
+
 void SpriteUI::Draw2D()
-{
-	
+{	
+
 	CMatrix mView;
 	CMatrix mProj;
 	mView.MakeLookAt(
@@ -179,5 +179,4 @@ void SpriteUI::Draw2D()
 	for (int i = 0; i < enSpriteHP_Num; i++) {
 		m_spriteHP[i].Draw(mView, mProj);
 	}
-
 }

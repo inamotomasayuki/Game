@@ -17,7 +17,7 @@ const float MINUS_START_ALPHA = 1.0f;			//マイナスを開始するアルファ値
 const float INIT_ALPHA = -0.1f;					//アルファ初期値
 
 const float UPPER_ALPHA = 1.0f;					//アルファ値上限
-const float DELETE_ALPHA = -0.1f;				//このアルファ値で削除する
+const float DELETE_ALPHA = 0.0f;				//このアルファ値で削除する
 
 const CVector3 CAMERA_POSITION = { 0, 0, -1 };		//カメラの位置
 const CVector3 CAMERA_TARGET = { 0, 0, 0 };			//カメラの注視点
