@@ -188,7 +188,18 @@ void SkinModel::Draw(CMatrix viewMatrix, CMatrix projMatrix, EnRenderMode render
 	else {
 		vsCb.isHasAoMap = false;
 	}
-
+	if (m_isDithering) {
+		vsCb.isDithering = true;
+	}
+	else {
+		vsCb.isDithering = false;
+	}
+	if (m_isDecDithe) {
+		vsCb.ditheringPow = m_ditheringPow;
+	}
+	else {
+		vsCb.ditheringPow = 20;
+	}
 	d3dDeviceContext->UpdateSubresource(m_cb, 0, nullptr, &vsCb, 0, 0);
 	//視点を更新
 	//視点を設定。

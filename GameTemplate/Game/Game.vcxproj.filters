@@ -173,6 +173,9 @@
     <ClCompile Include="GameTime.cpp" />
     <ClCompile Include="Stopwatch.cpp" />
     <ClCompile Include="FontUI.cpp" />
+    <ClCompile Include="Button.cpp" />
+    <ClCompile Include="Bridge.cpp" />
+    <ClCompile Include="Wall.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Vector.h">
@@ -317,6 +320,9 @@
     <ClInclude Include="GameTime.h" />
     <ClInclude Include="Stopwatch.h" />
     <ClInclude Include="FontUI.h" />
+    <ClInclude Include="Button.h" />
+    <ClInclude Include="Bridge.h" />
+    <ClInclude Include="Wall.h" />
   </ItemGroup>
   <ItemGroup>
     <MeshContentTask Include="Assets\modelData\Circle.fbx" />
@@ -342,6 +348,9 @@
     <MeshContentTask Include="Assets\modelData\Boxato.fbx" />
     <MeshContentTask Include="Assets\modelData\gameStage_02_01.fbx" />
     <MeshContentTask Include="Assets\modelData\gameStage01_final.fbx" />
+    <MeshContentTask Include="Assets\modelData\bridge.fbx" />
+    <MeshContentTask Include="Assets\modelData\button.fbx" />
+    <MeshContentTask Include="Assets\modelData\wall.fbx" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\sprite\kari.png" />

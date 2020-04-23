@@ -4,6 +4,7 @@
 #include "JumpFloor.h"
 #include "Warp00.h"
 #include "Warp01.h"
+#include "GameData.h"
 const float DELTA_TIME = 1.0f / 60.0f;			//経過時間　単位：秒
 const float INTERPOLATE_TIME = 0.1f;			//補完時間　単位：秒
 const float ROTATION_SPEED = 1.0f;				//回転加算速度
@@ -22,7 +23,7 @@ const float GRAVITY_ACCELERATION = 1.05f;		//重力加速度
 //条件式用の速度の大きさの数値
 const float MOVE_SPEED_LENGTH = 40.0f;					//移動中
 const float DASH_SPEED_LENGTH = 2000.0f;				//ダッシュ中
-const float JUMP_FLOOR_SPEED_LENGTH = 1000.0f;			//ジャンプ床のジャンプ中
+const float JUMP_FLOOR_SPEED_LENGTH = 8000.0f;			//ジャンプ床のジャンプ中
 const float ADD_SPEED_LENGTH = 0.01f;					//加速度加算中
 const float INPUT_AMOUNT_LENGTH = 0.8f;					//角度を求めるときの入力量
 const float INPUT_AMOUNT_DASH_LENGTH = 1000000.0f;		//走りアニメーションさせる
@@ -94,13 +95,14 @@ void Player::Update()
 	m_box = g_goMgr.FindGameObject<Box>("box");
 	m_item = g_goMgr.FindGameObject<Item>("item");
 	m_backGround = g_goMgr.FindGameObject<BackGround>("backGround");
-	//デバッグショートカット
-	if (g_pad[0].IsTrigger(enButtonX)) {
-		m_charaCon.SetPosition(m_jumpFloor->GetPosition());
-	}
-	if (g_pad[0].IsTrigger(enButtonY)) {
-		m_charaCon.SetPosition(m_moveFloor->GetPosition());
-	}
+
+	////デバッグショートカット
+	//if (g_pad[0].IsTrigger(enButtonX)) {
+	//	m_charaCon.SetPosition(m_jumpFloor->GetPosition());
+	//}
+	//if (g_pad[0].IsTrigger(enButtonY)) {
+	//	m_charaCon.SetPosition(m_moveFloor->GetPosition());
+	//}
 	if (!m_isWarp00 && !m_isWarp01) {
 		//パッド操作
 		PadMove();
@@ -134,7 +136,7 @@ void Player::Draw()
 		g_camera3D.GetViewMatrix(),
 		g_camera3D.GetProjectionMatrix(),
 		enRenderMode_Normal
-	);	
+	);
 }
 void Player::Warp_0()
 {
@@ -195,7 +197,24 @@ void Player::GhostContact()
 {
 	bool isContact = false;
 	bool isJump = m_jumpFlag;
+	bool isButton = false;
+	auto button1 = g_goMgr.FindGameObject<Button>("button1");
 	g_physics.ContactTest(m_charaCon, [&](const btCollisionObject& contactObject) {
+		g_goMgr.FindGameObjects<Button>("button", [&](Button* button)->bool {
+			//ボタンに当たった
+			if (button->GetGhost()->IsSelf(contactObject) == true) {
+				isButton = true;
+				button->IsPush();
+			}
+			if (isButton) {
+				button->SetState(button->enState_0);
+			}
+			return true;
+		});
+		if (button1->GetGhost()->IsSelf(contactObject) == true) {
+			button1->SetState(button1->enState_1);
+			button1->IsPush();
+		}
 		//星とぶつかった
 		if (m_star->GetGhost()->IsSelf(contactObject) == true) {
 			m_game->SetGetStarFlag();
@@ -212,11 +231,12 @@ void Player::GhostContact()
 			m_se[enSE_jumpFloor]->Play(false);
 			m_contactJumpFloor = true;
 		}
-		if (m_backGround->GetGhost()->IsSelf(contactObject) == true) {
-			m_jumpSpeed = 0.0f;
-			m_moveSpeed.y = 0.0f;
-			m_moveSpeed.y -= m_gravity;
-
+		if (g_gameData.GetStageNo() == 0) {
+			if (m_backGround->GetGhost()->IsSelf(contactObject) == true) {
+				m_jumpSpeed = 0.0f;
+				m_moveSpeed.y = 0.0f;
+				m_moveSpeed.y -= m_gravity;
+			}
 		}
 		g_goMgr.FindGameObjects<Box>("box", [&](Box* box)->bool {
 
@@ -392,8 +412,9 @@ void Player::PadMove()
 				}
 			}
 		}
-		if (m_game->GetGameClearFlag()) {
-			m_moveSpeed *= 0.0f;
+		if (m_game->GetStar()) {
+			m_moveSpeed.x = 0.0f;
+			m_moveSpeed.z = 0.0f;
 		}
 	}
 

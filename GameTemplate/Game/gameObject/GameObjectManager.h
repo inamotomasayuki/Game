@@ -44,6 +44,10 @@ public:
 	/// </summary>
 	void DrawEffect();
 	/// <summary>
+	/// フォントの描画
+	/// </summary>
+	void DrawFont();
+	/// <summary>
 	/// ゲームオブジェクトを追加。
 	/// </summary>
 	/// <param name="objectName">オブジェクト名</param>

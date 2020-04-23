@@ -8,7 +8,7 @@
 #include "Item.h"
 #include "BackGround.h"
 #include "Effect.h"
-
+#include "Button.h"
 class Warp00;
 class Warp01;
 class JumpFloor;
@@ -131,12 +131,27 @@ public:
 		return m_moveSpeed;
 	}
 	/// <summary>
+	/// 速度0
+	/// </summary>
+	void MoveSpeedZero()
+	{
+		m_moveSpeed = CVector3::Zero();
+	}
+	void GravityZero()
+	{
+		m_gravity = 0.0f;
+	}
+	/// <summary>
 	/// ワープ00フラグ
 	/// </summary>
 	/// <param name="warp"></param>
 	void SetIsWarp00(bool warp)
 	{
 		m_isWarp00 = warp;
+	}
+	bool GetIsWarp00()
+	{
+		return m_isWarp00;
 	}
 	/// <summary>
 	/// ワープ01フラグ
@@ -145,6 +160,10 @@ public:
 	void SetIsWarp01(bool warp)
 	{
 		m_isWarp01 = warp;
+	}
+	bool GetIsWarp01()
+	{
+		return m_isWarp01;
 	}
 	/// <summary>
 	/// 離れたかどうか

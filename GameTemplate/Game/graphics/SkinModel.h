@@ -11,6 +11,7 @@ enum EnFbxUpAxis {
 	enFbxUpAxisZ,		//Z-up
 };
 const int NUM_DIRECTION_LIG = 4;
+const int DITHERING_KILL_PIXEL = 63;
 /*!
 *@brief	ディレクションライト。
 */
@@ -19,10 +20,10 @@ struct SDirectionLight {
 	CVector4 color[NUM_DIRECTION_LIG];			//ライトのカラー。
 	CVector3			eyePos;				//視点の座標。
 	float				specPow;			//鏡面反射の絞り。
-	float				brightnessPow;	//空の明るさ
 	CVector4			ambient;
 	CVector3			eyeDir;
-	int isRimLight;
+	int isRimLight;	
+	float				brightnessPow = 1.0f;	//空の明るさ
 };
 /*!
 *@brief	スキンモデルクラス。
@@ -37,6 +38,14 @@ public:
 	{
 		m_dirLight.isRimLight = 0;
 		m_isRim = true;
+	}
+	void DitheringOn()
+	{
+		m_isDithering = true;
+	}
+	void DitheringOff()
+	{
+		m_isDithering = false;
 	}
 	void ShadowReciverOff()
 	{
@@ -75,6 +84,20 @@ public:
 	void SetBrightnessPow(float brightPow)
 	{
 		m_dirLight.brightnessPow = brightPow;
+	}
+	void DecDitheringPow()
+	{
+		m_isDecDithe = true;
+		if (m_ditheringPow > 0){
+			m_ditheringPow--;
+		}
+		else {
+			m_ditheringPow = 0;
+		}
+	}
+	int GetDitheringPow()
+	{
+		return m_ditheringPow;
 	}
 	//メッシュが見つかったときのコールバック関数。
 	using OnFindMesh = std::function<void(const std::unique_ptr<DirectX::ModelMeshPart>&)>;
@@ -184,8 +207,13 @@ private:
 		int isHasNormalMap;		//法線マップを保持している？
 		int isHasSpecuraMap;	//スペキュラマップを保持している？
 		int isHasAoMap;			//AOマップを保持している？
+		int isDithering;		//ディザリング？	
+		int ditheringPow;
 	};
+	int m_ditheringPow = DITHERING_KILL_PIXEL;			//ディザリングでキルするピクセル
+	bool m_isDecDithe = false;
 	bool m_isRim = false;					//リムライトするか
+	bool m_isDithering = false;				//ディザリング？
 	bool m_isShadowReciver = false;			//シャドウレシーバーにするか
 	EnFbxUpAxis			m_enFbxUpAxis = enFbxUpAxisZ;	//!<FBXの上方向。
 	ID3D11Buffer*		m_cb = nullptr;					//!<定数バッファ。

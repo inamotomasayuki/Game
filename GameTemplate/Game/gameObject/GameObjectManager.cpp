@@ -37,6 +37,12 @@ void GameObjectManager::DrawEffect()
 	}
 }
 
+void GameObjectManager::DrawFont()
+{
+	for (auto go : m_goList) {
+		go->DrawFont();
+	}
+}
 void GameObjectManager::Update()
 {
 	//登録されているゲームオブジェクトの更新処理を呼ぶ。

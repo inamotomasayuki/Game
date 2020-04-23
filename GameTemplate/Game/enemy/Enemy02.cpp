@@ -9,7 +9,7 @@ const float DEGREE_NUM = 80.0f;						//角度　単位：degree
 const float LENGTH = 50.0f;							//プレイヤーとの距離
 const int ATTACK_MINUS_PLAYER_HP = -1;				//攻撃時プレイヤーHPマイナス
 const float PLAYER_NOCKBACK_SPEED = 2500.0f;		//プレイヤーのノックバックスピード
-const int SCORE = 1;								//スコア
+const int SCORE = 0;								//スコア
 const float JUMP_SPEED_DECAY = 0.85f;				//ジャンプ速度減衰
 const float PYON_SPEED = 2000.0f;					//ぴょんスピード
 const int STOP_TIMER = 120.0f;						//往復タイマー　単位：秒
@@ -23,9 +23,15 @@ Enemy02::Enemy02()
 {
 	//cmoファイルの読み込み。
 	m_skinModel.Init(L"Assets/modelData/wingKuribo.cmo");
-	m_state = enState_right;
 	m_fumuSE = g_goMgr.NewGameObject<CSoundSource>(0);
 	m_fumuSE->Init(L"Assets/sound/fumu.wav");
+	m_rand = rand() % 2;
+	if (m_rand == 0) {
+		m_state = enState_left;
+	}
+	else if (m_rand == 1) {
+		m_state = enState_right;
+	}
 }
 
 void Enemy02::Update()

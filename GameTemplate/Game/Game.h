@@ -25,7 +25,9 @@
 #include "sound/SoundSource.h"
 #include "GameTime.h"
 #include "FontUI.h"
-#include "Font.h"
+#include "Button.h"
+#include "Bridge.h"
+#include "Wall.h"
 const int HP_UPPER = 5;
 class Game : public IGameObject
 {
@@ -34,7 +36,6 @@ public:
 	~Game();
 	void Update();
 	void Draw();
-	void DrawFade();
 public:
 	/// <summary>
 	/// スコアの設定
@@ -109,6 +110,14 @@ public:
 	{
 		return m_getStar;
 	}
+	void SetIsButton(bool button)
+	{
+		m_isButton = button;
+	}
+	bool GetIsButton()
+	{
+		return m_isButton;
+	}
 private:
 	/// <summary>
 	/// サウンド初期化
@@ -139,8 +148,10 @@ private:
 	Sky* m_sky = nullptr;					//空
 	Fade* m_fade = nullptr;					//フェード
 	Item* m_item = nullptr;					//アイテム
-	FontUI* m_fontUI = nullptr;
-	Font m_font;
+	FontUI* m_fontUI = nullptr;				//フォント
+	Bridge* m_bridge = nullptr;				//橋
+	Button* m_button = nullptr;				//ボタン
+	Wall* m_wall = nullptr;					//壁
 	CSoundSource* m_bgm = nullptr;						//BGM	
 	enum EnSE{
 		enSE_gameClear,		//ゲームクリア音
@@ -150,9 +161,9 @@ private:
 	CSoundSource* m_se[enSE_Num];			//効果音
 
 private:
-	float m_timer = 0.0f;			//タイマー
 	int m_score = 0;				//スコア
 	int m_hp = 5;					//HP
+	int m_stopTime = 0;				//止める
 	int m_clearTimer = 0;			//クリアまでのタイマー
 	int m_fireBallTimer = 0;		//ファイアボール生成タイマー
 	bool m_isFireBall = false;				//ファイアボール生成中？
@@ -164,5 +175,6 @@ private:
 	bool m_isFade = false;			//フェード
 	CVector3 m_cameraPos;			//カメラの位置
 	CVector3 m_nextCameraPos;		//次のカメラの位置
-	bool m_isGo = false;					//行けるかどうか
+	bool m_isGo = false;			//行けるかどうか
+	bool m_isButton = false;
 };

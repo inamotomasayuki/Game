@@ -36,7 +36,10 @@ public:
 	{
 		m_rigidBody.SetPositionAndRotation(pos, rot);
 	}
-
+	/// <summary>
+	/// 削除
+	/// </summary>
+	void Delete();
 private:
 	MeshCollider m_meshCollider;		//!<メッシュコライダー。
 	RigidBody m_rigidBody;				//!<剛体。

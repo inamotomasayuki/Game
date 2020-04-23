@@ -22,6 +22,7 @@ BackGround::~BackGround()
 void BackGround::Update()
 {
 	m_ghostObject.SetPosition(m_ghostPos);
+	m_physicsStaticObject.SetPositionAndRotation(m_position, m_rotation);
 	//ワールド行列の更新。
 	m_skinModel.UpdateWorldMatrix(m_position, m_rotation, m_scale);
 

@@ -118,6 +118,34 @@ Game::Game()
 				m_box->SetItem(m_box->enItem_coin);
 				return true;
 			}
+			if (objData.EqualObjectName(L"bridge")) {
+				m_bridge = g_goMgr.NewGameObject<Bridge>("bridge");
+				m_bridge->SetPosition(objData.position);
+				m_bridge->SetRotation(objData.rotation);
+				m_bridge->SetScale(objData.scale);
+				return true;
+			}
+			if (objData.EqualObjectName(L"button")) {
+				m_button = g_goMgr.NewGameObject<Button>("button");
+				m_button->SetPosition(objData.position);
+				m_button->SetRotation(objData.rotation);
+				m_button->SetScale(objData.scale);
+				return true;
+			}
+			if (objData.EqualObjectName(L"button1")) {
+				m_button = g_goMgr.NewGameObject<Button>("button1");
+				m_button->SetPosition(objData.position);
+				m_button->SetRotation(objData.rotation);
+				m_button->SetScale(objData.scale);
+				return true;
+			}
+			if (objData.EqualObjectName(L"wall")) {
+				m_wall = g_goMgr.NewGameObject<Wall>("wall");
+				m_wall->SetPosition(objData.position);
+				m_wall->SetRotation(objData.rotation);
+				m_wall->SetScale(objData.scale);
+				return true;
+			}
 			return false;
 			});
 		m_player = g_goMgr.NewGameObject<Player>("player");
@@ -125,7 +153,7 @@ Game::Game()
 		m_player->SetRotation(playerRot);
 		m_player->SetScale(playerScale);
 		m_spriteUI = g_goMgr.NewGameObject<SpriteUI>(0);
-		//m_fontUI = g_goMgr.NewGameObject<FontUI>(0);
+		m_fontUI = g_goMgr.NewGameObject<FontUI>(0);
 		m_gameCamera = g_goMgr.NewGameObject<GameCamera>("gameCamera");
 		InitSound();
 	}
@@ -223,7 +251,7 @@ Game::Game()
 		m_player->SetRotation(playerRot);
 		m_player->SetScale(playerScale);
 		m_spriteUI = g_goMgr.NewGameObject<SpriteUI>(0);
-		//m_fontUI = g_goMgr.NewGameObject<FontUI>(0);
+		m_fontUI = g_goMgr.NewGameObject<FontUI>(0);
 		m_gameCamera = g_goMgr.NewGameObject<GameCamera>("gameCamera");
 		InitSound();
 	}
@@ -264,6 +292,10 @@ Game::~Game()
 		g_goMgr.DeleteGameObject(fireBall);
 		return true;
 		});
+	g_goMgr.FindGameObjects<Button>("button", [](Button* button)->bool {
+		g_goMgr.DeleteGameObject(button);
+		return true;
+		});
 	g_goMgr.DeleteGameObject(m_warp00);
 	g_goMgr.DeleteGameObject(m_warp01);
 	g_goMgr.DeleteGameObject(m_moveFloor);
@@ -278,6 +310,8 @@ Game::~Game()
 	g_goMgr.DeleteGameObject(m_sky);
 	g_goMgr.DeleteGameObject(m_bgm);
 	g_goMgr.DeleteGameObject(m_fontUI);
+	g_goMgr.DeleteGameObject(m_bridge);
+	g_goMgr.DeleteGameObject(m_wall);
 }
 
 void Game::Update()
@@ -338,6 +372,11 @@ void Game::Update()
 	}
 	//‘JˆÚ
 	else {
+		m_stopTime++;
+		if (m_stopTime >= 80) {
+			m_player->MoveSpeedZero();
+			m_player->GravityZero();
+		}
 		if (!m_isFade) {
 			if (g_pad[0].IsTrigger(enButtonA)
 				&& m_gameOver->GetButtonFlag()) {
@@ -365,9 +404,13 @@ void Game::Update()
 		}
 		//‘JˆÚ
 		if (m_clearTimer >= CLEAR_TIME) {
-			if (g_pad[0].IsTrigger(enButtonA)) {
-				g_goMgr.NewGameObject<StageSelect>(0);
-				g_goMgr.DeleteGameObject(this);
+			if (!m_isFade) {
+				if (g_pad[0].IsTrigger(enButtonA)) {
+					if (m_fade == nullptr) {
+						m_fade = g_goMgr.NewGameObject<Fade>("fade");
+						m_isFade = true;
+					}
+				}
 			}
 		}
 		//ƒY[ƒ€
@@ -380,13 +423,18 @@ void Game::Update()
 	}
 	if (m_isFade) {
 		if (m_fade->GetAlpha() >= DELETE_THIS_ALPHA) {
+			g_goMgr.DeleteGameObject(m_fontUI);
 			g_goMgr.NewGameObject<StageSelect>(0);
 			g_goMgr.DeleteGameObject(this);
 		}
 	}
-	if (g_pad[0].IsTrigger(enButtonStart)) {
-		g_goMgr.NewGameObject<Title>(0);
-		g_goMgr.DeleteGameObject(this);
+	if (!m_fade) {
+		if (g_pad[0].IsTrigger(enButtonStart)) {
+			if (m_fade == nullptr) {
+				m_fade = g_goMgr.NewGameObject<Fade>("fade");
+				m_isFade = true;
+			}
+		}
 	}
 }
 
@@ -394,25 +442,6 @@ void Game::Draw()
 {
 }
 
-void Game::DrawFade()
-{
-	//m_timer = max(0.0f, m_timer - GameTime().GetFrameDeltaTime());
-	m_timer += GameTime().GetFrameDeltaTime() * 2.0f;
-	wchar_t text[256];
-	int minute = (int)m_timer / 60;
-	int sec = (int)m_timer % 60;
-	swprintf_s(text, L"%02d:%02d", minute, sec);
-	m_font.DrawScreenPos(
-		text,
-		{ 670.0f,0.0f },
-		{ 0.0f,1.0f,0.0f,1.0f }
-	);
-	m_font.DrawScreenPos(
-		L"ƒvƒŒƒCŽžŠÔ",
-		{ 380.0f, 0.0f },
-		{ 0.0f,1.0f,0.0f,1.0f }
-	);
-}
 
 void Game::InitSound()
 {

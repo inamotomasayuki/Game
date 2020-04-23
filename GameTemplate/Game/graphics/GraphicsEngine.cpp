@@ -303,6 +303,10 @@ void GraphicsEngine::GameDraw()
 	g_goMgr.Draw2D();
 	//フェードを描画
 	g_goMgr.DrawFade();
+
+	//フォントを描画
+	g_goMgr.DrawFont();
+
 	//描画終了。
 	EndRender();
 

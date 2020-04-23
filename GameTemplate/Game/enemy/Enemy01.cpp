@@ -17,7 +17,7 @@ const float LENGTH = 50.0f;						//プレイヤーとの距離
 const int ATTACK_MINUS_PLAYER_HP = -1;			//攻撃時プレイヤーHPマイナス
 const float PLAYER_NOCKBACK_SPEED = 2500.0f;	//プレイヤーのノックバックスピード
 
-const int SCORE = 1;					//スコア
+const int SCORE = 0;					//スコア
 
 Enemy01::Enemy01()
 {
@@ -43,10 +43,15 @@ void Enemy01::Update()
 		//角度を求める
 		Angle();
 		if (!m_isDeath) {
-			//追跡
-			Search();
-			//攻撃（プレイヤーをノックバック）
-			Attack();
+			if (!m_player->GetIsWarp00() && !m_player->GetIsWarp01()) {
+				//追跡
+				Search();
+				//攻撃（プレイヤーをノックバック）
+				Attack();
+			}
+			else {
+				m_moveSpeed = m_v * 0.01f;
+			}
 			//元の位置に戻る
 			Return();
 		}

@@ -60,6 +60,7 @@ private:
 	bool m_isAttack = false;		//攻撃したかどうか
 	bool m_isAttacked = false;		//攻撃されたかどうか
 	int m_waitTimer = 0;			//待機タイマー
+	int m_deleteTimer = 0;			//削除タイマー
 	bool m_isChangeModel = false;		//モデルチェンジフラグ
 	bool m_isKicked = false;			//蹴られたかどうか
 	bool m_isPlayerJump = false;		//プレイヤーが飛んだかどうか

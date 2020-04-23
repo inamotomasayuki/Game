@@ -10,7 +10,7 @@ const int ATTACK_MINUS_PLAYER_HP = -1;				//攻撃時プレイヤーHPマイナス
 const float PLAYER_NOCKBACK_SPEED = 2500.0f;		//プレイヤーのノックバックスピード
 const float ENEMY_GRAVITY = 800.0f;					//重力
 const float ENEMY_GRAVITY_ACCELERATION = 1.02f;		//重力加速度
-const int SCORE = 1;								//スコア
+const int SCORE = 0;								//スコア
 const float KICKED_SPEED = -2000.0f;				//蹴られた時のスピード（蹴った方向に飛ばすためにマイナス）
 const float DELTA_TIME = 1.0f / 60.0f;				//経過時間　単位：秒
 const float ROTATION_SPEED = 40.0f;					//回転速度
@@ -101,9 +101,12 @@ void EnemyBall::Death(int score)
 	}
 	//玉状態処理
 	Ball();
-	//めっちゃ距離離れたら削除
-	if (m_len > DELETE_LENGTH) {
-		g_goMgr.DeleteGameObject(this);
+	//削除
+	if (m_isKicked) {
+		m_deleteTimer++;
+		if (m_deleteTimer >= 200) {
+			g_goMgr.DeleteGameObject(this);
+		}
 	}
 }
 

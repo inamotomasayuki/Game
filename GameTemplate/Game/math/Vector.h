@@ -47,6 +47,20 @@ public:
 		static const CVector2 one = { 1.0f,  1.0f };
 		return one;
 	}
+	const CVector2& operator*=(float s)
+	{
+		Scale(s);
+		return *this;
+	}
+	/*!
+	* @brief	拡大。
+	*/
+	void Scale(float s)
+	{
+		DirectX::XMVECTOR xmv = DirectX::XMLoadFloat2(&vec);
+		xmv = DirectX::XMVectorScale(xmv, s);
+		DirectX::XMStoreFloat2(&vec, xmv);
+	}
 };
 /*!
  * @brief	ベクトル。

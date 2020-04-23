@@ -30,7 +30,7 @@ private:
 	bool m_isAttack = false;		//攻撃したかどうか
 	bool m_isAttacked = false;		//攻撃されたかどうか
 	int m_waitTimer = 0;			//待機タイマー
-
+	int m_rand = 0;					//乱数
 	bool m_isJump = false;		//ジャンプフラグ
 	float m_jumpSpeed = 0.0f;	//ジャンプ速度
 	int m_timer = 0;			//往復用タイマー　単位：秒

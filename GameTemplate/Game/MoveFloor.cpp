@@ -11,12 +11,12 @@ const float ZERO = 0.0f;				//É[Éç
 MoveFloor::MoveFloor()
 {
 	if (g_gameData.GetStageNo() == 0) {
-		m_skinModel.Init(L"Assets/modelData/moveFloor.cmo");
+		m_skinModel.Init(L"Assets/modelData/moveFloor.cmo");	
+		m_ghostObject.CreateMesh(m_position, m_rotation, m_scale, m_skinModel);
 	}
 	if (g_gameData.GetStageNo() == 1) {
 		m_skinModel.Init(L"Assets/modelData/moveFloor01.cmo");
 	}
-	m_ghostObject.CreateMesh(m_position, m_rotation, m_scale, m_skinModel);
 	m_staticObject.CreateMeshObject(m_skinModel, m_position, m_rotation, m_scale);
 }
 
@@ -31,8 +31,8 @@ void MoveFloor::Update()
 	if (g_gameData.GetStageNo() == 0) {
 		//âùïú
 		RoundTrip();
+		m_ghostObject.SetPosition(m_position);
 	}
-	m_ghostObject.SetPosition(m_position);
 	m_staticObject.SetPositionAndRotation(m_position, m_rotation);
 }
 void MoveFloor::Draw()

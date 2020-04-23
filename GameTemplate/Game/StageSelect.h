@@ -49,5 +49,6 @@ private:
 	bool m_isGame = false;								//ゲームにいくか
 	bool m_isTitle = false;								//タイトルにいくか
 	bool m_isGo = false;					//行けるかどうか
+	bool m_isOK = false;					//決定
 
 };

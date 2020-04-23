@@ -2,6 +2,17 @@
  * @brief	モデルシェーダー。
  */
 
+ //ディザパターン
+static const int pattern[] = {
+ 0, 32,  8, 40,  2, 34, 10, 42,   /* 8x8 Bayer ordered dithering  */
+ 48, 16, 56, 24, 50, 18, 58, 26,  /* pattern.  Each input pixel   */
+ 12, 44,  4, 36, 14, 46,  6, 38,  /* is scaled to the 0..63 range */
+ 60, 28, 52, 20, 62, 30, 54, 22,  /* before looking in this table */
+ 3, 35, 11, 43,  1, 33,  9, 41,   /* to determine the action.     */
+ 51, 19, 59, 27, 49, 17, 57, 25,
+ 15, 47,  7, 39, 13, 45,  5, 37,
+ 63, 31, 55, 23, 61, 29, 53, 21
+};
 
 /////////////////////////////////////////////////////////////
 // Shader Resource View
@@ -40,6 +51,8 @@ cbuffer VSPSCb : register(b0){
 	int isHasNormalMap;		//法線マップある？
 	int isHasSpecularMap;	//スペキュラマップある？
 	int isHasAoMap;			//AOマップある？
+	int isDithering;		//ディザリング？
+	int ditheringPow;		//ディザリングの強さ
 };
 static const int NUM_DIRECTION_LIG = 4;
 /*!
@@ -50,10 +63,10 @@ cbuffer LightCb : register(b1) {
 	float4 dligColor[NUM_DIRECTION_LIG];
 	float3 eyePos;		//カメラの視点	
 	float specPow;		//スペキュラライトの絞り
-	float brightnessPow;	//空の明るさ
 	float3 ambient;		//アンビエントライト
 	float3 eyeDir;		//カメラの前方向
-	int isRimLight;
+	int isRimLight;	
+	float brightnessPow;	//空の明るさ
 };
 /// <summary>
 /// シャドウマップ用の定数バッファ。
@@ -286,6 +299,22 @@ float4 PSMain( PSInput In ) : SV_Target0
 		rim = pow(rim, 3.0f);
 		//黄色
 		lig += float3(50.5f, 50.5f, 0.5f) * rim;
+	}
+	if (isDithering == 1) {
+		 //ディザリングを試す
+		float2 pos = In.Position.xy / In.Position.w;
+
+		pos *= 0.5f;
+		pos += 0.5f;
+		float2 uv = fmod(pos * 1000.0f, 8.0f);
+		int t = 0;
+		int x = (int)clamp(uv.x, 0.0f, 7.0f);
+		int y = (int)clamp(uv.y, 0.0f, 7.0f);
+		int index = y * 8 + x;
+		t = pattern[index];
+		if (t >= ditheringPow) {
+			clip(-1);
+		}
 	}
 	{
 		//ハーフランバート拡散照明によるライティング計算

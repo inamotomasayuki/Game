@@ -61,34 +61,38 @@ void StageSelect::Update()
 {
 
 	g_gameData.SetStageNo(stageNo);
-	//セレクトかOKかを選択する処理
-	if (g_pad[0].IsTrigger(enButtonUp)) {
-		m_selectNo--;
-	}
-	if (g_pad[0].IsTrigger(enButtonDown)) {
-		m_selectNo++;
-	}
-	if (m_selectNo < 0) {
-		m_selectNo = SELECT_NUM;
-	}
-	if (m_selectNo > SELECT_NUM) {
-		m_selectNo = 0;
-	}
-	//ステージを選択する処理
-	if (m_selectNo == enSelect_stage) {
-		m_sprite[enSprite_upTriangle].SetAlpha(ALPHA_PLUS);
-		m_sprite[enSprite_leftTriangle].SetAlpha(ALPHA_PLUS);
-		m_sprite[enSprite_rightTriangle].SetAlpha(ALPHA_PLUS);
-		m_sprite[enSprite_downTriangle].SetAlpha(TOUMEI_ALPHA);
-		m_sprite[enSprite_ok].SetAlpha(TOUMEI_ALPHA);
-		if (g_pad[0].IsTrigger(enButtonRight)) {
-			stageNo++;
+	if (!m_isOK) {
+		//セレクトかOKかを選択する処理
+		if (g_pad[0].IsTrigger(enButtonUp)) {
+			m_selectNo--;
 		}
-		if (g_pad[0].IsTrigger(enButtonLeft)) {
-			stageNo--;
+		if (g_pad[0].IsTrigger(enButtonDown)) {
+			m_selectNo++;
+		}
+		if (m_selectNo < 0) {
+			m_selectNo = SELECT_NUM;
+		}
+		if (m_selectNo > SELECT_NUM) {
+			m_selectNo = 0;
+		}
+		if (g_pad[0].IsTrigger(enButtonA)) {
+			m_selectNo = enSelect_ok;
+		}
+		//ステージを選択する処理
+		if (m_selectNo == enSelect_stage) {
+			m_sprite[enSprite_upTriangle].SetAlpha(ALPHA_PLUS);
+			m_sprite[enSprite_leftTriangle].SetAlpha(ALPHA_PLUS);
+			m_sprite[enSprite_rightTriangle].SetAlpha(ALPHA_PLUS);
+			m_sprite[enSprite_downTriangle].SetAlpha(TOUMEI_ALPHA);
+			m_sprite[enSprite_ok].SetAlpha(TOUMEI_ALPHA);
+			if (g_pad[0].IsTrigger(enButtonRight)) {
+				stageNo++;
+			}
+			if (g_pad[0].IsTrigger(enButtonLeft)) {
+				stageNo--;
+			}
 		}
 	}
-
 	//OK中にAボタンでゲームに遷移
 	if (m_selectNo == enSelect_ok) {
 		m_sprite[enSprite_leftTriangle].SetAlpha(TOUMEI_ALPHA);
@@ -98,6 +102,7 @@ void StageSelect::Update()
 		m_sprite[enSprite_ok].SetAlpha(ALPHA_PLUS);
 		if (!m_isGame) {
 			if (g_pad[0].IsTrigger(enButtonA)) {
+				m_isOK = true;
 				if (m_fade == nullptr) {
 					m_fade = g_goMgr.NewGameObject<Fade>("fade");
 					m_isGame = true;
@@ -108,6 +113,7 @@ void StageSelect::Update()
 	//Bボタンでタイトルに戻る
 	if (!m_isTitle) {
 		if (g_pad[0].IsTrigger(enButtonB)) {
+			m_isOK = true;
 			if (m_fade == nullptr) {
 				m_fade = g_goMgr.NewGameObject<Fade>("fade");
 				m_isTitle = true;

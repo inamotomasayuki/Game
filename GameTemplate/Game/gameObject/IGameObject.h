@@ -20,6 +20,9 @@ public:
 	virtual void DrawEffect()
 	{
 	}
+	virtual void DrawFont()
+	{
+	}
 	/// <summary>
 	/// 削除リクエストを行う
 	/// </summary>
