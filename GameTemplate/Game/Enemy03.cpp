@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Enemy03.h"
 #include "Game.h"
-#include "../GameData.h"
+#include "GameData.h"
 
 const int ATTACK_WAIT_TIME = 40;				//UŒ‚‚µ‚½‚Æ‚«‚Ì‘Ò‚¿ŠÔ
 const float ATTACKED_WAIT_TIME = 20.0f;			//UŒ‚‚³‚ê‚½‚Æ‚«‚Ì‘Ò‚¿ŠÔ

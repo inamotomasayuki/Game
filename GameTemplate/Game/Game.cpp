@@ -296,6 +296,10 @@ Game::~Game()
 		g_goMgr.DeleteGameObject(button);
 		return true;
 		});
+	g_goMgr.FindGameObjects<Button>("button1", [](Button* button)->bool {
+		g_goMgr.DeleteGameObject(button);
+		return true;
+		});
 	g_goMgr.DeleteGameObject(m_warp00);
 	g_goMgr.DeleteGameObject(m_warp01);
 	g_goMgr.DeleteGameObject(m_moveFloor);
