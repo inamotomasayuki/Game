@@ -1,0 +1,14 @@
+.vs/
+x64/
+Assets/
+*.lib
+*.obj
+*.cso
+*.user
+*.log
+*.tlog
+*.pdb
+*.ini
+*.png
+*.fbx
+*.jpg
